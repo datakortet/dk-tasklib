@@ -55,5 +55,18 @@ target/
 *.py~
 *.rst~
 
+.md5
 
-.idea/
+.idea/misc.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dataSources.ids
+.idea/datasources.xml
+.idea/*.iml
+.idea/dictionaries
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+.idea/gradle.xml
+.idea/libraries
+.idea/mongoSettings.xml

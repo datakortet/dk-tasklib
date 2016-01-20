@@ -11,6 +11,10 @@ class PackageInterface(object):
     def version(self):
         return self['version']
 
+    @property
+    def name(self):
+        return self['name']
+
     def upversion(self, major=False, minor=False, patch=False):
         """Update package version (default patch-level increase).
         """
@@ -39,7 +43,7 @@ class PackageIni(PackageInterface):
     def exists(cls):
         return pfind('.', 'package.ini') or pfind('.', 'dkbuild.ini')
 
-    def __init__(self):
+    def __init__(self, *args, **kw):
         self.fname = pfind('.', 'package.ini') or pfind('.', 'dkbuild.ini')
         if self.fname is None:
             raise RuntimeError("I couldn't find a %s file" % packagejson)
@@ -92,12 +96,15 @@ class PackageJson(PackageInterface):
     @property
     def package(self):
         if not self._package:
-            self._package = json.loads(open(self.fname).read())
+            with open(self.fname) as fp:
+                self._package = json.loads(fp.read())
         return self._package
 
     def __setitem__(self, key, value):
         self.package[key] = value
-        json.dump(open(self.fname, 'w'), self.package, indent=4)
+        # print "PACKAGE:", self.package
+        # print json.dumps(self.package, indent=4)
+        json.dump(self.package, open(self.fname, 'w'), indent=4)
 
     def __getitem__(self, attr, default=None):
         try:

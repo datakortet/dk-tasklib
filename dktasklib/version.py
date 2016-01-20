@@ -23,7 +23,7 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
         ctx.force = force
         
     if kind == "pkg":
-        version = ctx.pkg.version
+        version = ctx.pkg.version()
     elif kind == "hash":
         version = hashlib.md5(open(source).read()).hexdigest()
     # elif kind == "svn":
