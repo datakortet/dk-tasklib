@@ -13,7 +13,7 @@ install:
   - npm install less-plugin-clean-css
   - npm install less-plugin-inline-urls
 
-script: py.test -v --cov=dktasklib .
+script: py.test -v --cov=dktasklib tests
 
 after_success:
   coveralls
