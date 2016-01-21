@@ -3,6 +3,8 @@ import re
 import os
 import hashlib
 import textwrap
+
+from dkfileutils.path import Path
 from invoke import run, ctask as task
 # from .subversion import get_svn_version
 from .package import Package
@@ -23,7 +25,7 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
         ctx.force = force
         
     if kind == "pkg":
-        version = ctx.pkg.version()
+        version = ctx.pkg.version
     elif kind == "hash":
         version = hashlib.md5(open(source).read()).hexdigest()
     # elif kind == "svn":
@@ -45,7 +47,7 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
 
 @task
 def version(ctx):
-    vnum = Package().version()
+    vnum = Package().version
     print vnum
     return vnum
 
@@ -74,6 +76,7 @@ def update_template_version(ctx, fname=None):
     fname = fname or ctx.pkg.update_template_version_fname
 
     if not os.path.exists(fname):
+        Path(ctx.pkg.root).makedirs(Path(fname).dirname())
         with open(fname, 'w') as fp:
             fp.write(textwrap.dedent("""
             {% load staticfiles %}

@@ -49,7 +49,7 @@ class changed_dir(object):
         return isinstance(value, changed_dir.NoChange)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     p = argparse.ArgumentParser()
     p.add_argument(
         'directory',

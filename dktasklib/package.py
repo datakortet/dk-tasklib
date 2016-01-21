@@ -3,24 +3,19 @@
 import json
 import os
 
-from ConfigParser import RawConfigParser
+from ConfigParser import RawConfigParser, NoOptionError
 from dkfileutils.pfind import pfind
 
 
 class PackageInterface(object):
-    def version(self):
-        return self['version']
-
-    @property
-    def name(self):
-        return self['name']
 
     def upversion(self, major=False, minor=False, patch=False):
         """Update package version (default patch-level increase).
         """
         if not (major or minor or patch):
-            patch = True
-        version = [int(n, 10) for n in self.version().split('.')]
+            # this is normally set by version.upversion
+            patch = True  # pragma: nocover
+        version = [int(n, 10) for n in self.version.split('.')]
         if major:
             version[0] += 1
         if minor:
@@ -30,6 +25,21 @@ class PackageInterface(object):
         newversion = '.'.join([str(n) for n in version])
         self['version'] = newversion
         return newversion
+
+    # for convenience (continue using [](__setitem__) for setting).
+    def __getattr__(self, item):
+        return self[item]
+
+    def __setitem__(self, key, value):  # pragma: nocover
+        # should override
+        pass
+
+    def __getitem__(self, item, default=None):  # pragma: nocover
+        # should override
+        return ''
+
+    def get(self, key, default=None):
+        return self.__getitem__(key, default)
 
 
 class PackageIni(PackageInterface):
@@ -45,8 +55,12 @@ class PackageIni(PackageInterface):
 
     def __init__(self, *args, **kw):
         self.fname = pfind('.', 'package.ini') or pfind('.', 'dkbuild.ini')
-        if self.fname is None:
-            raise RuntimeError("I couldn't find a %s file" % packagejson)
+        if self.fname is None:  # pragma: nocover
+            raise RuntimeError("""
+                I couldn't find a package.json, package.ini,
+                or dkbuild.ini file starting from %s.
+                """ % os.getcwd())
+        self.root = os.path.dirname(self.fname)
         self._package = None
 
     def _open(self, fname):
@@ -66,7 +80,7 @@ class PackageIni(PackageInterface):
     def __getitem__(self, attr, default=None):
         try:
             return self.package.get('package', attr)
-        except KeyError:
+        except (KeyError, NoOptionError):
             if default is not None:
                 return default
             raise AttributeError(
@@ -87,10 +101,11 @@ class PackageJson(PackageInterface):
     def __init__(self, basedir=None, packagejson='package.json'):
         if basedir is None:
             self.fname = pfind('.', packagejson)
-            if self.fname is None:
+            if self.fname is None:  # pragma: nocover
                 raise RuntimeError("I couldn't find a %s file" % packagejson)
         else:
             self.fname = os.path.join(basedir, packagejson)
+        self.root = os.path.dirname(self.fname)
         self._package = None
 
     @property
