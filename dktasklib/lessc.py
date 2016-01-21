@@ -9,7 +9,7 @@ from .utils import switch_extension, filename, min_name, version_name, join
 from .changed import changed_dir
 from .version import add_version, update_template_version
 
-bootstrap = os.path.join(os.environ['SRV'], 'lib', 'bootstrap', 'less')
+bootstrap = os.path.join(os.environ.get('SRV', ''), 'lib', 'bootstrap', 'less')
 
 
 @task
