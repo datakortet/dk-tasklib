@@ -30,7 +30,7 @@ class changed_dir(object):
     def __enter__(self):
         if self.force or changed(self.dirname, self.glob, self.filename):
             return
-        else:
+        else:  # pragma: nocover
             print self.msg
             # this horrid hack is just barely ok in task.py code...
             # (expect debuggers/pylint/coverage/etc. to be unhappy)
@@ -40,12 +40,14 @@ class changed_dir(object):
             # set the trace function below on parent frame
             frame.f_trace = self.trace
 
-    def trace(self, frame, event, arg):
+    def trace(self, frame, event, arg):  # pragma: nocover
         # we just entered the with block.. cleanup and exit immediately
         sys.settrace(self._trace)
         raise changed_dir.NoChange()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback):  # pragma: nocover
+        if self._trace:
+            sys.settrace(self._trace)
         return isinstance(value, changed_dir.NoChange)
 
 

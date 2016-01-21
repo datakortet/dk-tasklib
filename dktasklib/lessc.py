@@ -31,7 +31,7 @@ def lessc(ctx, source, destination="",
     if not destination:
         destination = source[:-len('.less')] + '.css'
     options = ""
-    if ctx.verbose:
+    if getattr(ctx, 'verbose', False):
         options += ' --verbose'
     if include_path:
         options += ' --include-path="%s"' % ';'.join(include_path)
@@ -44,7 +44,8 @@ def lessc(ctx, source, destination="",
     if cleancss:
         options += ' --clean-css="-b --s0 --advanced"'
 
-    run("lessc {options} {source} {destination}".format(**locals()))
+    # run("lessc {options} {source} {destination}".format(**locals()))
+    os.system("lessc {options} {source} {destination}".format(**locals()))
 
 
 @task
