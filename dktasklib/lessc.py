@@ -6,7 +6,7 @@ from invoke import run, ctask as task
 
 from .package import Package
 from .utils import switch_extension, filename, min_name, version_name, join
-from .changed import changed_dir
+# from .changed import changed_dir
 from .version import add_version, update_template_version
 
 bootstrap = os.path.join(os.environ.get('SRV', ''), 'lib', 'bootstrap', 'less')

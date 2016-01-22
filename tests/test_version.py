@@ -7,7 +7,7 @@ from yamldirs import create_files
 from dktasklib import version
 
 
-def test_version():
+def test_version(ctx):
     files = """
         - package.json: |
             {
@@ -16,7 +16,7 @@ def test_version():
     """
     with create_files(files) as directory:
         os.chdir(directory)
-        assert version.version(invoke.Context()) == '1.1.2'
+        assert version.version(ctx) == '1.1.2'
 
 
 def test_add_version():
