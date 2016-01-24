@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import functools
-from invoke import run, ctask as task
+
+from dkfileutils.changed import Directory
+from invoke import ctask as task
 
 from dktasklib.executables import requires
 from .package import Package
 from .utils import switch_extension, filename, min_name, version_name, join
-# from .changed import changed_dir
 from .version import add_version, update_template_version
 
 bootstrap = os.path.join(os.environ.get('SRV', ''), 'lib', 'bootstrap', 'less')
@@ -107,7 +107,7 @@ def build_less(ctx, force=False, verbose=False, src=None, dst=None, **kw):
         print 'build_less output:', ctx.pkg.build_less_output
 
     dirname = os.path.dirname(ctx.pkg.build_less_input)
-    with changed_dir(dirname, glob='**/*.less', force=ctx.force):
+    if ctx.force or Directory(dirname).changed(glob='**/*.less'):
         build_css(
             ctx,
             ctx.pkg.build_less_input,

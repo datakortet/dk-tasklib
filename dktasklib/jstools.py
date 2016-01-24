@@ -10,14 +10,15 @@ def browserify(ctx, source, dest, require=(), external=(), entry=None):
     Run ``browserify``
 
     Args:
-        ctx:        context
-        source:     root source file
-        dest:       path/name of assembled file
-        require:
+        ctx (pyinvoke.Context):  context
+        source (str):            root source file
+        dest (str):              path/name of assembled file
+        require (iterable):
         external:
         entry:
 
     Returns:
+        None
 
     """
     options = ""

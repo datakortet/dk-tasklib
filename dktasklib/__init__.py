@@ -3,5 +3,3 @@
 from ._version import __version__
 from .package import Package
 from . import lessc
-# from .npm import isinstalled
-# from .changed import changed_dir
