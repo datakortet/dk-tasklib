@@ -5,6 +5,7 @@
 
 import dktasklib._version
 import dktasklib.clean
+import dktasklib.docs
 import dktasklib.executables
 import dktasklib.jstools
 import dktasklib.lessc
@@ -12,7 +13,6 @@ import dktasklib.manage
 import dktasklib.npm
 import dktasklib.package
 import dktasklib.runners
-import dktasklib.sysdeps
 import dktasklib.version
 
 
@@ -21,6 +21,7 @@ def test_import_():
     
     assert dktasklib._version
     assert dktasklib.clean
+    assert dktasklib.docs
     assert dktasklib.executables
     assert dktasklib.jstools
     assert dktasklib.lessc
@@ -28,5 +29,4 @@ def test_import_():
     assert dktasklib.npm
     assert dktasklib.package
     assert dktasklib.runners
-    assert dktasklib.sysdeps
     assert dktasklib.version

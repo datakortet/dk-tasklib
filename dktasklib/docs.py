@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import os
 import webbrowser
 from os.path import join
-import sys
 
 from invoke import ctask as task, Collection
-from .utils import cd
 
 
 # Underscored func name to avoid shadowing kwargs in build()
@@ -19,19 +19,11 @@ def _clean(ctx):
 
 # Ditto
 @task(name='browse')
-def _browse(ctx):
-    """Open build target's index.html in a browser (using 'open').
+def _browse(ctx):  # pragma: nocover
+    """Open build target's index.html in a browser (using the :py:mod:`webbrowser` module).
     """
     index = join(ctx.docs.builddir, ctx.docs.target_file)
     webbrowser.open_new(index)
-
-
-# @task
-# def build(ctx):
-#     "Build sphinx docs."
-#     sphinxdir = os.path.join(os.environ['DKROOT'], 'sphinxdoc')   # XXX
-#     with cd('docs'):
-#         ctx.run("sphinx-build -a -E -T -c {sphinxdir} -b html . ./html".format(**locals()))
 
 
 @task(default=True, help={
@@ -39,37 +31,29 @@ def _browse(ctx):
     'clean': "Remove build tree before building",
     'browse': "Open docs index in browser after building",
     'warn': "Build with stricter warnings/errors enabled",
+    'builder': "Builder to use; defaults tto html",
+    'force': "Force re-reading of all files (ignore cache)",
 })
-def build(ctx, clean=False, browse=False, warn=False, opts=""):
+def build(ctx, clean=False, browse=False, warn=False,
+          builder='html',
+          force=True,
+          opts=""):
     """
     Build the project's Sphinx docs.
     """
-
-    x = """
-    ::
-
-        Usage: inv[oke] [--core-opts] docs [--options] [other tasks here ...]
-
-        Docstring:
-          Build the project's Sphinx docs.
-
-        Options:
-          -b, --browse               Open docs index in browser after building
-          -c, --clean                Remove build tree before building
-          -o STRING, --opts=STRING   Extra sphinx-build options/args
-          -w, --warn                 Build with stricter warnings/errors enabled
-
-    """
     if clean:
         _clean(ctx)
-    if opts is None:
+    if opts is None:  # pragma: nocover
         opts = ""
+    opts += " -b %s" % builder
     if warn:
         opts += " -n -W"
+    if force:
+        opts += " -a -E"
     cmd = "sphinx-build {opts} {ctx.docs.source} {ctx.docs.builddir}".format(
         opts=opts, ctx=ctx)
     ctx.run(cmd)
-    if browse:
+    if browse:  # pragma: nocover
         _browse(ctx)
 
 
