@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
+import functools
 from invoke import run, ctask as task
 
+from dktasklib.executables import requires
 from .package import Package
 from .utils import switch_extension, filename, min_name, version_name, join
 # from .changed import changed_dir
@@ -12,24 +13,29 @@ from .version import add_version, update_template_version
 bootstrap = os.path.join(os.environ.get('SRV', ''), 'lib', 'bootstrap', 'less')
 
 
+@requires('nodejs', 'npm', 'lessc')
 @task
 def version(ctx):
-    "Display the lessc version"
-    return run("lessc --version")
+    """Display the lessc version.
+    """
+    return ctx.run("lessc --version")
 
 
+@requires('nodejs', 'npm', 'lessc')
 @task
-def lessc(ctx, source, destination="",
+def lessc(ctx,
+          source, destination="",
           include_path=None,
           strict_imports=False,
           inline_urls=True,
           autoprefix=True,
-          cleancss=True
-          ):
+          cleancss=True):
+    """Run `lessc` with options.
+    """
     if include_path is None:
         include_path = []
     if not destination:
-        destination = source[:-len('.less')] + '.css'
+        destination = switch_extension(source, '.css', '.less')
     options = ""
     if getattr(ctx, 'verbose', False):
         options += ' --verbose'
@@ -44,8 +50,8 @@ def lessc(ctx, source, destination="",
     if cleancss:
         options += ' --clean-css="-b --s0 --advanced"'
 
-    # run("lessc {options} {source} {destination}".format(**locals()))
-    os.system("lessc {options} {source} {destination}".format(**locals()))
+    ctx.run("lessc {options} {source} {destination}".format(**locals()))
+    return destination
 
 
 @task

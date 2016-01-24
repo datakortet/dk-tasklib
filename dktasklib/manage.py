@@ -13,7 +13,7 @@ DEFAULT_MANAGE_PY_PATH = os.path.join(os.environ.get('SRV', ''), 'src', 'datakor
 def manage(ctx, cmd, settings=None, manage_path=None):
     """Run manage.py with `settings` in a separate process.
     """
-    os.environ['DJANGO_SETTINGS_MODULE'] = settings or DEFAULT_SETTINGS_MODULE
+    # os.environ['DJANGO_SETTINGS_MODULE'] = settings or DEFAULT_SETTINGS_MODULE
     with cd(manage_path or DEFAULT_MANAGE_PY_PATH):
         run("python manage.py " + cmd)
 

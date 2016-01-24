@@ -20,8 +20,7 @@ from distutils.core import setup, Command
 from setuptools.command.test import test as TestCommand
 from ConfigParser import RawConfigParser
 
-
-version = '0.2.0'
+version = eval(open('_version.py').read().split('=')[1].strip())
 
 
 class PyTest(TestCommand):

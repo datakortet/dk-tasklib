@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import socket  # WSAStartup + select on windows issue..
+
+from ._version import __version__
 from .package import Package
 from . import lessc
-from .npm import isinstalled
+# from .npm import isinstalled
 # from .changed import changed_dir
