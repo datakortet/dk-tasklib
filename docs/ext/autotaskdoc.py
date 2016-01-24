@@ -116,6 +116,7 @@ class AutoTaskdocDirective(Directive):
     optional_arguments = 1
     final_argument_whitespace = False
     option_spec = {}
+    module = None
 
     def _options(self, tuples):
         # output the task's options as a two-column table
@@ -150,6 +151,10 @@ class AutoTaskdocDirective(Directive):
 
     def _document_task(self, name, task, ctx):
         # output name of task, and note if it is the default task
+        if task.body.__module__ != self.module.__name__:
+            # only document tasks from this module.
+            return []
+
         task_name = nodes.paragraph(classes=['task-name'])
         self.state.nested_parse(
             StringList([
@@ -180,9 +185,9 @@ class AutoTaskdocDirective(Directive):
     def run(self):
         # import pprint; pprint.pprint(self.__dict__)
         module_path = self.arguments[0]
-        module = importlib.import_module(module_path)
-        parent = os.path.dirname(module.__file__)
-        collection = invoke.Collection.from_module(module, loaded_from=parent)
+        self.module = importlib.import_module(module_path)
+        parent = os.path.dirname(self.module.__file__)
+        collection = invoke.Collection.from_module(self.module, loaded_from=parent)
         parser = Parser(contexts=collection.to_contexts())
 
         # output the name of the collection
