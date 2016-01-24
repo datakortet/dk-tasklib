@@ -9,19 +9,30 @@ class MissingCommand(Exception):
     pass
 
 
+# noinspection PyShadowingNames
 class Executables(object):
+    """Class for finding executables on the host system.
+    """
     def __init__(self):
         self._cache = {}
 
     def require(self, *dependencies):
         """Ensure that all dependencies are available.
-           You should not need to call this yourself, use the :fn:`requires`
+           You should not need to call this yourself, use the :func:`requires`
            decorator instead.
         """
         for dep in dependencies:
             self.find(dep)
 
     def find(self, name, requires=(), install_txt='"'):
+        """Find the executable named ``name`` on the :envvar:`PATH`.
+
+           Args:
+               name (str): name of executable to find.
+               requires (List[str]): list of executables to find first.
+               install_txt (str): instructions for how to install the
+                    executable if it is not found.
+        """
         if name not in self._cache:
             self.require(*requires)
 
@@ -33,19 +44,21 @@ class Executables(object):
 
     def _find_exe(self, name, requires=(), install_txt=None):
         fexe = get_executable(name)
-        if not fexe:
-            if install_txt is None:
+        if not fexe:  # pragma: nocover
+            if install_txt is None:  # pragma: nocover
                 install_txt = "Missing command: %s %r" % (name, requires)
             raise MissingCommand(install_txt)
         return fexe
 
-    def find_nodejs(self):
+    def find_nodejs(self):  # pragma: nocover
+        """Find ``node.js``.
+        """
         if sys.platform == 'win32':
             node_exe = get_executable('node')
         else:
             node_exe = get_executable('nodejs') or get_executable('node')
 
-        if not node_exe:
+        if not node_exe:  # pragma: nocover
             raise MissingCommand("""
             Install Node.js using your OS package manager
             https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
@@ -53,8 +66,10 @@ class Executables(object):
         return node_exe
 
     def find_npm(self):
+        """Find the node package manager (npm).
+        """
         npm_exe = get_executable('npm')
-        if not npm_exe:
+        if not npm_exe:  # pragma: nocover
             raise MissingCommand("""
             Install Node.js using your OS package manager
             https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
@@ -62,7 +77,7 @@ class Executables(object):
         return npm_exe
 
 
-#: public interface to the Executables class
+#: public interface to the :py:class:`Executables` class
 exe = Executables()
 
 
@@ -78,10 +93,7 @@ def requires(*deps):
     """
     def _wrapper(fn):
         exe.require(*deps)
-
-        def _inner(*args, **kwargs):
-            return fn(*args, **kwargs)
-        return _inner
+        return fn
     return _wrapper
 
 

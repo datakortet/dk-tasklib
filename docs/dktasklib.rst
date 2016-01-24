@@ -76,12 +76,6 @@ dktasklib.runners module
     :members:
 .. autotaskdoc:: dktasklib.runners
 
-dktasklib.sysdeps module
-------------------------
-
-.. automodule:: dktasklib.sysdeps
-    :members:
-.. autotaskdoc:: dktasklib.sysdeps
 
 dktasklib.utils module
 ----------------------
