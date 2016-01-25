@@ -7,7 +7,7 @@ python:
 addons:
   apt:
     packages:
-    - nodejs
+    - nodejs: "5.0.0"
     - tree
 
 install:
