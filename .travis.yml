@@ -1,11 +1,14 @@
 language: python
+sudo: false
 
 python:
   - "2.7"
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y tree
+addons:
+  apt:
+    packages:
+    - nodejs
+    - tree
 
 install:
   - pip install -r requirements.txt
