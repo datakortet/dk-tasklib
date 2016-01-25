@@ -1,7 +1,9 @@
 
 .. image:: https://travis-ci.org/datakortet/dk-tasklib.svg?branch=master
-    :target: https://travis-ci.org/datakortet/dk-tasklib
+   :target: https://travis-ci.org/datakortet/dk-tasklib
 
+.. image:: https://coveralls.io/repos/github/datakortet/dk-tasklib/badge.svg?branch=master
+   :target: https://coveralls.io/github/datakortet/dk-tasklib?branch=master
 
 dk-tasklib -- pyinvoke  task library
 ==================================================
