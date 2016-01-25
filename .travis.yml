@@ -7,10 +7,10 @@ python:
 addons:
   apt:
     packages:
-    - nodejs: "5.0.0"
     - tree
 
 install:
+  - nvm use 5.0
   - pip install -r requirements.txt
   - pip install coveralls
   - npm install -g less
