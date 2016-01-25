@@ -18,5 +18,5 @@ def test_clean(ctx):
     with create_files(files) as directory:
         os.chdir(directory)
         clean.clean(ctx, 'c')
-        assert os.listdir('build') == ['a', 'b', 'c']
+        assert set(os.listdir('build')) == {'a', 'b', 'c'}
         assert os.listdir('build/c') == []

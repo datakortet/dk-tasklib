@@ -10,10 +10,10 @@ before_install:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
-  - npm install less
-  - npm install less-plugin-autoprefix
-  - npm install less-plugin-clean-css
-  - npm install less-plugin-inline-urls
+  - npm install -g less
+  - npm install -g less-plugin-autoprefix
+  - npm install -g less-plugin-clean-css
+  - npm install -g less-plugin-inline-urls
 
 script: py.test -v --cov=dktasklib tests
 
