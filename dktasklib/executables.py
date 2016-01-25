@@ -51,7 +51,7 @@ class Executables(object):
         return fexe
 
     def find_nodejs(self):  # pragma: nocover
-        """Find ``node.js``.
+        """Find :program:`node`.
         """
         if sys.platform == 'win32':
             node_exe = get_executable('node')
@@ -66,7 +66,7 @@ class Executables(object):
         return node_exe
 
     def find_npm(self):
-        """Find the node package manager (npm).
+        """Find the node package manager (:program:`npm`).
         """
         npm_exe = get_executable('npm')
         if not npm_exe:  # pragma: nocover

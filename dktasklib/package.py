@@ -81,6 +81,7 @@ class PackageIni(PackageInterface):
         try:
             return self.package.get('package', attr)
         except (KeyError, NoOptionError):
+            # return default
             if default is not None:
                 return default
             raise AttributeError(
@@ -125,6 +126,7 @@ class PackageJson(PackageInterface):
         try:
             return self.package[attr]
         except KeyError:
+            # return default
             if default is not None:
                 return default
             raise AttributeError(

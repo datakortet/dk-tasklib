@@ -12,12 +12,15 @@ from .package import Package
 
 @task(help=dict(
     dest_template="this filename template must contain '{version}'",
-    kind="type of version number [pkg,svn,hash]",
+    kind="type of version number [pkg,hash]",
 ))
 def add_version(ctx, source, dest_template, kind="pkg", force=None):
     """Add version number to a file (either pkg version, svn revision, or hash).
+
+       Returns:
+           (str) output file name
     """
-    if not hasattr(ctx, 'pkg'):
+    if kind == 'pkg' and not hasattr(ctx, 'pkg'):
         ctx.pkg = Package()
     if not hasattr(ctx, 'force'):
         ctx.force = bool(force)
@@ -25,13 +28,13 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
         ctx.force = force
         
     if kind == "pkg":
-        version = ctx.pkg.version
+        ver = ctx.pkg.version
     elif kind == "hash":
-        version = hashlib.md5(open(source).read()).hexdigest()
+        ver = hashlib.md5(open(source).read()).hexdigest()
     # elif kind == "svn":
-    #     version = get_svn_version(source)
+    #     ver = get_svn_version(source)
         
-    ver_fname = dest_template.format(version=version)
+    ver_fname = dest_template.format(version=ver)
 
     if not ctx.force and os.path.exists(ver_fname):
         if open(source).read() != open(ver_fname).read():
@@ -41,8 +44,11 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
             or pass --force to the build command.
             """
     else:
+        # copy file contents to versioned file name
         with open(ver_fname, 'wb') as fp:
             fp.write(open(source, 'rb').read())
+
+    return ver_fname
 
 
 @task

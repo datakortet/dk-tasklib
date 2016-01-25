@@ -3,7 +3,7 @@ import os
 import sys
 
 from dkfileutils.changed import Directory
-from invoke import ctask as task
+from invoke import ctask as task, Collection
 
 from dktasklib.executables import requires
 from .package import Package
@@ -14,15 +14,6 @@ bootstrap = os.path.join(os.environ.get('SRV', ''), 'lib', 'bootstrap', 'less')
 
 
 @requires('nodejs', 'npm', 'lessc')
-@task
-def version(ctx):
-    """Display the lessc version.
-    """
-    return ctx.run("lessc --version")
-
-
-@requires('nodejs', 'npm', 'lessc')
-@task
 def lessc(ctx,
           source, destination="",
           include_path=None,
@@ -31,13 +22,29 @@ def lessc(ctx,
           autoprefix=True,
           cleancss=True):
     """Run `lessc` with options.
+
+       Args:
+           source (str): the input file name
+           destination (Optional[str]): the output filename (if not specified
+                it will be the same as the input file name and a ``.css``
+                extension).
+           include_path (Optional[List[str]]): Optional list of directories
+                to search to satisfy ``@import`` directives.
+           strict_imports (bool): Re-fetch all imports.
+           inline_urls (bool): Should ``@url(.../foo.png)`` be inlined?
+           autoprefix (bool): Should the autoprefixer be run (last 4 versions)
+           cleancss (bool): Should the css be minified?
+
+       Returns:
+           str: The output file name.
+
     """
     if include_path is None:
         include_path = []
     if not destination:
         destination = switch_extension(source, '.css', '.less')
     options = ""
-    if getattr(ctx, 'verbose', False):
+    if getattr(ctx, 'verbose', False):  # pragma: nocover
         options += ' --verbose'
     if include_path:
         options += ' --include-path="%s"' % ';'.join(include_path)
@@ -54,28 +61,36 @@ def lessc(ctx,
     return destination
 
 
-@task
-def build_css(ctx, lessfile, dest, version='svn',
-              build='build/css', use_bootstrap=True, **kw):
-    """Build all .less files into .css.
-       `dest` should be the target filename.
+def build_css(ctx,
+              lessfile, dest,
+              version='pkg',
+              use_bootstrap=True,
+              **kw):
+    """Build a ``.less`` file into a versioned and minified ``.css`` file.
+
+       Args:
+           lessfile (str): input file name
+           dest (str): output file name (should be the plain version of the
+                output file name, ie. foo.css, not foo.min.css).
+           version (str): the type of version number (pkg or hash)
+           use_bootstrap (bool): Should Bootstrap be compiled in?
+
+       Returns:
+           str: output file name
+
     """
     path = kw.pop('path', [])
     if use_bootstrap:
-        path.append(bootstrap)
+        path.append(ctx.lessc.bootstrap_less_src)
 
-    cssfname = join(build, switch_extension(filename(lessfile), '.css'))
+    # foo.css -> foo.min.css
     minfname = min_name(dest)
 
-    # rawcss = join(build, filename(dest))
-
-    if ctx.verbose:
-        print >>sys.stderr, 'lessc..'
-        
-    lessc(
+    output_fname = lessc(
         ctx,
         lessfile,
-        minfname,
+        os.path.join('build', 'css', minfname),
+        # minfname,
         include_path=path,
         strict_imports=True,
         inline_urls=True,
@@ -83,13 +98,21 @@ def build_css(ctx, lessfile, dest, version='svn',
         cleancss=True,
     )
     
-    if ctx.verbose:
-        print >>sys.stderr, 'verisioning..'
-    add_version(ctx, minfname, version_name(minfname), kind=version)
+    return add_version(
+        ctx,
+        output_fname,
+        version_name(output_fname),
+        kind=version)
 
 
-@task(post=[update_template_version])
-def build_less(ctx, force=False, verbose=False, src=None, dst=None, **kw):
+@task(
+    default=True,
+    post=[update_template_version],
+    help={
+
+    }
+)
+def build(ctx, force=False, verbose=False, src=None, dst=None, **kw):
     """Compile .less to .css  (pakage.json[build_less_input/output]
     """
     if not hasattr(ctx, 'pkg'):
@@ -102,11 +125,13 @@ def build_less(ctx, force=False, verbose=False, src=None, dst=None, **kw):
         ctx.force = force
     if not hasattr(ctx, 'verbose'):
         ctx.verbose = verbose
-    if ctx.verbose:
+
+    if ctx.verbose:  # pragma: nocover
         print 'build_less input: ', ctx.pkg.build_less_input
         print 'build_less output:', ctx.pkg.build_less_output
 
     dirname = os.path.dirname(ctx.pkg.build_less_input)
+
     if ctx.force or Directory(dirname).changed(glob='**/*.less'):
         build_css(
             ctx,
@@ -115,3 +140,13 @@ def build_less(ctx, force=False, verbose=False, src=None, dst=None, **kw):
             version='pkg',
             **kw
         )   
+
+
+less = Collection('lessc', build)
+less.configure({
+    'lessc': {
+        'source': 'less/index.less',
+        'target': '',
+        'bootstrap_less_src': os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less'),
+    }
+})

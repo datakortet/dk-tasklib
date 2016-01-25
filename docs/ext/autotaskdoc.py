@@ -122,7 +122,15 @@ class AutoTaskdocDirective(Directive):
         # output the task's options as a two-column table
         rows = []
         for k, v in tuples:
+            # namecell = nodes.literal('', ':option:`%s`' % k)
             namecell = nodes.literal('', k)
+            # namecell = nodes.literal()
+
+            # namecell = nodes.option(text=k)
+            # self.state.nested_parse(StringList([
+            #     ':option:`%s`' % k
+            # ]), 0, namecell)
+
             helpcell = nodes.paragraph()
             self.state.nested_parse(StringList([v]), 0, helpcell)
             rows.append(
@@ -142,8 +150,8 @@ class AutoTaskdocDirective(Directive):
                     '',
                     nodes.row(
                         '',
-                        nodes.entry('', nodes.paragraph('', 'options')),
-                        nodes.entry('', nodes.paragraph('', '')))),
+                        nodes.entry('', nodes.paragraph(text='options')),
+                        nodes.entry('', nodes.paragraph(text='')))),
                 nodes.tbody('', *rows)),
             classes=['task-options'])
 
