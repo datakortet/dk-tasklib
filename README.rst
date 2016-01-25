@@ -1,6 +1,6 @@
 
-.. image:: https://travis-ci.org/thebjorn/dk-tasklib.svg?branch=master
-    :target: https://travis-ci.org/thebjorn/dk-tasklib
+.. image:: https://travis-ci.org/datakortet/dk-tasklib.svg?branch=master
+    :target: https://travis-ci.org/datakortet/dk-tasklib
 
 
 dk-tasklib -- pyinvoke  task library
