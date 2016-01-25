@@ -10,6 +10,7 @@ addons:
     - tree
 
 install:
+  - nvm install 5.0
   - nvm use 5.0
   - pip install -r requirements.txt
   - pip install coveralls
