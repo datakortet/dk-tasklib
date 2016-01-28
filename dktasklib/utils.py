@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-import inspect
 import os
-from contextlib import contextmanager
-
 import sys
-
-from dkfileutils.changed import changed
+from contextlib import contextmanager
 
 join = os.path.join
 null = "NUL" if sys.platform == 'win32' else '/dev/null'
@@ -32,24 +28,6 @@ def filename(fname):
     """
     return os.path.split(fname)[1]
 
-
-def min_name(fname, min='.min'):
-    """Adds a `.min` extension before the last file extension.
-    """
-    name, ext = os.path.splitext(fname)
-    return name + min + ext
-
-
-def version_name(fname):
-    """Returns a template string containing `{version}` in the correct
-       place.
-    """
-    if '.min.' in fname:
-        pre, post = fname.split('.min.')
-        return pre + '-{version}.min.' + post
-    else:
-        return min_name(fname, '-{version}')
-    
 
 @contextmanager
 def cd(directory):

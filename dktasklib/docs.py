@@ -4,6 +4,7 @@ import os
 import webbrowser
 from os.path import join
 
+from dkfileutils.changed import Directory
 from invoke import ctask as task, Collection
 
 
@@ -41,6 +42,12 @@ def build(ctx, clean=False, browse=False, warn=False,
     """
     Build the project's Sphinx docs.
     """
+    if not force and not Directory(ctx.docs.source).changed():
+        print """
+        No changes detected in {}, add --force to build docs anyway.
+        """.format(ctx.docs.source)
+        return  # should perhaps check if code has changed too? (autodoc)
+
     if clean:
         _clean(ctx)
     if opts is None:  # pragma: nocover

@@ -46,6 +46,7 @@ def test_attributes():
     """
     with create_files(files) as directory:
         os.chdir(directory)
+        assert package.PackageIni.exists()
         pkg = package.Package()
         assert pkg.version == '1.1.2'
         assert pkg.get('foo', 'bar') == 'bar'

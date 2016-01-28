@@ -2,6 +2,7 @@
 
 import json
 import os
+from invoke.config import Config
 
 from ConfigParser import RawConfigParser, NoOptionError
 from dkfileutils.pfind import pfind
@@ -25,6 +26,10 @@ class PackageInterface(object):
         newversion = '.'.join([str(n) for n in version])
         self['version'] = newversion
         return newversion
+
+    def config(self):  # pragma: nocover
+        # must override
+        return {}
 
     # for convenience (continue using [](__setitem__) for setting).
     def __getattr__(self, item):
@@ -77,6 +82,9 @@ class PackageIni(PackageInterface):
         self.package.set('package', attr, val)
         self.package.write(open(self.fname, 'w'))
 
+    def config(self):
+        return Config(dict(self.package.items('package')))
+
     def __getitem__(self, attr, default=None):
         try:
             return self.package.get('package', attr)
@@ -121,6 +129,9 @@ class PackageJson(PackageInterface):
         # print "PACKAGE:", self.package
         # print json.dumps(self.package, indent=4)
         json.dump(self.package, open(self.fname, 'w'), indent=4)
+
+    def config(self):
+        return Config(self.package)
 
     def __getitem__(self, attr, default=None):
         try:

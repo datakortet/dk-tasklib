@@ -5,12 +5,13 @@ import hashlib
 import textwrap
 
 from dkfileutils.path import Path
-from invoke import run, ctask as task
+from invoke import run, ctask as task, Collection
 # from .subversion import get_svn_version
 from .package import Package
 
 
 @task(help=dict(
+    source="",
     dest_template="this filename template must contain '{version}'",
     kind="type of version number [pkg,hash]",
 ))
@@ -20,13 +21,6 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
        Returns:
            (str) output file name
     """
-    if kind == 'pkg' and not hasattr(ctx, 'pkg'):
-        ctx.pkg = Package()
-    if not hasattr(ctx, 'force'):
-        ctx.force = bool(force)
-    if force is not None:
-        ctx.force = force
-        
     if kind == "pkg":
         ver = ctx.pkg.version
     elif kind == "hash":
@@ -36,7 +30,7 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
         
     ver_fname = dest_template.format(version=ver)
 
-    if not ctx.force and os.path.exists(ver_fname):
+    if not force and os.path.exists(ver_fname):
         if open(source).read() != open(ver_fname).read():
             print """
             There is allready a file with the current version number,
@@ -108,3 +102,36 @@ def update_template_version(ctx, fname=None):
     )
     with open(fname, 'w') as fp:
         fp.write(newtxt)
+
+
+def min_name(fname, min='.min'):
+    """Adds a `.min` extension before the last file extension.
+    """
+    name, ext = os.path.splitext(fname)
+    return name + min + ext
+
+
+def version_name(fname):
+    """Returns a template string containing `{version}` in the correct
+       place.
+    """
+    if '.min.' in fname:
+        pre, post = fname.split('.min.')
+        return pre + '-{version}.min.' + post
+    else:
+        return min_name(fname, '-{version}')
+
+ns = Collection(
+    'version',
+    add_version,
+    version,
+    upversion,
+    update_template_version
+)
+ns.configure({
+    'force': False,
+    'pkg': {
+        'name': '<package-name>',
+        'version': '<version-string>',
+    },
+})

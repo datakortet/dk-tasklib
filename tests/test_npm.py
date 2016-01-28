@@ -16,4 +16,5 @@ def test_installed():
     # for line in npm._run('npm -ls -g --depth=0 less'):
     #     print line
     assert exe.find('lessc', requires=['nodejs', 'npm'])
-    # assert npm.global_package('less')
+    assert npm.global_package('less')
+    assert not npm.global_package('xyzxyxzs')

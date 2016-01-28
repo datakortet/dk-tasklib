@@ -5,6 +5,7 @@ import invoke
 from yamldirs import create_files
 
 from dktasklib import lessc
+from dktasklib.utils import cd
 
 
 def test_lessc(ctx):
@@ -22,7 +23,26 @@ def test_lessc(ctx):
         assert len(open('foo.css').read()) > len(open('foo.less').read())
 
 
-def test_build_css(ctx):
+def get_context(dct, default=None):
+    def cfg_dict(d):
+        res = invoke.Config()
+        for k, v in d.items():
+            res[k] = cfg_obj(v)
+        return res
+
+    def cfg_obj(obj):
+        return {
+            dict: cfg_dict
+        }.get(type(obj), lambda x:x)(obj)
+
+    cfg = invoke.Config().config
+    if default is not None:
+        cfg.update(default)
+    cfg.update(dct)
+    return invoke.Context(cfg_obj(cfg))
+
+
+def test_build_css():
     files = """
         foo.less: |
             .foo {
@@ -32,10 +52,7 @@ def test_build_css(ctx):
     """
     with create_files(files) as directory:
         os.chdir(directory)
-        ctx.lessc= invoke.Config()
-        ctx.lessc.source = 'less/index.less'
-        ctx.lessc.target = ''
-        ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
+        ctx = get_context({}, lessc.ns.configuration())
 
         fname = lessc.build_css(ctx, 'foo.less', 'foo.css', version='hash')
         ctx.run('tree')
@@ -54,7 +71,7 @@ def test_build_css(ctx):
         assert 1
 
 
-def test_build_css_pkg_version(ctx):
+def test_build_css_pkg_version():
     files = """
         - package.json: |
             {"version": "1.2.3"}
@@ -66,10 +83,12 @@ def test_build_css_pkg_version(ctx):
     """
     with create_files(files) as directory:
         os.chdir(directory)
-        ctx.lessc= invoke.Config()
-        ctx.lessc.source = 'less/index.less'
-        ctx.lessc.target = ''
-        ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
+        ctx = get_context({'pkg': {"version": "1.2.3"}}, lessc.ns.configuration())
+
+        # ctx.lessc= invoke.Config()
+        # ctx.lessc.source = 'less/index.less'
+        # ctx.lessc.target = ''
+        # ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
 
         fname = lessc.build_css(ctx, 'foo.less', 'foo.css', version='pkg')
         ctx.run('tree')
@@ -88,26 +107,47 @@ def test_build_css_pkg_version(ctx):
         assert 1
 
 
-def test_build_less(ctx):
+def test_build_less():
     files = """
         - package.json: |
             {
                 "name": "bar",
                 "version": "1.2.3"
             }
+        - invoke.json: |
+            {
+                "pkg": {
+                    "name": "andy",
+                    "version": "4.5.6"
+                }
+            }
         - less:
             - bar.less: |
                 .foo {
                     display: flex;
-                    color: lighten(red, 20%);
+                    color: orange;
                 }
+            - andy.less: |
+                .foo {
+                    display: inline;
+                    color: chartreuse;
+                }
+
     """
     with create_files(files) as directory:
         os.chdir(directory)
-        ctx.lessc= invoke.Config()
-        ctx.lessc.source = 'less/index.less'
-        ctx.lessc.target = ''
-        ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
+
+        ctx = get_context(
+            invoke.Config(runtime_path='invoke.json'),
+            lessc.ns.configuration()
+        )
+        # ctx.config.merge()
+        print "CONFIGGGG:"
+        import pprint;pprint.pprint(dict(**ctx.config))
+        # ctx.lessc = invoke.Config()
+        # ctx.lessc.source = 'less/index.less'
+        # ctx.lessc.target = ''
+        # ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
         lessc.build(ctx)
         ctx.run('tree')
         #
