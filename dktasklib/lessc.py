@@ -2,6 +2,7 @@
 import os
 
 from dkfileutils.changed import Directory
+from dkfileutils.path import Path
 from invoke import ctask as task, Collection
 
 from dktasklib.executables import requires
@@ -106,7 +107,7 @@ def build_less(ctx,
         return
 
     path = kw.pop('path', [])
-    if use_bootstrap or ctx.lessc.use_bootstrap:
+    if (use_bootstrap or ctx.lessc.use_bootstrap) and ctx.bootstrap.src:
         path.append(ctx.bootstrap.src)
 
     # foo.css -> foo.min.css
@@ -123,9 +124,13 @@ def build_less(ctx,
     )
 
     outname = version_name(buildname)
-    versioned_name = add_version(ctx, buildname, outname, kind=version)
+    versioned_name = add_version(ctx,
+                                 buildname, outname,
+                                 kind=version,
+                                 force=force)
     out_name = os.path.join(output_dir, filename(versioned_name))
     if force or not os.path.exists(out_name):
+        Path(output_dir).makedirs()
         ctx.run('cp {src} {dst}'.format(
             src=versioned_name,
             dst=out_name

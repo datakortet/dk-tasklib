@@ -45,22 +45,22 @@ def add_version(ctx, source, dest_template, kind="pkg", force=None):
     return ver_fname
 
 
-@task
+@task(
+    aliases=['ver'],
+    autoprint=True,     # print return value
+)
 def version(ctx):
-    vnum = Package().version
-    print vnum
-    return vnum
+    "Print this package's version number."
+    return Package().version
 
 
-@task
+@task(autoprint=True)
 def upversion(ctx, major=False, minor=False, patch=False):
     """Update package version (default patch-level increase).
     """
     if not (major or minor or patch):
         patch = True
-    new_version = Package().upversion(major, minor, patch)
-    print new_version
-    return new_version
+    return Package().upversion(major, minor, patch)
 
 
 @task
@@ -82,7 +82,7 @@ def update_template_version(ctx, fname=None):
             {% load staticfiles %}
             {% with "0.0.0" as version %}
                 {# keep the above exactly as-is (it will be overwritten when compiling the css). #}
-                {% with "PKGNAME/PKGNAME-"|add:version|add:".min.css" as app_path %}
+                {% with app_path="PKGNAME/PKGNAME-"|add:version|add:".min.css" %}
                     {% if debug %}
                         <link rel="stylesheet" type="text/css" href='{% static "PKGNAME/PKGNAME.css" %}'>
                     {% else %}
