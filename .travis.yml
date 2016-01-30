@@ -19,6 +19,7 @@ install:
   - npm install -g less-plugin-clean-css
   - npm install -g less-plugin-inline-urls
   - npm install -g babel-cli
+  - npm install -g browserify
 
 script: py.test -v --cov=dktasklib tests
 
