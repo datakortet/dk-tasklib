@@ -4,6 +4,7 @@ import textwrap
 
 from invoke import ctask as task, Collection
 
+from dktasklib import runners
 from dktasklib.executables import requires
 from dktasklib.utils import cd
 
@@ -42,7 +43,7 @@ def ensure_node_modules(ctx):
 
 
 def ensure_es2015(ctx):
-    if 'babel-preset-es2015' not in ctx.run("npm ls --depth=0 babel-preset-es2015 --no-color").stdout:
+    if 'babel-preset-es2015' not in runners.run("npm ls --depth=0 babel-preset-es2015 --no-color"):
         print "didn't find babel-preset-es2015, installing it.."
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-es2015 --save-dev")

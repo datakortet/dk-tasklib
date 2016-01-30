@@ -18,6 +18,7 @@ install:
   - npm install -g less-plugin-autoprefix
   - npm install -g less-plugin-clean-css
   - npm install -g less-plugin-inline-urls
+  - npm install -g babel-cli
 
 script: py.test -v --cov=dktasklib tests
 

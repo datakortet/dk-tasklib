@@ -26,7 +26,7 @@ def test_add_version():
         - foo.txt: hello world
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
 
         version.add_version(
             invoke.Context(config={
@@ -74,7 +74,7 @@ def test_add_version_hash():
         - foo.txt
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
         version.add_version(
             invoke.Context(),
             'foo.txt',
@@ -94,7 +94,7 @@ def test_update_template_version():
             }
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
         version.update_template_version(
             invoke.Context()
         )
