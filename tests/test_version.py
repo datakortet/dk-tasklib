@@ -4,7 +4,7 @@ import os
 import invoke
 from yamldirs import create_files
 
-from dktasklib import version
+from dktasklib import version, Package
 
 
 def test_version(ctx):
@@ -29,7 +29,9 @@ def test_add_version():
         os.chdir(directory)
 
         version.add_version(
-            invoke.Context(),
+            invoke.Context(config={
+                'pkg': Package().config()
+            }),
             'foo.txt',
             'foo-{version}.txt',
             'pkg'
@@ -41,7 +43,9 @@ def test_add_version():
 
         # shouldn't change versioned resources..
         version.add_version(
-            invoke.Context(),
+            invoke.Context(config={
+                'pkg': Package().config()
+            }),
             'foo.txt',
             'foo-{version}.txt',
             'pkg'
@@ -51,7 +55,9 @@ def test_add_version():
 
         # .. update versioned resources when forcing
         version.add_version(
-            invoke.Context(),
+            invoke.Context(config={
+                'pkg': Package().config()
+            }),
             'foo.txt',
             'foo-{version}.txt',
             'pkg',

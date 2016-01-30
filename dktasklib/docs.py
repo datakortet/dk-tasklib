@@ -59,8 +59,9 @@ def build(ctx, clean=False, browse=False, warn=False,
         opts += " -a -E"
     cmd = "sphinx-build {opts} {ctx.docs.source} {ctx.docs.builddir}".format(
         opts=opts, ctx=ctx)
-    if ctx.pkg['django_settings_module']:
-        os.environ['DJANGO_SETTINGS_MODULE'] = ctx.pkg['django_settings_module']
+    dj_settings = ctx.get('pkg', {}).get('django_settings_module')
+    if dj_settings:
+        os.environ['DJANGO_SETTINGS_MODULE'] = dj_settings
     ctx.run(cmd)
     if browse:  # pragma: nocover
         _browse(ctx)
