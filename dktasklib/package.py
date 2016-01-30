@@ -37,7 +37,7 @@ class PackageInterface(object):
 
     def set_version(self, version):
         # override this for special handling of versions
-        self['version'] = newversion
+        self['version'] = version
 
     def get_config(self):
         # override to provide config values from file.
