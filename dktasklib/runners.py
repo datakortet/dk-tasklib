@@ -13,7 +13,7 @@ def run(cmdline, throw=False):
             subprocess.check_output(
                 cmdline,
                 shell=True
-            ).decode('u8')
+            )  # .decode('u8')  ## (can't decode since Result is a str)
         )
         res.cmd = cmdline
         return res
