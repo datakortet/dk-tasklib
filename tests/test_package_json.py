@@ -83,8 +83,8 @@ def test_upversion():
 
         version.upversion(invoke.Context(), minor=True)
         print open('package.json').read()
-        assert json.load(open('package.json'))['version'] == '1.2.3'
+        assert json.load(open('package.json'))['version'] == '1.2.0'
 
         version.upversion(invoke.Context(), major=True)
         print open('package.json').read()
-        assert json.load(open('package.json'))['version'] == '2.2.3'
+        assert json.load(open('package.json'))['version'] == '2.0.0'

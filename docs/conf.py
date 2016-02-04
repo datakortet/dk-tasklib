@@ -59,8 +59,7 @@ copyright = u'2016 Bjorn Pettersen'
 # built documents.
 #
 # The short X.Y version.
-version = eval(open('../dktasklib/_version.py').read().split('=')[1].strip())
-# version = '0.2.0'
+version = '0.2.6'
 # The full version, including alpha/beta/rc tags.
 release = version
 

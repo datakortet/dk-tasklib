@@ -76,8 +76,8 @@ def tree(ctx):
 
 
 # Vanilla/default/parameterized collection for normal use
-docs = Collection('docs', _clean, _browse, build, tree)
-docs.configure({
+ns = Collection('docs', _clean, _browse, build, tree)
+ns.configure({
     'docs': {
         'source': 'docs',
         'builddir': join('build', 'docs'),

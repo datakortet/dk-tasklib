@@ -7,6 +7,7 @@ import invoke
 import pytest
 from yamldirs import create_files
 
+import dktasklib.package.package_ini
 from dktasklib import version, package
 
 
@@ -45,8 +46,8 @@ def test_attributes():
             version = 1.1.2
     """
     with create_files(files) as directory:
-        os.chdir(directory)
-        assert package.PackageIni.exists()
+        # os.chdir(directory)
+        assert dktasklib.package.package_ini.PackageIni.exists()
         pkg = package.Package()
         assert pkg.version == '1.1.2'
         assert pkg.get('foo', 'bar') == 'bar'
@@ -61,7 +62,7 @@ def test_version():
             version = 1.1.2
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
         pkg = package.Package()
         assert pkg.version == '1.1.2'
 
@@ -81,7 +82,7 @@ def test_upversion():
         #    from dktasklib.version import upversion
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
 
         version.upversion(invoke.Context())
         print open('package.ini').read()
@@ -89,8 +90,8 @@ def test_upversion():
 
         version.upversion(invoke.Context(), minor=True)
         print open('package.ini').read()
-        assert _getval('package.ini', 'version') == '1.2.3'
+        assert _getval('package.ini', 'version') == '1.2.0'
 
         version.upversion(invoke.Context(), major=True)
         print open('package.ini').read()
-        assert _getval('package.ini', 'version') == '2.2.3'
+        assert _getval('package.ini', 'version') == '2.0.0'

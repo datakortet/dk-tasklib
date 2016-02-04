@@ -20,7 +20,7 @@ from distutils.core import setup, Command
 from setuptools.command.test import test as TestCommand
 from ConfigParser import RawConfigParser
 
-version = eval(open('dktasklib/_version.py').read().split('=')[1].strip())
+version = '0.2.6'
 
 
 class PyTest(TestCommand):
