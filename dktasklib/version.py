@@ -126,14 +126,15 @@ def upversion(ctx, major=False, minor=False, patch=False):
 @task
 def update_template_version(ctx, fname=None):
     """Update version number in include template.
+
+       By including this template, i.e.::
+
+           ``{% include "app/templates/app/app-css.html" %}``
+
+       you will automagically include the latest version of the generated css.
+
     """
-    if not hasattr(ctx, 'pkg'):
-        ctx.pkg = Package()
-    if not hasattr(ctx.pkg, 'update_template_version_fname'):
-        _t = 'templates/{pkg.name}/{pkg.name}-css.html'.format(pkg=ctx.pkg)
-        ctx.pkg.update_template_version_fname = _t
-        
-    fname = fname or ctx.pkg.update_template_version_fname
+    fname = fname or '{pkg.root}/templates/{pkg.name}/{pkg.name}-css.html'.format(**ctx)
 
     if not os.path.exists(fname):
         Path(ctx.pkg.root).makedirs(Path(fname).dirname())

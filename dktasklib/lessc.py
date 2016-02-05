@@ -5,6 +5,7 @@ from dkfileutils.changed import Directory
 from dkfileutils.path import Path
 from invoke import ctask as task, Collection
 
+from dktasklib import urlinliner
 from dktasklib.executables import requires
 from .utils import switch_extension, filename
 from dktasklib.version import min_name, version_name
@@ -93,11 +94,20 @@ def build_less(ctx,
            str: output file name
 
     """
+    input_dir = input_dir or ctx.lessc.input_dir.format(**ctx)
+    input_dir = Path(input_dir).relpath()
+
+    for fname in input_dir.glob("*.inline"):
+        urlinliner.inline(ctx, fname)
+
+    output_dir = output_dir or ctx.lessc.output_dir.format(**ctx)
+    output_dir = Path(output_dir).relpath()
+
+    build_dir = ctx.lessc.build_dir.format(**ctx)
+    build_dir = Path(build_dir).relpath()
+
     src = input_fname or ctx.lessc.input_fname.format(**ctx)
     dst = output_fname or ctx.lessc.output_fname.format(**ctx)
-
-    input_dir = input_dir or ctx.lessc.input_dir.format(**ctx)
-    output_dir = output_dir or ctx.lessc.output_dir.format(**ctx)
 
     if not force and not Directory(input_dir).changed(glob='**/*.less'):
         print """
@@ -115,10 +125,10 @@ def build_less(ctx,
     buildname = lessc(
         ctx,
         os.path.join(input_dir, src),
-        os.path.join(ctx.lessc.build_dir, minfname),
+        os.path.join(build_dir, minfname),
         include_path=path,
         strict_imports=True,
-        inline_urls=True,
+        inline_urls=False,
         autoprefix=True,
         cleancss=True,
     )
@@ -146,6 +156,7 @@ ns = Collection('lessc', build_less)
 ns.configure({
     'force': False,
     'pkg': {
+        'root': '<package-root-directory>',
         'name': '<package-name>',
         'version': '<version-string>',
     },
@@ -154,10 +165,10 @@ ns.configure({
     },
     'lessc': {
         'use_bootstrap': False,
-        'build_dir': 'build/css',
-        'input_dir': 'less',
+        'build_dir': '{pkg.root}/build/css',
+        'input_dir': '{pkg.root}/less',
         'input_fname': '{pkg.name}.less',
-        'output_dir': 'static/{pkg.name}/css/',
+        'output_dir': '{pkg.root}/static/{pkg.name}/css/',
         'output_fname': '{pkg.name}.css',
     }
 })
