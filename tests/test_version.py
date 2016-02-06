@@ -87,7 +87,7 @@ def test_add_version_hash():
 
 def test_update_template_version():
     files = """
-        - package.json: |
+        package.json: |
             {
                 "name": "foo",
                 "version": "1.1.2"
@@ -96,6 +96,8 @@ def test_update_template_version():
     with create_files(files) as directory:
         # os.chdir(directory)
         version.update_template_version(
-            invoke.Context()
+            invoke.Context(config={
+                'pkg': Package().config()
+            })
         )
         assert 1

@@ -19,11 +19,8 @@ class PackageJson(PackageInterface):
     def exists(cls):
         return pfind('.', 'package.json')
 
-    def __init__(self, ctx=None, basedir=None, packagejson='package.json'):
-        if basedir:
-            fname = os.path.join(basedir, packagejson)
-        else:
-            fname = pfind('.', packagejson)
+    def __init__(self, ctx=None, fname='package.json'):
+        fname = pfind('.', fname)
         super(PackageJson, self).__init__(ctx, fname=fname)
         self._package = None
 

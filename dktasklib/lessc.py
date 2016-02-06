@@ -165,10 +165,10 @@ ns.configure({
     },
     'lessc': {
         'use_bootstrap': False,
-        'build_dir': '{pkg.root}/build/css',
-        'input_dir': '{pkg.root}/less',
+        'build_dir': 'build/css',
+        'input_dir': 'less',
         'input_fname': '{pkg.name}.less',
-        'output_dir': '{pkg.root}/static/{pkg.name}/css/',
+        'output_dir': 'static/{pkg.name}/css/',
         'output_fname': '{pkg.name}.css',
     }
 })
