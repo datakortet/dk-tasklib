@@ -134,7 +134,7 @@ def update_template_version(ctx, fname=None):
        you will automagically include the latest version of the generated css.
 
     """
-    fname = fname or 'templates/{pkg.name}/{pkg.name}-css.html'.format(**ctx)
+    fname = fname or '{pkg.sourcedir}/templates/{pkg.name}/{pkg.name}-css.html'.format(**ctx)
 
     if not os.path.exists(fname):
         Path(ctx.pkg.root).makedirs(Path(fname).dirname())

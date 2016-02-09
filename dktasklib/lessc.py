@@ -145,6 +145,10 @@ def build_less(ctx,
             src=versioned_name,
             dst=out_name
         ))
+        ctx.run('cp {src} {dst}'.format(
+            src=buildname,
+            dst=os.path.join(output_dir, filename(buildname))
+        ))
     else:
         print """
         Filename already exists, add --force or call upversion: {}
@@ -166,9 +170,9 @@ ns.configure({
     'lessc': {
         'use_bootstrap': False,
         'build_dir': 'build/css',
-        'input_dir': 'less',
+        'input_dir': '{pkg.sourcedir}/less',
         'input_fname': '{pkg.name}.less',
-        'output_dir': 'static/{pkg.name}/css/',
+        'output_dir': '{pkg.sourcedir}/static/{pkg.name}/css/',
         'output_fname': '{pkg.name}.css',
     }
 })
