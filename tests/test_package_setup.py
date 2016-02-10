@@ -67,7 +67,7 @@ def test_upversion():
             setup(version='1.1.2')
     """
     with create_files(files) as directory:
-        # os.chdir(directory)
+        os.chdir(directory)
 
         version.upversion(invoke.Context())
         print open('setup.py').read()

@@ -109,25 +109,26 @@ def get_context(dct, default=None):
 
 def test_build_less():
     files = """
-        - package.json: |
+    andy:
+        package.json: |
             {
                 "name": "bar",
                 "version": "1.2.3"
             }
-        - invoke.json: |
+        invoke.json: |
             {
                 "pkg": {
                     "name": "andy",
                     "version": "4.5.6"
                 }
             }
-        - less:
-            - bar.less: |
+        less:
+            bar.less: |
                 .foo {
                     display: flex;
                     color: orange;
                 }
-            - andy.less: |
+            andy.less: |
                 .foo {
                     display: inline;
                     color: chartreuse;
@@ -135,7 +136,7 @@ def test_build_less():
 
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        # os.chdir(directory)
 
         ctx = get_context(
             invoke.Config(runtime_path='invoke.json'),
