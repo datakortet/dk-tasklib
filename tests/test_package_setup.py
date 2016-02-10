@@ -19,8 +19,7 @@ def test_find_package():
         setup.py: |
             from distutils.core import setup
             setup(version='1.1.2')
-        subdir:
-            - empty
+        subdir: []
     """
     with create_files(files) as directory:
         os.chdir('subdir')
