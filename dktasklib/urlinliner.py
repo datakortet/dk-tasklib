@@ -8,6 +8,8 @@ import urllib
 
 
 def inline_data(data, type='image/png', name=""):
+    """Inline (encode) the ``data``.
+    """
     if len(data) > 10 * 1024:
         print "%s is too big (%d bytes), max is 10KB" % (name, len(data))
         return name
@@ -20,6 +22,8 @@ def inline_data(data, type='image/png', name=""):
 
 
 def inline_file(fname):
+    """Inline from a file source named ``fname``.
+    """
     ext = os.path.splitext(fname)[1]  # ".png"
     return inline_data(
         open(fname, 'rb').read(),
@@ -29,6 +33,8 @@ def inline_file(fname):
 
 
 def inline_url(uri):
+    """Fetch ``uri`` and inline.
+    """
     fp = urllib.urlopen(uri)
     return inline_data(
         fp.read(),
