@@ -7,6 +7,7 @@ from invoke import ctask as task, Collection
 from dktasklib import runners
 from dktasklib.executables import requires
 from dktasklib.utils import cd
+from dktasklib.version import version_name, add_version
 
 
 def ensure_package_json(ctx):
@@ -65,6 +66,28 @@ def babel(ctx, source, dest, source_maps=True):
         options += " --source-maps"
 
     ctx.run("babel {options} --out-file {dest} {source}".format(**locals()))
+    return dest
+
+
+def version_js(ctx, fname, kind='pkg', force=False):
+    """Add version number to a .js file.
+    """
+    dst = add_version(
+        ctx,
+        fname, version_name(fname),
+        kind=kind,
+        force=force
+    )
+    if force or not os.path.exists(dst):
+        ctx.run('cp {src} {dst}'.format(
+            src=fname,
+            dst=dst
+        ))
+    else:
+        print """
+        Filename already exists, add --force or call upversion: {}
+        """.format(dst)
+    return dst
 
 
 @requires('browserify', 'nodejs')
