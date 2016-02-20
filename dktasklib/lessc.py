@@ -5,11 +5,13 @@ from dkfileutils.changed import Directory
 from dkfileutils.path import Path
 from invoke import ctask as task, Collection
 
-from dktasklib import urlinliner
-from dktasklib.executables import requires
-from .utils import switch_extension, filename
-from dktasklib.version import min_name, version_name
-from .version import add_version, update_template_version
+from dktasklib.concat import copy
+from dktasklib.environment import env
+from . import urlinliner
+from .executables import requires
+from .utils import switch_extension, fmt
+from .version import get_version
+from .version import update_template_version
 
 
 @requires('nodejs', 'npm', 'lessc')
@@ -60,72 +62,54 @@ def lessc(ctx,
     return destination
 
 
+# noinspection PyIncorrectDocstring
 @task(
     default=True,
-    post=[update_template_version],
-    help={
-        'input_dir': 'directory to search for input_fname',
-        'input_fname': 'input filename ({pkg.name}.less)',
-        'output_dir': 'directory to place output_fname',
-        'output_fname': 'output filename ({pkg.name}.css)',
-        'force': 'Rebuild without cache.'
-    }
+    post=[update_template_version]
 )
 def build_less(ctx,
-               input_dir=None,
-               input_fname=None,
-               output_dir=None,
-               output_fname=None,
+               source='{pkg.sourcedir}/less/{pkg.name}.less',
+               dest='{pkg.sourcedir}/static/{pkg.name}/css/{pkg.name}-{version}.min.css',
                version='pkg',
-               use_bootstrap=True,
+               bootstrap=True,
                force=False,
                **kw):
     """Build a ``.less`` file into a versioned and minified ``.css`` file.
 
        Args:
-           input_fname (str): input file name
-           output_fname (str): output file name (should be the plain version of the
-                output file name, ie. foo.css, not foo.min.css).
-           version (str): the type of version number (pkg or hash)
-           use_bootstrap (bool): Should Bootstrap be compiled in?
-           force (bool): Rebuild even if nothing has changed.
+           ctx (Context):    automatically passed by invoke.
+           source (str):     input file name (can contain {template} strings
+                             that will be looked up in env.
+           dest (str):       output file name (ditto about template strings).
+           version (str):    the type of version number (pkg or hash)
+           bootstrap (bool): Should Bootstrap be compiled in?
+           force (bool):     Rebuild even if nothing has changed.
 
        Returns:
-           str: output file name
+           str:              dest file name fully instantiated with
+                             template parameters
 
     """
-    input_dir = input_dir or ctx.lessc.input_dir.format(**ctx)
-    input_dir = Path(input_dir).relpath()
+    c = env(ctx)
+    source = Path(fmt(source, c))
+    dest = Path(fmt(dest, c))
 
-    for fname in input_dir.glob("*.inline"):
+    for fname in source.dirname().glob("*.inline"):
         urlinliner.inline(ctx, fname)
 
-    output_dir = output_dir or ctx.lessc.output_dir.format(**ctx)
-    output_dir = Path(output_dir).relpath()
-
-    build_dir = ctx.lessc.build_dir.format(**ctx)
-    build_dir = Path(build_dir).relpath()
-
-    src = input_fname or ctx.lessc.input_fname.format(**ctx)
-    dst = output_fname or ctx.lessc.output_fname.format(**ctx)
-
-    if not force and not Directory(input_dir).changed(glob='**/*.less'):
-        print """
-        No changes detected in {input_dir}/{glob}, add --force
-        to less file(s) build anyway.
-        """.format(input_dir=input_dir, glob='**/*.less')
+    if not force and not Directory(source.dirname()).changed(glob='**/*.less'):
+        print "No changes: {input_dir}/{glob}, add --force to build.".format(
+            input_dir=source.dirname(), glob='**/*.less')
         return
 
     path = kw.pop('path', [])
-    if (use_bootstrap or ctx.lessc.use_bootstrap) and ctx.bootstrap.src:
+    if (bootstrap or ctx.lessc.use_bootstrap) and ctx.bootstrap.src:
         path.append(ctx.bootstrap.src)
 
-    # foo.css -> foo.min.css
-    minfname = min_name(dst)
-    buildname = lessc(
+    cssname = lessc(
         ctx,
-        os.path.join(input_dir, src),
-        os.path.join(build_dir, minfname),
+        source.relpath(),
+        dest.relpath().format(version=get_version(ctx, source, version)),
         include_path=path,
         strict_imports=True,
         inline_urls=False,
@@ -133,27 +117,13 @@ def build_less(ctx,
         cleancss=True,
     )
 
-    outname = version_name(buildname)
-    versioned_name = add_version(ctx,
-                                 buildname, outname,
-                                 kind=version,
-                                 force=force)
-    out_name = os.path.join(output_dir, filename(versioned_name))
-    if force or not os.path.exists(out_name):
-        Path(output_dir).makedirs()
-        ctx.run('cp {src} {dst}'.format(
-            src=versioned_name,
-            dst=out_name
-        ))
-        ctx.run('cp {src} {dst}'.format(
-            src=buildname,
-            dst=os.path.join(output_dir, filename(buildname))
-        ))
-    else:
-        print """
-        Filename already exists, add --force or call upversion: {}
-        """.format(out_name)
-    return out_name
+    copy(  # create a copy without version number too..
+        ctx,
+        cssname,
+        Path(cssname).dirname() / switch_extension(source.basename(), '.css'),
+        force=True
+    )
+    return cssname
 
 
 ns = Collection('lessc', build_less)
@@ -162,6 +132,7 @@ ns.configure({
     'pkg': {
         'root': '<package-root-directory>',
         'name': '<package-name>',
+        'sourcedir': '<source-dir>',
         'version': '<version-string>',
     },
     'bootstrap': {

@@ -28,9 +28,12 @@ class Executables(object):
         """Find the executable named ``name`` on the :envvar:`PATH`.
 
            Args:
-               name (str): name of executable to find.
-               requires (List[str]): list of executables to find first.
-               install_txt (str): instructions for how to install the
+               name (str):
+                    name of executable to find.
+               requires (List[str]):
+                    list of executables to find first.
+               install_txt (str):
+                    instructions for how to install the
                     executable if it is not found.
         """
         if name not in self._cache:

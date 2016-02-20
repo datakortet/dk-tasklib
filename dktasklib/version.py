@@ -8,42 +8,8 @@ import warnings
 from dkfileutils.path import Path
 from invoke import run, ctask as task, Collection
 # from .subversion import get_svn_version
+from dktasklib.concat import copy
 from .package import Package
-
-
-@task(help=dict(
-    source="",
-    dest_template="this filename template must contain '{version}'",
-    kind="type of version number [pkg,hash]",
-))
-def add_version(ctx, source, dest_template, kind="pkg", force=None):
-    """Add version number to a file (either pkg version, svn revision, or hash).
-
-       Returns:
-           (str) output file name
-    """
-    if kind == "pkg":
-        ver = ctx.pkg.version
-    elif kind == "hash":
-        ver = hashlib.md5(open(source).read()).hexdigest()
-    # elif kind == "svn":
-    #     ver = get_svn_version(source)
-        
-    ver_fname = dest_template.format(version=ver)
-
-    if not force and os.path.exists(ver_fname):
-        if open(source).read() != open(ver_fname).read():
-            print """
-            There is allready a file with the current version number,
-            either run `inv version patch` to create a new version,
-            or pass --force to the build command.
-            """
-    else:
-        # copy file contents to versioned file name
-        with open(ver_fname, 'wb') as fp:
-            fp.write(open(source, 'rb').read())
-
-    return ver_fname
 
 
 @task(
@@ -172,7 +138,7 @@ def min_name(fname, min='.min'):
     return name + min + ext
 
 
-def version_name(fname):
+def versioned_name(fname):
     """Returns a template string containing `{version}` in the correct
        place.
     """
@@ -182,9 +148,89 @@ def version_name(fname):
     else:
         return min_name(fname, '-{version}')
 
+version_name = versioned_name
+
+
+def get_version(ctx, fname, kind='pkg'):
+    """Return the version number for fname.
+    """
+    fname = Path(fname)
+    if kind == "pkg":
+        return ctx.pkg.version
+    elif kind == "hash":
+        md5 = fname.dirname() / '.md5'
+        if md5.exists():
+            return md5.open().read()
+        return hashlib.md5(open(fname).read()).hexdigest()
+    # elif kind == "svn":
+    #     ver = get_svn_version(source)
+    return ""
+
+
+# @task(help=dict(
+#     source="",
+#     dest_template="this filename template must contain '{version}'",
+#     kind="type of version number [pkg,hash]",
+# ))
+def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
+    """Copy source with version number to `outputdir`.
+
+       The version type is specified by the ``kind`` parameter and can be
+       either "pkg" (package version), "svn" (current subversion revision
+       number), or "hash" (the md5 hash of the file's contents).
+
+       Returns:
+           (str) output file name
+    """
+    # where to place the versioned file..
+    print "LOCALS:", locals()
+    source = Path(source)
+    outputdir = Path(outputdir) if outputdir else source.dirname()
+    outputdir.makedirs()
+    dst_fname = source.basename()
+    if '{version}' not in str(dst_fname):
+        dst_fname = versioned_name(dst_fname)
+    dst = outputdir / dst_fname.format(version=get_version(ctx, source, kind))
+
+    if force or not os.path.exists(dst):
+        copy(ctx, source, dst, force=force)
+
+    elif open(source).read() != open(dst).read():
+        print """
+        Filename already exists, add --force or call upversion: {}
+        """.format(dst)
+
+    return dst
+
+add_version = copy_to_version
+
+#
+# def versionate(ctx, source, destdir=None, force=False, kind='pkg'):
+#     """Add a version number to source and copy to destdir.
+#     """
+#     source = Path(source)
+#
+#     # where to place the versioned file..
+#     if destdir is None:
+#         destdir = source.dirname()
+#     else:
+#         destdir = Path(destdir)
+#     destdir.makedirs()
+#     dst = destdir / versioned_name(source.basename())
+#
+#     dst = copy_to_version(
+#         ctx,
+#         source, dst,
+#         kind=kind,
+#         force=force
+#     )
+#
+#     return dst
+
+
 ns = Collection(
     'version',
-    add_version,
+    # add_version,
     version,
     upversion,
     update_template_version

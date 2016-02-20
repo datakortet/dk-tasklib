@@ -32,7 +32,7 @@ def _browse(ctx):  # pragma: nocover
     'clean': "Remove build tree before building",
     'browse': "Open docs index in browser after building",
     'warn': "Build with stricter warnings/errors enabled",
-    'builder': "Builder to use; defaults tto html",
+    'builder': "Builder to use, defaults to html",
     'force': "Force re-reading of all files (ignore cache)",
 })
 def build(ctx, clean=False, browse=False, warn=False,

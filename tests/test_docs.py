@@ -16,8 +16,6 @@ def test_build(ctx):
                 hello *world*
     """
     with create_files(files) as directory:
-        os.chdir(directory)
-
         ctx.docs = invoke.Config()
         ctx.docs.source = 'docs'
         ctx.docs.builddir = 'build'

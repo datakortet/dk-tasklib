@@ -22,6 +22,8 @@ def test_find_package():
         subdir: []
     """
     with create_files(files) as directory:
+        print "\nCURDIR:", os.getcwd()
+        print "CONTENTS:", os.listdir('.')
         os.chdir('subdir')
         pkg = package.Package()
         assert pkg.version == '1.1.2'
@@ -34,7 +36,6 @@ def test_attributes():
             setup(version='1.1.2')
     """
     with create_files(files) as directory:
-        # os.chdir(directory)
         assert dktasklib.package.setup_file.SetupPy.exists()
         pkg = package.Package()
         assert pkg.version == '1.1.2'
@@ -50,7 +51,6 @@ def test_version():
             setup(version='1.1.2')
     """
     with create_files(files) as directory:
-        # os.chdir(directory)
         pkg = package.Package()
         assert pkg.version == '1.1.2'
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import pprint
 
 import invoke
 from dkfileutils.path import Path
@@ -39,6 +40,9 @@ class PackageInterface(object):
         cfg.root = self.root
         cfg.sourcedir = self.sourcedir
         return cfg
+
+    def __repr__(self):
+        return pprint.pformat(self.config())
 
     def __getattr__(self, item):
         # for convenience (continue using [](__setitem__) for setting).
