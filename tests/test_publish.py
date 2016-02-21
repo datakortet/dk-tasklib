@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+import sys
 from yamldirs import create_files
 
 from dktasklib.commands import tree
@@ -46,4 +47,7 @@ def test_publish(ctx):
         ctx = ctx.init(echo=True)
         publish(ctx)
         ctx.run('tree')
-        assert 'mypackage-1.0.0.zip' in os.listdir('dist')
+        if sys.platform == 'win32':
+            assert 'mypackage-1.0.0.zip' in os.listdir('dist')
+        else:
+            assert 'mypackage-1.0.0.tar.gz' in os.listdir('dist')

@@ -48,6 +48,6 @@ def test_concat(ctx):
             fp.write('a\r\n')
         with open('bar.txt', 'wb') as fp:
             fp.write('b\n')
-
+        print "LISTDIR", os.listdir('.')
         concat(ctx.init(), 'baz.txt', 'foo.txt', 'bar.txt', force=True)
         assert open('baz.txt').read().split() == ['a', 'b']
