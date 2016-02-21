@@ -17,7 +17,6 @@ def test_line_endings():
         print repr(open('foo.txt', 'rb').read())
 
         assert len(line_endings('foo.txt')) == 2
-
         fix_line_endings('foo.txt')
         assert len(line_endings('foo.txt')) == 1
 
@@ -42,8 +41,8 @@ def test_copy(ctx):
 
 def test_concat(ctx):
     files = """
-        foo.txt
-        bar.txt
+        - foo.txt
+        - bar.txt
     """
     with create_files(files) as directory:
         with open('foo.txt', 'wb') as fp:
