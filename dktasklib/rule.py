@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
-import re
-import textwrap
 
 import invoke
-from dkfileutils.path import Path
-
-
-SRV = Path(os.environ['SRV'])
 
 
 class BuildRule(object):

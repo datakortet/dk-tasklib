@@ -16,7 +16,7 @@ lessc = Command('lessc', '{opts} {src} {dst}',
                 requirements=('nodejs', 'npm', 'lessc'))
 
 
-SRV = Path(os.environ['SRV'])
+BOOTSTRAP = Path(os.environ.get('SRV', '')) / 'lib' / 'bootstrap' / 'less'
 
 
 @task(
@@ -30,7 +30,7 @@ class LessRule(BuildRule):
     """Build a ``.less`` file into a versioned and minified ``.css`` file.
     """
 
-    bootstrap_src = SRV / 'lib' / 'bootstrap' / 'less'
+    bootstrap_src = BOOTSTRAP
 
     def __init__(self, *args, **kw):
         self.after = [UpdateTemplateVersion(
