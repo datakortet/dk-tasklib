@@ -6,7 +6,7 @@ import sys
 def line_endings(fname):
     """Return all line endings in the file.
     """
-    _endings = {line[-2:] for line in open(fname).readlines()}
+    _endings = {line[-2:] for line in open(fname, 'rb').readlines()}
     res = set()
     for e in _endings:
         if e.endswith('\r'):
@@ -41,8 +41,8 @@ def copy(ctx, source, dest, force=False):
     if source == dest:
         return
 
-    source = os.path.normcase(os.path.normpath(source))
-    dest = os.path.normcase(os.path.normpath(dest))
+    source = os.path.normcase(os.path.normpath(str(source)))
+    dest = os.path.normcase(os.path.normpath(str(dest)))
     flags = ""
     if sys.platform == 'win32':
         if force:
