@@ -16,10 +16,17 @@ def test_build(ctx):
                 hello *world*
     """
     with create_files(files) as directory:
-        ctx.docs = invoke.Config()
-        ctx.docs.source = 'docs'
-        ctx.docs.builddir = 'build'
-        ctx.docs.target_file = 'index.html'
+        ctx = ctx.init(
+            docs=dict(
+                source='docs',
+                builddir='build',
+                target_file='index.html'
+            )
+        )
+        # ctx.docs = invoke.Config()
+        # ctx.docs.source = 'docs'
+        # ctx.docs.builddir = 'build'
+        # ctx.docs.target_file = 'index.html'
         docs.build(ctx, clean=True)  # cover clean when clean.
         docs.tree(ctx)
         assert os.path.exists('build/index.html')

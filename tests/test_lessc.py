@@ -6,7 +6,7 @@ from yamldirs import create_files
 
 from dktasklib import Package
 from dktasklib import lessc
-from dktasklib.utils import cd
+from dktasklib.commands import tree
 
 
 def test_lessc(ctx):
@@ -17,61 +17,16 @@ def test_lessc(ctx):
             }
     """
     with create_files(files) as directory:
-        assert lessc.lessc(ctx, 'foo.less') == 'foo.css'
+        print lessc.lessc(
+            ctx.init(), src='foo.less', dst='foo.css',
+            autoprefix="ie > 8, last 4 versions"
+        )
         assert 'foo.css' in os.listdir('.')
         print open('foo.css').read()
         assert len(open('foo.css').read()) > len(open('foo.less').read())
 
 
-def get_context(dct, default=None):
-    def cfg_dict(d):
-        res = invoke.Config()
-        for k, v in d.items():
-            res[k] = cfg_obj(v)
-        return res
-
-    def cfg_obj(obj):
-        return {
-            dict: cfg_dict
-        }.get(type(obj), lambda x:x)(obj)
-
-    cfg = invoke.Config().config
-    if default is not None:
-        cfg.update(default)
-    cfg.update(dct)
-    return invoke.Context(cfg_obj(cfg))
-
-#
-# def test_build_css():
-#     files = """
-#         foo.less: |
-#             .foo {
-#                 display: flex;
-#                 color: lighten(red, 20%);
-#             }
-#     """
-#     with create_files(files) as directory:
-#         os.chdir(directory)
-#         ctx = get_context({}, lessc.ns.configuration())
-#
-#         fname = lessc.build_css(ctx, 'foo.less', 'foo.css', version='hash')
-#         ctx.run('tree')
-#         #
-#         #    |-- build
-#         #    |   `-- css
-#         #    |       |-- foo-214ec5a558de22bb640095fe67ba9edc.min.css
-#         #    |       `-- foo.min.css
-#         #    `-- foo.less
-#         #
-#         print 'FNAME:test_build_css:', fname
-#         assert set(os.listdir('.')) == {'foo.less', 'build'}
-#         assert os.listdir('build') == ['css']
-#         assert set(os.listdir('build/css')) == {'foo.min.css', os.path.split(fname)[1]}
-#         print open(fname).read()
-#         assert 1
-
-
-def test_build_less_default():
+def test_less_rule_default(ctx):
     # standard package structure..
     files = """
     mypackage:
@@ -89,89 +44,72 @@ def test_build_less_default():
     with create_files(files) as directory:
         os.chdir('mypackage')  # into the package directory
 
-        ctx = get_context({
-            'pkg': Package()
-        }, lessc.ns.configuration())
-        # ctx = invoke.Context(config=lessc.ns.configuration())
-        # ctx.(lessc.ns.configuration())
+        ctx = ctx.init(pkg=Package())
 
-        import pprint;pprint.pprint(dict(ctx))
-        # ctx.lessc= invoke.Config()
-        # ctx.lessc.source = 'less/index.less'
-        # ctx.lessc.target = ''
-        # ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
+        lessc.LessRule(ctx)
+        tree()
+        # .
+        # |-- mypackage
+        # |   |-- less
+        # |   |   `-- mypackage.less
+        # |   |-- static
+        # |   |   `-- mypackage
+        # |   |       `-- css
+        # |   |           |-- mypackage-1.2.3.min.css
+        # |   |           `-- mypackage.css
+        # |   `-- templates
+        # |       `-- mypackage
+        # |           `-- mypackage-css.html    # due to `after` task
+        # |-- package.json
+        # `-- setup.py
 
-        fname = lessc.build_less(ctx)
-        ctx.run('tree')
-        #
-        #    |-- build
-        #    |   `-- css
-        #    |       |-- foo-1.2.3.min.css
-        #    |       `-- foo.min.css
-        #    `-- foo.less
-        #
-        print 'FNAME:test_build_css:', fname
-        assert set(os.listdir('.')) == {'package.json', 'foo.less', 'build'}
-        assert os.listdir('build') == ['css']
-        assert set(os.listdir('build/css')) == {'foo.min.css', 'foo-1.2.3.min.css'}
-        print open(fname).read()
-        assert 1
+        assert 'mypackage.css' in os.listdir('mypackage/static/mypackage/css')
+        assert 'mypackage-1.2.3.min.css' in os.listdir('mypackage/static/mypackage/css')
+        assert 'mypackage-css.html' in os.listdir('mypackage/templates/mypackage')
 
 
-# def test_build_less():
-#     files = """
-#     andy:
-#         package.json: |
-#             {
-#                 "name": "bar",
-#                 "sourcedir": ".",
-#                 "version": "1.2.3"
-#             }
-#         invoke.json: |
-#             {
-#                 "pkg": {
-#                     "name": "andy",
-#                     "sourcedir": ".",
-#                     "version": "4.5.6"
-#                 }
-#             }
-#         less:
-#             bar.less: |
-#                 .foo {
-#                     display: flex;
-#                     color: orange;
-#                 }
-#             andy.less: |
-#                 .foo {
-#                     display: inline;
-#                     color: chartreuse;
-#                 }
-#
-#     """
-#     with create_files(files) as directory:
-#         ctx = get_context(
-#             invoke.Config(runtime_path='invoke.json'),
-#             lessc.ns.configuration()
-#         )
-#         ctx.pkg.sourcedir = '.'
-#         # ctx.config.merge()
-#         print "CONFIGGGG:"
-#         import pprint;pprint.pprint(dict(**ctx.config))
-#         # ctx.lessc = invoke.Config()
-#         # ctx.lessc.source = 'less/index.less'
-#         # ctx.lessc.target = ''
-#         # ctx.lessc.bootstrap_less_src = os.path.join(os.environ.get('BOOTSTRAPSRC', ''), 'less')
-#         lessc.build_less(ctx)
-#         ctx.run('tree')
-#         #
-#         #    |-- build
-#         #    |   `-- css
-#         #    |       `-- static
-#         #    |           `-- bar
-#         #    |               |-- bar-1.2.3.min.css
-#         #    |               `-- bar.min.css
-#         #    |-- less
-#         #    |   `-- bar.less
-#         #    `-- package.json
-#         #
-#         assert 1
+def test_less_rule_non_std(ctx):
+    # standard package structure..
+    files = """
+    mypackage:
+        - package.json: |
+            {"version": "1.2.3"}
+        - setup.py
+        - mypackage:
+            - less:
+                mypackage-bs3.less: |
+                    .foo {
+                        display: flex;
+                        color: lighten(red, 20%);
+                    }
+    """
+    with create_files(files) as directory:
+        os.chdir('mypackage')  # into the package directory
+
+        ctx = ctx.init(pkg=Package())
+
+        lessc.LessRule(
+            ctx,
+            src='mypackage/less/mypackage-bs3.less',
+            dst='mypackage/static/mypackage/css/mypackage-bs3-{version}.min.css',
+            import_fname='mypackage/templates/mypackage/mypackage-bs3-css.html'
+        )
+        tree()
+        # .
+        # |-- mypackage
+        # |   |-- less
+        # |   |   `-- mypackage-bs3.less
+        # |   |-- static
+        # |   |   `-- mypackage
+        # |   |       `-- css
+        # |   |           |-- mypackage-bs3-1.2.3.min.css
+        # |   |           `-- mypackage-bs3.css
+        # |   `-- templates
+        # |       `-- mypackage
+        # |           `-- mypackage-bs3-css.html
+        # |-- package.json
+        # `-- setup.py
+        assert 'mypackage-bs3.css' in os.listdir('mypackage/static/mypackage/css')
+        assert 'mypackage-bs3-1.2.3.min.css' in os.listdir('mypackage/static/mypackage/css')
+        assert 'mypackage-bs3-css.html' in os.listdir('mypackage/templates/mypackage')
+

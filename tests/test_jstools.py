@@ -17,10 +17,7 @@ def test_babel(ctx):
             [1,2,3].map(x => x*x)
     """
     with create_files(files) as directory:
-        # os.chdir(directory)
-        ctx.update({
-            'pkg': Package().config()
-        })
+        ctx = ctx.init(pkg=Package())
         babel(
             ctx,
             'foo.js',

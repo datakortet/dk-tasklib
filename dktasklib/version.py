@@ -9,6 +9,7 @@ from dkfileutils.path import Path
 from invoke import run, ctask as task, Collection
 # from .subversion import get_svn_version
 from dktasklib.concat import copy
+from dktasklib.rule import BuildRule
 from .package import Package
 
 
@@ -37,17 +38,20 @@ def files_with_version_numbers():
 
 
 def _replace_version(fname, cur_version, new_version):
+    """Replace the version string ``cur_version`` with the version string
+       ``new_version`` in ``fname``.
+    """
     if not fname.exists():
         return False
 
     with open(fname, 'rb') as fp:
         txt = fp.read()
 
-    if cur_version not in txt:
+    if cur_version not in txt:  # pragma: nocover
         # warnings.warn("Did not find %r in %r" % (cur_version, fname))
         return False
     occurences = txt.count(cur_version)
-    if occurences > 2:
+    if occurences > 2:  # pragma: nocover
         warnings.warn(
             "Found version string (%r) multiple times in %r, skipping" % (
                 cur_version, fname
@@ -84,51 +88,84 @@ def upversion(ctx, major=False, minor=False, patch=False):
     for fname in files_with_version_numbers():
         changed += _replace_version(fname, txt_version, new_version)
     if changed == 0:
-        warnings.warn("I didn't change any files...!")
+        warnings.warn("I didn't change any files...!")  # pragma: nocover
     print "changed %d files" % changed
     return new_version
 
 
-@task
-def update_template_version(ctx, fname=None):
-    """Update version number in include template.
+class UpdateTemplateVersion(BuildRule):
+    def __call__(self, fname):
+        fname = fname.format(**self.ctx)
 
-       By including this template, i.e.::
-
-           ``{% include "app/templates/app/app-css.html" %}``
-
-       you will automagically include the latest version of the generated css.
-
-    """
-    fname = fname or '{pkg.sourcedir}/templates/{pkg.name}/{pkg.name}-css.html'.format(**ctx)
-
-    if not os.path.exists(fname):
-        Path(ctx.pkg.root).makedirs(Path(fname).dirname())
-        with open(fname, 'w') as fp:
-            fp.write(textwrap.dedent("""
-            {% load staticfiles %}
-            {% with "0.0.0" as version %}
-                {# keep the above exactly as-is (it will be overwritten when compiling the css). #}
-                {% with app_path="PKGNAME/PKGNAME-"|add:version|add:".min.css" %}
-                    {% if debug %}
-                        <link rel="stylesheet" type="text/css" href='{% static "PKGNAME/PKGNAME.css" %}'>
-                    {% else %}
-                        <link rel="stylesheet" type="text/css" href="{% static app_path %}">
-                    {% endif %}
+        if not os.path.exists(fname):
+            Path(self.ctx.pkg.root).makedirs(Path(fname).dirname())
+            with open(fname, 'w') as fp:
+                fp.write(textwrap.dedent("""
+                {% load staticfiles %}
+                {% with "0.0.0" as version %}
+                    {# keep the above exactly as-is (it will be overwritten when compiling the css). #}
+                    {% with app_path="PKGNAME/PKGNAME-"|add:version|add:".min.css" %}
+                        {% if debug %}
+                            <link rel="stylesheet" type="text/css" href='{% static "PKGNAME/PKGNAME.css" %}'>
+                        {% else %}
+                            <link rel="stylesheet" type="text/css" href="{% static app_path %}">
+                        {% endif %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
-            """).replace("PKGNAME", ctx.pkg.name))
-            
-    with open(fname, 'r') as fp:
-        txt = fp.read()
+                """).replace("PKGNAME", self.ctx.pkg.name))
 
-    newtxt = re.sub(
-        r'{% with "(\d+\.\d+\.\d+)" as version',
-        '{{% with "{}" as version'.format(ctx.pkg.version),
-        txt
-    )
-    with open(fname, 'w') as fp:
-        fp.write(newtxt)
+        with open(fname, 'r') as fp:
+            txt = fp.read()
+
+        newtxt = re.sub(
+            r'{% with "(\d+\.\d+\.\d+)" as version',
+            '{{% with "{}" as version'.format(self.ctx.pkg.version),
+            txt
+        )
+        with open(fname, 'w') as fp:
+            fp.write(newtxt)
+        print 'Updated {% import %} template:', fname
+
+# @task
+# def update_template_version(ctx, fname=None):
+#     """Update version number in include template.
+#
+#        By including this template, i.e.::
+#
+#            ``{% include "app/templates/app/app-css.html" %}``
+#
+#        you will automagically include the latest version of the generated css.
+#
+#     """
+#     fname = fname or '{pkg.sourcedir}/templates/{pkg.name}/{pkg.name}-css.html'.format(**ctx)
+#
+#     if not os.path.exists(fname):
+#         Path(ctx.pkg.root).makedirs(Path(fname).dirname())
+#         with open(fname, 'w') as fp:
+#             fp.write(textwrap.dedent("""
+#             {% load staticfiles %}
+#             {% with "0.0.0" as version %}
+#                 {# keep the above exactly as-is (it will be overwritten when compiling the css). #}
+#                 {% with app_path="PKGNAME/PKGNAME-"|add:version|add:".min.css" %}
+#                     {% if debug %}
+#                         <link rel="stylesheet" type="text/css" href='{% static "PKGNAME/PKGNAME.css" %}'>
+#                     {% else %}
+#                         <link rel="stylesheet" type="text/css" href="{% static app_path %}">
+#                     {% endif %}
+#                 {% endwith %}
+#             {% endwith %}
+#             """).replace("PKGNAME", ctx.pkg.name))
+#
+#     with open(fname, 'r') as fp:
+#         txt = fp.read()
+#
+#     newtxt = re.sub(
+#         r'{% with "(\d+\.\d+\.\d+)" as version',
+#         '{{% with "{}" as version'.format(ctx.pkg.version),
+#         txt
+#     )
+#     with open(fname, 'w') as fp:
+#         fp.write(newtxt)
 
 
 def min_name(fname, min='.min'):
@@ -183,7 +220,7 @@ def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
            (str) output file name
     """
     # where to place the versioned file..
-    print "LOCALS:", locals()
+    # print "LOCALS:", locals()
     source = Path(source)
     outputdir = Path(outputdir) if outputdir else source.dirname()
     outputdir.makedirs()
@@ -233,7 +270,6 @@ ns = Collection(
     # add_version,
     version,
     upversion,
-    update_template_version
 )
 ns.configure({
     'force': False,
