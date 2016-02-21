@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 from yamldirs import create_files
 
 from dktasklib.concat import line_endings, chomp, fix_line_endings, concat, copy
