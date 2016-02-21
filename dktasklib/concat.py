@@ -65,9 +65,11 @@ def concat(ctx, dest, *sources, **kw):
         ctx.run('copy {flags} {source} {dest}'.format(**locals()))
     else:
         if force:
-            flags += " --force"
+            pass
+            # flags += " --force"
         source = ' '.join(sources)
-        ctx.run('cp {flags} {source} >> {dest}'.format(**locals()))
+        # print 'cat {flags} {source} > {dest}'.format(**locals())
+        ctx.run('cat {flags} {source} > {dest}'.format(**locals()))
 
     if len(line_endings(dest)) > 1:
         fix_line_endings(dest)

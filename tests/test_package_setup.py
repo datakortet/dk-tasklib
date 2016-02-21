@@ -56,17 +56,17 @@ def test_version():
 
 
 def _getval(attr):
-    return subprocess.check_output("python setup.py --" + attr).strip()
+    return subprocess.check_output("python setup.py --" + attr, shell=True).strip()
 
 
-def test_upversion():
+def test_upversion(ctx):
     files = """
         setup.py: |
             from distutils.core import setup
             setup(version='1.1.2')
     """
     with create_files(files) as directory:
-        os.chdir(directory)
+        ctx = ctx.init()
 
         version.upversion(invoke.Context())
         print open('setup.py').read()
