@@ -4,6 +4,8 @@ import string
 import sys
 from contextlib import contextmanager
 
+from dkfileutils.path import Path
+
 join = os.path.join
 null = "NUL" if sys.platform == 'win32' else '/dev/null'
 win32 = sys.platform == 'win32'
@@ -48,6 +50,21 @@ def filename(fname):
 
 
 @contextmanager
+def env(**kw):
+    """Context amanger to temporarily override environment variables.
+    """
+    currentvals = {k: os.environ.get(k) for k in kw}
+    for k, v in kw.items():
+        os.environ[k] = str(v)
+    yield
+    for k in kw:
+        if currentvals[k] is None:
+            os.unsetenv(k)
+        else:
+            os.environ[k] = currentvals[k]
+
+
+@contextmanager
 def cd(directory):
     """Context manager to change directory.
 
@@ -62,3 +79,25 @@ def cd(directory):
     os.chdir(directory)
     yield
     os.chdir(cwd)
+
+
+def find_pymodule(dotted_name):
+    """Find the directory of a python module, without importing it.
+    """
+    name = dotted_name.split('.', 1)[0]
+    for p in sys.path:
+        pth = Path(p)
+        if not pth:
+            continue
+        try:
+            # print 'trying:', name, 'in', pth, os.listdir(pth)
+            if name in pth and (pth/name).isdir():
+                return pth/name
+            if name + '.py' in pth:
+                return pth
+        except OSError:
+            continue
+        except Exception as e:
+            print 'error', pth, e
+            raise
+    raise ValueError("Path not found for: " + dotted_name)
