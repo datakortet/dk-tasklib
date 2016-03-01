@@ -78,7 +78,9 @@ class Command(object):
             fparams += " " + posargs
         if ctx is None:
             ctx = invoke.Context()
-        cmd = self.cmd + ' ' + self.required_params + fparams
+
+        cmd = '"%s"' % self.cmd if ' ' in self.cmd else cmd
+        cmd += ' ' + self.required_params + fparams
         ctx.run(cmd)
         return cmd
 
