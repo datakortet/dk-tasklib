@@ -11,6 +11,23 @@ null = "NUL" if sys.platform == 'win32' else '/dev/null'
 win32 = sys.platform == 'win32'
 
 
+def dest_is_newer_than_source(src, dst):
+    """Check if destination is newer than source.
+
+       Usage::
+
+            if not force and dest_is_newer_than_source(source, dest):
+                print 'babel:', dest, 'is up-to-date.'
+                return dest
+
+    """
+    if not os.path.exists(dst):
+        return False
+    if not os.path.exists(src):
+        raise ValueError("Source does not exist: " + src)
+    return os.path.getmtime(src) < os.path.getmtime(dst)
+
+
 class _MissingDottedString(str):
     def __getattr__(self, attr):
         return _MissingDottedString(self[:-1] + '.' + attr + '}')

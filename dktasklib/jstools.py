@@ -6,7 +6,7 @@ from invoke import ctask as task, Collection
 
 from dktasklib import runners
 from dktasklib.executables import requires
-from dktasklib.utils import cd
+from dktasklib.utils import cd, dest_is_newer_than_source
 from dktasklib.version import version_name, add_version
 
 
@@ -52,10 +52,14 @@ def ensure_es2015(ctx):
 
 @requires('babel', 'nodejs')
 @task
-def babel(ctx, source, dest, source_maps=True):
+def babel(ctx, source, dest, source_maps=True, force=False):
     """
     --source-maps --out-file $ProjectFileDir$/$ProjectName$/static/$ProjectName$/$FileNameWithoutExtension$.js $FilePath$
     """
+    if not force and dest_is_newer_than_source(source, dest):
+        print 'babel:', dest, 'is up-to-date.'
+        return dest
+
     ensure_package_json(ctx)
     ensure_node_modules(ctx)
     ensure_es2015(ctx)
