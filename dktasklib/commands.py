@@ -79,7 +79,7 @@ class Command(object):
         if ctx is None:
             ctx = invoke.Context()
 
-        cmd = '"%s"' % self.cmd if ' ' in self.cmd else cmd
+        cmd = '"%s"' % self.cmd if ' ' in self.cmd else self.cmd
         cmd += ' ' + self.required_params + fparams
         ctx.run(cmd)
         return cmd
