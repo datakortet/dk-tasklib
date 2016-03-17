@@ -50,7 +50,7 @@ class Executables(object):
         if not fexe:  # pragma: nocover
             if install_txt is None:  # pragma: nocover
                 install_txt = "Missing command: %r [requires: %s]" % (name, requires)
-            raise MissingCommand(install_txt)
+            raise MissingCommand(install_txt + name)
         return fexe
 
     def find_nodejs(self):  # pragma: nocover
