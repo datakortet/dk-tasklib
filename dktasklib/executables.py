@@ -57,10 +57,9 @@ class Executables(object):
     def _find_exe(self, name, requires=(), install_txt=None):
         fexe = get_executable(name)
         if not fexe:  # pragma: nocover
-            print 'INSTGALLTXT:', `install_txt`
             if not install_txt:  # pragma: nocover
                 install_txt = "Missing command: %r [requires: %s]" % (name, requires)
-            raise MissingCommand(install_txt + name)
+            raise MissingCommand(install_txt)
         return fexe
 
     def find_uglify(self):
