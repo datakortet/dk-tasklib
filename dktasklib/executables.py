@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
+
+import invoke
 from dkfileutils.which import get_executable
 
 
@@ -15,6 +17,13 @@ class Executables(object):
     """
     def __init__(self):
         self._cache = {}
+        self._ctx = None
+
+    @property
+    def ctx(self):
+        if self._ctx is None:
+            self._ctx = invoke.Context()
+        return self._ctx
 
     def require(self, *dependencies):
         """Ensure that all dependencies are available.
@@ -24,7 +33,7 @@ class Executables(object):
         for dep in dependencies:
             self.find(dep)
 
-    def find(self, name, requires=(), install_txt='"'):
+    def find(self, name, requires=(), install_txt=''):
         """Find the executable named ``name`` on the :envvar:`PATH`.
 
            Args:
@@ -48,10 +57,35 @@ class Executables(object):
     def _find_exe(self, name, requires=(), install_txt=None):
         fexe = get_executable(name)
         if not fexe:  # pragma: nocover
-            if install_txt is None:  # pragma: nocover
+            print 'INSTGALLTXT:', `install_txt`
+            if not install_txt:  # pragma: nocover
                 install_txt = "Missing command: %r [requires: %s]" % (name, requires)
             raise MissingCommand(install_txt + name)
         return fexe
+
+    def find_uglify(self):
+        exename = 'uglifyjs'
+        exepath = get_executable(exename)
+        if not exepath:
+            self.ctx.run("npm install -g uglify-js --no-color", echo=True, encoding="utf-8")
+            exepath = get_executable(exename)
+        return exepath
+
+    def find_browserify(self):
+        exename = 'browserify'
+        exepath = get_executable(exename)
+        if not exepath:
+            self.ctx.run("npm install -g browserify --no-color", echo=True, encoding="utf-8")
+            exepath = get_executable(exename)
+        return exepath
+
+    def find_babel(self):
+        exename = 'babel'
+        exepath = get_executable(exename)
+        if not exepath:
+            self.ctx.run("npm install -g babel --no-color", echo=True, encoding="utf-8")
+            exepath = get_executable(exename)
+        return exepath
 
     def find_nodejs(self):  # pragma: nocover
         """Find :program:`node`.

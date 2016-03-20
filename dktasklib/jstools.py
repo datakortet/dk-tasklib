@@ -5,6 +5,7 @@ import textwrap
 from invoke import ctask as task, Collection
 
 from dktasklib import runners
+from dktasklib.commands import Command
 from dktasklib.executables import requires
 from dktasklib.utils import cd, dest_is_newer_than_source
 from dktasklib.version import version_name, add_version
@@ -18,6 +19,8 @@ def ensure_package_json(ctx):
         print "Missing package.json file, creating default version.."
         with cd(ctx.pkg.root):
             ctx.run("npm init -f")
+    else:
+        return True
 
 
 def ensure_babelrc(ctx):
@@ -32,6 +35,8 @@ def ensure_babelrc(ctx):
                 "presets": ["es2015"]
             }
             """))
+    else:
+        return True
 
 
 def ensure_node_modules(ctx):
@@ -41,6 +46,26 @@ def ensure_node_modules(ctx):
     if not os.path.exists(node_modules):
         with cd(ctx.pkg.root):
             ctx.run("npm install --no-color")
+    else:
+        return True
+
+
+# def ensure_babel(ctx):
+#     if 'babel' not in runners.run("npm ls -g --depth=0 babel --no-color"):
+#         print "didn't find babel, installing it.."
+#         with cd(ctx.pkg.root):
+#             ctx.run("npm install -g babel")
+#     else:
+#         return True
+
+
+# def ensure_browserify(ctx):
+#     if 'browserify' not in runners.run("npm ls -g --depth=0 browserify --no-color"):
+#         print "didn't find browserify, installing it.."
+#         with cd(ctx.pkg.root):
+#             ctx.run("npm install -g browserify")
+#     else:
+#         return True
 
 
 def ensure_es2015(ctx):
@@ -48,9 +73,20 @@ def ensure_es2015(ctx):
         print "didn't find babel-preset-es2015, installing it.."
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-es2015 --save-dev")
+    else:
+        return True
 
 
-@requires('babel', 'nodejs')
+def ensure_babelify(ctx):
+    if 'babelify' not in runners.run("npm ls --depth=0 babelify --no-color"):
+        print "didn't find babelify, installing it.."
+        with cd(ctx.pkg.root):
+            ctx.run("npm install --save-dev babelify --no-color", echo=False, encoding='utf-8')
+    else:
+        return True
+
+
+@requires('nodejs', 'npm', 'babel')
 @task
 def babel(ctx, source, dest, source_maps=True, force=False):
     """
@@ -62,6 +98,7 @@ def babel(ctx, source, dest, source_maps=True, force=False):
 
     ensure_package_json(ctx)
     ensure_node_modules(ctx)
+    # ensure_babel(ctx)
     ensure_es2015(ctx)
     ensure_babelrc(ctx)
 
@@ -94,9 +131,14 @@ def version_js(ctx, fname, kind='pkg', force=False):
     return dst
 
 
-@requires('browserify', 'nodejs')
+@requires('nodejs', 'npm', 'browserify')
 @task
-def browserify(ctx, source, dest, require=(), external=(), entry=None):
+def browserify(ctx,
+               source, dest,
+               babelify=False,
+               require=(),
+               external=(),
+               entry=None):
     """
     Run ``browserify``
 
@@ -104,18 +146,25 @@ def browserify(ctx, source, dest, require=(), external=(), entry=None):
         ctx (pyinvoke.Context):  context
         source (str):            root source file
         dest (str):              path/name of assembled file
-        require (iterable):
-        external:
+        babelify (Bool):         use babel transform
+        require (iterable):      A module name or file to bundle.require()
+                                 Optionally use a colon separator to set the target.
+        external:                Reference a file from another bundle. Files can be globs.
         entry:
 
     Returns:
         None
 
     """
-    ensure_package_json(ctx)
-    ensure_node_modules(ctx)
+    print 'ensure package.json:', ensure_package_json(ctx)
+    print 'ensure node_modules:', ensure_node_modules(ctx)
+    # print 'ensure browserify:', ensure_browserify(ctx)
 
-    options = ""
+    # options = "--debug"  # source maps
+    options = ""  # no source maps
+    if babelify:
+        print 'ensure babelify:', ensure_babelify(ctx)
+        options += ' -t babelify'
     for r in require:
         options += ' -r "%s"' % r
     for e in external:
@@ -124,9 +173,29 @@ def browserify(ctx, source, dest, require=(), external=(), entry=None):
         options += ' -e "%s"' % entry
     cmd = "browserify {source} -o {dest} {options}".format(**locals())
     ctx.run(cmd)
+    return dest
 
 
-ns = Collection(babel, browserify)
+uglifycmd = Command('uglifyjs', '{src} {opts} -o {dst}',
+                    requirements=('nodejs', 'npm', 'uglify'))
+
+
+@requires('nodejs', 'npm', 'uglify')
+@task
+def uglifyjs(ctx,
+             src, dst,
+             compress=True, mangle=True):
+    uglifycmd(
+        ctx,
+        src=src,
+        dst=dst,
+        compress=compress,
+        mangle=mangle
+    )
+    return dst
+
+
+ns = Collection(babel, browserify, uglifyjs)
 ns.configure({
     'static': 'static/{pkg.name}'
 })
