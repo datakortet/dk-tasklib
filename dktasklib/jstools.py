@@ -173,6 +173,11 @@ def browserify(ctx,
         options += ' -e "%s"' % entry
     cmd = "browserify {source} -o {dest} {options}".format(**locals())
     ctx.run(cmd)
+    with open(dest, 'rb') as fp:
+        txt = fp.read()
+    if '\r\n' in txt:
+        with open(dest, 'wb') as fp:
+            fp.write(txt.replace('\r\n', '\n'))
     return dest
 
 
