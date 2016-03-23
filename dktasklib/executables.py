@@ -66,7 +66,7 @@ class Executables(object):
         exename = 'uglifyjs'
         exepath = get_executable(exename)
         if not exepath:
-            self.ctx.run("npm install -g uglify-js --no-color", echo=True, encoding="utf-8")
+            self.ctx.run("npm install -g uglify-js --no-color", echo=False, encoding="utf-8")
             exepath = get_executable(exename)
         return exepath
 
@@ -74,7 +74,7 @@ class Executables(object):
         exename = 'browserify'
         exepath = get_executable(exename)
         if not exepath:
-            self.ctx.run("npm install -g browserify --no-color", echo=True, encoding="utf-8")
+            self.ctx.run("npm install -g browserify --no-color", echo=False, encoding="utf-8")
             exepath = get_executable(exename)
         return exepath
 
@@ -82,7 +82,7 @@ class Executables(object):
         exename = 'babel'
         exepath = get_executable(exename)
         if not exepath:
-            self.ctx.run("npm install -g babel --no-color", echo=True, encoding="utf-8")
+            self.ctx.run("npm install -g babel --no-color", echo=False, encoding="utf-8")
             exepath = get_executable(exename)
         return exepath
 
