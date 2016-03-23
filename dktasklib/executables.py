@@ -4,6 +4,8 @@ import sys
 import invoke
 from dkfileutils.which import get_executable
 
+from dktasklib.utils import win32
+
 
 class MissingCommand(Exception):
     """Exception thrown when a command (executable) is not found.
@@ -66,24 +68,36 @@ class Executables(object):
         exename = 'uglifyjs'
         exepath = get_executable(exename)
         if not exepath:
-            self.ctx.run("npm install -g uglify-js --no-color", echo=False, encoding="utf-8")
-            exepath = get_executable(exename)
+            npminstall = "npm install -g uglify-js --no-color"
+            if win32:
+                self.ctx.run(npminstall, echo=False, encoding="utf-8")
+                exepath = get_executable(exename)
+            else:
+                raise MissingCommand("Missing uglifyjs (%s)" % npminstall)
         return exepath
 
     def find_browserify(self):
         exename = 'browserify'
         exepath = get_executable(exename)
+        npminstall = "npm install -g browserify --no-color"
         if not exepath:
-            self.ctx.run("npm install -g browserify --no-color", echo=False, encoding="utf-8")
-            exepath = get_executable(exename)
+            if win32:
+                self.ctx.run(npminstall, echo=False, encoding="utf-8")
+                exepath = get_executable(exename)
+            else:
+                raise MissingCommand("Missing browserify (%s)" % npminstall)
         return exepath
 
     def find_babel(self):
         exename = 'babel'
         exepath = get_executable(exename)
+        npminstall = "npm install -g babel --no-color"
         if not exepath:
-            self.ctx.run("npm install -g babel --no-color", echo=False, encoding="utf-8")
-            exepath = get_executable(exename)
+            if win32:
+                self.ctx.run(npminstall, echo=False, encoding="utf-8")
+                exepath = get_executable(exename)
+            else:
+                raise MissingCommand("Missing babel (%s)" % npminstall)
         return exepath
 
     def find_nodejs(self):  # pragma: nocover
