@@ -10,7 +10,8 @@ from . import urlinliner
 from .concat import copy
 from .environment import env
 from .utils import fmt, switch_extension
-from .version import get_version, UpdateTemplateVersion
+from .version import get_version
+from .upversion import UpdateTemplateVersion
 
 lessc = Command('lessc', '{opts} {src} {dst}',
                 requirements=('nodejs', 'npm', 'lessc'))

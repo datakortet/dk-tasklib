@@ -34,6 +34,22 @@ class PackageInterface(object):
         else:
             return self.root
 
+    @property
+    def docsdir(self):
+        """Return the root of this package's documentation tree.
+        """
+        return self.get('docsdir', self.root / 'docs')
+
+    @property
+    def staticdir(self):
+        """Return the root of this package's static tree.
+        """
+        proper_package = 'setup.py' in self.root
+        if proper_package:
+            return self.root / self.name / 'static'
+        else:
+            return self.root / 'static'
+
     def config(self):  # pragma: nocover
         cfg = Config(dict(iter(self)))
         cfg.name = self.name
@@ -73,7 +89,7 @@ class PackageInterface(object):
         return iter([])
 
     def get(self, attr, default=None):
-        """Override this method, and call super if the attribute is not foudn::
+        """Override this method, and call super if the attribute is not found::
 
             def get(self, attr, default=None):
                 try:

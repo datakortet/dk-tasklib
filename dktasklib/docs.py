@@ -13,7 +13,7 @@ from invoke import ctask as task, Collection
 def _clean(ctx):
     """Nuke docs build target directory so next build is clean.
     """
-    builddir = ctx.docs.builddir
+    builddir = ctx.pkg.root / 'build' / 'docs'
     if os.path.exists(builddir) and len(os.listdir(builddir)) > 0:
         ctx.run("rm -rf {0}/*".format(builddir))
 
@@ -23,7 +23,7 @@ def _clean(ctx):
 def _browse(ctx):  # pragma: nocover
     """Open build target's index.html in a browser (using the :py:mod:`webbrowser` module).
     """
-    index = join(ctx.docs.builddir, ctx.docs.target_file)
+    index = join(ctx.pkg.root / 'build' / 'docs' / 'index.html')
     webbrowser.open_new(index)
 
 
@@ -42,10 +42,10 @@ def build(ctx, clean=False, browse=False, warn=False,
     """
     Build the project's Sphinx docs.
     """
-    if not force and not Directory(ctx.docs.source).changed():
+    if not force and not Directory(ctx.pkg.docsdir).changed():
         print """
         No changes detected in {}, add --force to build docs anyway.
-        """.format(ctx.docs.source)
+        """.format(ctx.pkg.docsdir)
         return  # should perhaps check if code has changed too? (autodoc)
 
     if clean:
@@ -57,9 +57,8 @@ def build(ctx, clean=False, browse=False, warn=False,
         opts += " -n -W"
     if force:
         opts += " -a -E"
-    cmd = "sphinx-build {opts} {ctx.docs.source} {ctx.docs.builddir}".format(
-        opts=opts, ctx=ctx)
-    dj_settings = ctx.get('pkg', {}).get('django_settings_module')
+    cmd = "sphinx-build {opts} {ctx.pkg.docsdir} {ctx.pkg.root}/build/docs".format(opts=opts, ctx=ctx)
+    dj_settings = ctx.get('pkg', {}).get('django_settings_module', "")
     if dj_settings:
         os.environ['DJANGO_SETTINGS_MODULE'] = dj_settings
     ctx.run(cmd)
@@ -72,7 +71,7 @@ def tree(ctx):
     """Display the docs tree.
     """
     ignore = ".git|*.pyc|*.swp|dist|*.egg-info|_static|_build|_templates"
-    ctx.run('tree -Ca -I "{0}" {1}'.format(ignore, ctx.docs.source))
+    ctx.run('tree -Ca -I "{0}" {1}'.format(ignore, ctx.pkg.docsdir))
 
 
 # Vanilla/default/parameterized collection for normal use

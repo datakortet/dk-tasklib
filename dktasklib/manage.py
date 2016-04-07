@@ -3,6 +3,7 @@ import os
 
 from dkfileutils.path import Path
 from dkfileutils.pfind import pfind
+from dkfileutils.changed import changed
 from invoke import ctask as task, run
 from .utils import cd, env, find_pymodule
 from .package import Package
@@ -48,3 +49,5 @@ def collectstatic(ctx, settings=None, venv=None):
         settings = DEFAULT_SETTINGS_MODULE
     print "using settings:", settings, 'venv:', venv
     manage(ctx, "collectstatic --noinput", settings=settings, venv=venv)
+    # record changes made by collectstatic
+    changed(ctx.pkg.staticdir)
