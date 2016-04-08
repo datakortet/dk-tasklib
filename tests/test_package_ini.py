@@ -8,7 +8,7 @@ import pytest
 from yamldirs import create_files
 
 import dktasklib.package.package_ini
-from dktasklib import version, package
+from dktasklib import upversion, package
 
 
 def test_find_package():
@@ -84,14 +84,14 @@ def test_upversion():
     with create_files(files) as directory:
         # os.chdir(directory)
 
-        version.upversion(invoke.Context())
+        upversion.upversion(invoke.Context())
         print open('package.ini').read()
         assert _getval('package.ini', 'version') == '1.1.3'
 
-        version.upversion(invoke.Context(), minor=True)
+        upversion.upversion(invoke.Context(), minor=True)
         print open('package.ini').read()
         assert _getval('package.ini', 'version') == '1.2.0'
 
-        version.upversion(invoke.Context(), major=True)
+        upversion.upversion(invoke.Context(), major=True)
         print open('package.ini').read()
         assert _getval('package.ini', 'version') == '2.0.0'

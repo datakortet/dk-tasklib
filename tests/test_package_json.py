@@ -5,7 +5,7 @@ import invoke
 import pytest
 from yamldirs import create_files
 
-from dktasklib import version, package
+from dktasklib import upversion, package
 
 
 def test_find_package():
@@ -77,14 +77,14 @@ def test_upversion():
     with create_files(files) as directory:
         os.chdir(directory)
 
-        version.upversion(invoke.Context())
+        upversion.upversion(invoke.Context())
         print open('package.json').read()
         assert json.load(open('package.json'))['version'] == '1.1.3'
 
-        version.upversion(invoke.Context(), minor=True)
+        upversion.upversion(invoke.Context(), minor=True)
         print open('package.json').read()
         assert json.load(open('package.json'))['version'] == '1.2.0'
 
-        version.upversion(invoke.Context(), major=True)
+        upversion.upversion(invoke.Context(), major=True)
         print open('package.json').read()
         assert json.load(open('package.json'))['version'] == '2.0.0'
