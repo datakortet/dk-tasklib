@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# -*- coding: utf-8 -*-
 import json
 import os
 import subprocess
@@ -11,7 +10,7 @@ import pytest
 from yamldirs import create_files
 
 import dktasklib.package.package_ini
-from dktasklib import version, package
+from dktasklib import upversion, package
 
 
 def test_find_package():
@@ -68,15 +67,15 @@ def test_upversion(ctx):
     with create_files(files) as directory:
         ctx = ctx.init()
 
-        version.upversion(invoke.Context())
+        upversion.upversion(invoke.Context())
         print open('setup.py').read()
         assert _getval('version') == '1.1.3'
 
-        version.upversion(invoke.Context(), minor=True)
+        upversion.upversion(invoke.Context(), minor=True)
         print open('setup.py').read()
         assert _getval('version') == '1.2.0'
 
-        version.upversion(invoke.Context(), major=True)
+        upversion.upversion(invoke.Context(), major=True)
         print open('setup.py').read()
         assert _getval('version') == '2.0.0'
 

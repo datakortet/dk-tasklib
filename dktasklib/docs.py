@@ -4,15 +4,17 @@ import os
 import webbrowser
 from os.path import join
 
-from dkfileutils.changed import Directory
+from dkfileutils.changed import changed
 from invoke import ctask as task, Collection
+from dktasklib import Package
 
 
-# Underscored func name to avoid shadowing kwargs in build()
 @task(name='clean')
-def _clean(ctx):
+def _clean(ctx):  # Underscored func name to avoid shadowing kwargs in build()
     """Nuke docs build target directory so next build is clean.
     """
+    if 'pkg' not in ctx:
+        ctx.pkg = Package()
     builddir = ctx.pkg.root / 'build' / 'docs'
     if os.path.exists(builddir) and len(os.listdir(builddir)) > 0:
         ctx.run("rm -rf {0}/*".format(builddir))
@@ -42,7 +44,7 @@ def build(ctx, clean=False, browse=False, warn=False,
     """
     Build the project's Sphinx docs.
     """
-    if not force and not Directory(ctx.pkg.docsdir).changed():
+    if not force and not changed(ctx.pkg.docsdir):
         print """
         No changes detected in {}, add --force to build docs anyway.
         """.format(ctx.pkg.docsdir)
@@ -58,7 +60,7 @@ def build(ctx, clean=False, browse=False, warn=False,
     if force:
         opts += " -a -E"
     cmd = "sphinx-build {opts} {ctx.pkg.docsdir} {ctx.pkg.root}/build/docs".format(opts=opts, ctx=ctx)
-    dj_settings = ctx.get('pkg', {}).get('django_settings_module', "")
+    dj_settings = ctx.pkg.get('django_settings_module', "")
     if dj_settings:
         os.environ['DJANGO_SETTINGS_MODULE'] = dj_settings
     ctx.run(cmd)

@@ -38,6 +38,7 @@ class PackageInterface(object):
     def docsdir(self):
         """Return the root of this package's documentation tree.
         """
+        print 'in docsdir', self.root
         return self.get('docsdir', self.root / 'docs')
 
     @property
@@ -55,6 +56,8 @@ class PackageInterface(object):
         cfg.name = self.name
         cfg.root = self.root
         cfg.sourcedir = self.sourcedir
+        cfg.docsdir = self.docsdir
+        cfg.staticdir = self.staticdir
         return cfg
 
     def __repr__(self):
