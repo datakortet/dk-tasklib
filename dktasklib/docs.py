@@ -39,7 +39,7 @@ def _browse(ctx):  # pragma: nocover
 })
 def build(ctx, clean=False, browse=False, warn=False,
           builder='html',
-          force=True,
+          force=False,
           opts=""):
     """
     Build the project's Sphinx docs.

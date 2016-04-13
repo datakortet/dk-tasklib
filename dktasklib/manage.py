@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import os
 
 from dkfileutils.path import Path
@@ -32,16 +33,41 @@ def manage(ctx, cmd, settings=None, manage_path=None, venv=None):
 
             call = "python manage.py {cmd}"
             if venv:
-                call = "vex {venv} python manage.py {cmd}"
+                call = "vex {venv} python manage.py {cmd} --traceback"
 
             run(call.format(venv=venv, cmd=cmd))
 
 
 @task
-def collectstatic(ctx, settings=None, venv=None):
+def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
     "Run collectstatic with settings from package.json ('django_settings_module')"
     if not hasattr(ctx, 'pkg'):
         ctx.pkg = Package()
+
+    if not (force or ctx.pkg.staticdir.changed()):
+        print "Skipping collectstic: no changes to static dir."
+        return
+
+    if not clobber:
+        # check that we don't overwrite versioned resources
+        changed_versioned_resources = False
+        static = Path(os.environ['SRV']) / 'data' / 'static'
+        for fname in ctx.pkg.staticdir.glob('**/*\d+.min.*'):
+            pubname = static / fname.relpath(ctx.pkg.staticdir)
+            if pubname.exists():
+                # print 'checking:', pubname
+                if pubname.open('rb').read() != fname.open('rb').read():
+                    changed_versioned_resources = True
+                    print
+                    print "ERROR: versioned file has changes:"
+                    print "  contents of:      ", fname
+                    print "  is different from:", pubname
+                    print
+        if changed_versioned_resources:
+            print "Exiting due to changes in versioned resources. " \
+                  "You should probably revert the changes and create " \
+                  "a new version."
+            sys.exit(1)
 
     try:
         settings = settings or ctx.pkg.django_settings_module

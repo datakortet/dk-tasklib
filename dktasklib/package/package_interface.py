@@ -4,6 +4,7 @@ import pprint
 
 import invoke
 from dkfileutils.path import Path
+from dkfileutils.changed import Directory
 from invoke.config import Config
 
 
@@ -28,28 +29,22 @@ class PackageInterface(object):
     def sourcedir(self):
         """Return the root of this package's source tree.
         """
-        proper_package = 'setup.py' in self.root
-        if proper_package:
-            return self.root / self.name
-        else:
-            return self.root
+        is_package = 'setup.py' in self.root
+        return Directory(self.root / self.name if is_package else self.root)
 
     @property
     def docsdir(self):
         """Return the root of this package's documentation tree.
         """
-        print 'in docsdir', self.root
-        return self.get('docsdir', self.root / 'docs')
+        return Directory(self.get('docsdir', self.root / 'docs'))
 
     @property
     def staticdir(self):
         """Return the root of this package's static tree.
         """
-        proper_package = 'setup.py' in self.root
-        if proper_package:
-            return self.root / self.name / 'static'
-        else:
-            return self.root / 'static'
+        is_package = 'setup.py' in self.root
+        return Directory(self.root / self.name / 'static'
+                         if is_package else self.root / 'static')
 
     def config(self):  # pragma: nocover
         cfg = Config(dict(iter(self)))
