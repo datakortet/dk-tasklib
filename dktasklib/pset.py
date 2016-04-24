@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+# noinspection PyPep8Naming
 class pset(dict):
     """Property Set class.
        A property set is an object where values are attached to attributes,
@@ -19,10 +20,15 @@ class pset(dict):
     def __init__(self, items=(), **attrs):
         object.__setattr__(self, '_order', [])
         super(pset, self).__init__()
+        if isinstance(items, dict):
+            items = items.items()
         for k, v in items:
             self._add(k, v)
         for k, v in attrs.items():
             self._add(k, v)
+
+    def __repr__(self):
+        return '{%s}' % ', '.join(["%r: %r" % kv for kv in self])
 
     def _add(self, key, value):
         """Add key->value to client vars.
@@ -44,12 +50,18 @@ class pset(dict):
         """
         if other is None:
             return False
+        if type(other) == dict:
+            return dict.__eq__(self, other)
+        # noinspection PyProtectedMember
         if set(self._order) == set(other._order):  # pylint: disable=W0212
             for key in self._order:
                 if self[key] != other[key]:
                     return False
             return True
         return False
+
+    def __ne__(self, other):
+        return not (self == other)
 
     def __iadd__(self, other):
         for k, v in other:
@@ -96,6 +108,7 @@ class pset(dict):
         return iter(self)
 
     def values(self):
+        # type: () -> list
         return [dict.get(self, k) for k in self._order]
 
     def keys(self):

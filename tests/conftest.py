@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pragma: nocover
 import invoke
 import pytest
 
