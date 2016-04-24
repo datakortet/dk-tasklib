@@ -27,11 +27,8 @@ Usage::
 """
 import time
 from dkfileutils.path import Path
-from invoke import ctask as task
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
-from dktasklib import Package
 
 
 class FileModified(FileSystemEventHandler):
@@ -56,9 +53,12 @@ class DirectoryModified(FileSystemEventHandler):
         self.action = action
 
     def on_modified(self, event):
+        # print event.src_path, self.path, self.ext
         if not event.src_path.startswith(self.path):
+            # print '  path different'
             return
         if self.ext and not event.src_path.endswith(self.ext):
+            # print '  ext different'
             return
         self.action(event)
 
@@ -83,6 +83,7 @@ class Watcher(object):
         )
 
     def start(self):
+        print 'watching for changes.. (Ctrl-C to exit)'
         self.observer.start()
         try:
             while 1:
