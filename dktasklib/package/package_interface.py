@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
 import pprint
-
 import invoke
 from dkfileutils.path import Path
 from dkfileutils.changed import Directory
