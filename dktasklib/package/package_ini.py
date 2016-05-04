@@ -7,21 +7,23 @@ from dkfileutils.pfind import pfind
 from .package_interface import PackageInterface
 
 
-class PackageIni(PackageInterface):
+class IniPackageFile(PackageInterface):
     """Read package.ini::
 
            pkg = dktasklib.Package()
            VERSION = pkg.version
 
     """
+    INI_NAME = ""
+
     @classmethod
     def exists(cls):
-        return pfind('.', 'package.ini')
+        return pfind('.', cls.INI_NAME + '.ini')
 
     def __init__(self, ctx=None, *args, **kw):
-        super(PackageIni, self).__init__(
+        super(IniPackageFile, self).__init__(
             ctx,
-            fname=pfind('.', 'package.ini')
+            fname=pfind('.', self.INI_NAME + '.ini')
         )
         self._package = None
 
@@ -42,7 +44,15 @@ class PackageIni(PackageInterface):
         try:
             return self.package.get('package', attr)
         except (KeyError, NoOptionError):
-            return super(PackageIni, self).get(attr, default)
+            return super(IniPackageFile, self).get(attr, default)
 
     def set(self, attr, val):
         self.package.set('package', attr, val)
+
+
+class PackageIni(IniPackageFile):
+    INI_NAME = 'package'
+
+
+class DkBuildIni(IniPackageFile):
+    INI_NAME = 'dkbuild'

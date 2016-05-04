@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .setup_file import SetupPy
-from .package_ini import PackageIni
+from .package_ini import PackageIni, DkBuildIni
 from .package_json import PackageJson
 
 
@@ -11,6 +11,8 @@ def Package(*args, **kwargs):
     # these are listed in order of preference
     if PackageIni.exists():
         return PackageIni(*args, **kwargs)
+    # if DkBuildIni.exists():
+    #     return DkBuildIni(*args, **kwargs)
     elif PackageJson.exists():
         return PackageJson(*args, **kwargs)
     elif SetupPy.exists():

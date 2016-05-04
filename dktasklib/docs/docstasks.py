@@ -2,15 +2,22 @@
 
 import os
 import webbrowser
-from os.path import join
-
 from dkfileutils.changed import changed
-from invoke import ctask as task, Collection
+from invoke import ctask as task
 from dktasklib import Package
+from .module import Module
+from .makedocs import document_module
+
+
+@task
+def mkdocs(ctx):
+    """Create documentation stubs.
+    """
+    document_module(Module(ctx.pkg))
 
 
 @task(name='clean')
-def _clean(ctx):  # Underscored func name to avoid shadowing kwargs in build()
+def clean_docs(ctx):  # Underscored func name to avoid shadowing kwargs in build()
     """Nuke docs build target directory so next build is clean.
     """
     if 'pkg' not in ctx:
@@ -22,10 +29,10 @@ def _clean(ctx):  # Underscored func name to avoid shadowing kwargs in build()
 
 # Ditto
 @task(name='browse')
-def _browse(ctx):  # pragma: nocover
+def browse_docs(ctx):  # pragma: nocover
     """Open build target's index.html in a browser (using the :py:mod:`webbrowser` module).
     """
-    index = join(ctx.pkg.root / 'build' / 'docs' / 'index.html')
+    index = ctx.pkg.root / 'build' / 'docs' / 'index.html'
     webbrowser.open_new(index)
 
 
@@ -51,7 +58,7 @@ def build(ctx, clean=False, browse=False, warn=False,
         return  # should perhaps check if code has changed too? (autodoc)
 
     if clean:
-        _clean(ctx)
+        clean_docs(ctx)
     if opts is None:  # pragma: nocover
         opts = ""
     opts += " -b %s" % builder
@@ -65,7 +72,7 @@ def build(ctx, clean=False, browse=False, warn=False,
         os.environ['DJANGO_SETTINGS_MODULE'] = dj_settings
     ctx.run(cmd)
     if browse:  # pragma: nocover
-        _browse(ctx)
+        browse_docs(ctx)
 
 
 @task
@@ -75,13 +82,3 @@ def tree(ctx):
     ignore = ".git|*.pyc|*.swp|dist|*.egg-info|_static|_build|_templates"
     ctx.run('tree -Ca -I "{0}" {1}'.format(ignore, ctx.pkg.docsdir))
 
-
-# Vanilla/default/parameterized collection for normal use
-ns = Collection('docs', _clean, _browse, build, tree)
-ns.configure({
-    'docs': {
-        'source': 'docs',
-        'builddir': join('build', 'docs'),
-        'target_file': 'index.html',
-    }
-})

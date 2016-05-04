@@ -1,0 +1,85 @@
+{% if module.is_app %}
+.. py:module:: {{ module.name }}
+   :synopsis:  {{ module.synopsis }}
+
+
+------------------------------------------------------------------
+*DjApp* **{{ module.name }}**
+------------------------------------------------------------------
+
+{{ module.docstring }}
+
+{% else %}
+.. py:module:: {{ module.name }}
+   :synopsis:  {{ module.synopsis }}
+
+{{ module.name }}
+==================================================================
+
+{{ module.docstring }}
+
+Status
+======
+.. svnrevision:: {{ module.name }}
+
+ToDo list
+---------
+.. todolist::
+
+
+Lintscore
+---------
+.. lintscore:: {{ module.name }}
+
+{% endif %}
+{% if module.has('models.py') %}
+Models
+======
+.. model:: {{ module.name }}
+
+{% endif %}
+
+{% if module.has('urls.py') %}
+URLs
+====
+
+.. urlconfig:: {{ module.name }}.urls
+
+{% endif %}
+
+{% if module.has('admin.py') %}
+Admin
+=====
+
+.. literalinclude:: ../admin.py
+
+{% endif %}
+
+{% if module.has('defaults.py') %}
+SETTINGS
+========
+
+.. literalinclude:: ../defaults.py
+{% endif %}
+
+{%  if module.views() %}
+Views
+=====
+{% for pyname, modname in module.views() %}
+.. automodule:: {{ modname }}
+   :members:
+   :undoc-members:
+
+{% endfor %}
+
+{% endif %}
+
+{%  for pyname, modname in module.files() %}
+{{ modname }}
+---------------------------------------------------------------
+
+.. automodule:: {{ modname }}
+   :members:
+   :undoc-members:
+
+{% endfor %}

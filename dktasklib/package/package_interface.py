@@ -23,7 +23,17 @@ class PackageInterface(object):
 
     @property
     def name(self):
+        """The package/app name.
+        """
         return self.package_name.replace('-', '')
+
+    @property
+    def modulename(self):
+        """The importable module name.
+        """
+        if self.package_name == self.name:
+            return self.name
+        return self.root.parent.dirname() + '.' + self.name
 
     @property
     def sourcedir(self):
