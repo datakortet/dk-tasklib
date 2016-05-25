@@ -119,16 +119,17 @@ def version_js(ctx, fname, kind='pkg', force=False):
         kind=kind,
         force=force
     )
-    if force or not os.path.exists(dst):
-        ctx.run('cp {src} {dst}'.format(
-            src=fname,
-            dst=dst
-        ))
-    else:
-        print """
-        Filename already exists, add --force or call upversion: {}
-        """.format(dst)
     return dst
+    # if force or not os.path.exists(dst):
+    #     ctx.run('cp {src} {dst}'.format(
+    #         src=fname,
+    #         dst=dst
+    #     ))
+    # else:
+    #     print """
+    #     Filename already exists, add --force or call upversion: {}
+    #     """.format(dst)
+    # return dst
 
 
 @requires('nodejs', 'npm', 'browserify')
@@ -212,6 +213,8 @@ def buildjs(ctx, src, dst, force=False, **kw):
     if uglify:
         finaldst = switch_extension(dst, '.min.js')
         dst = uglifyjs(ctx, dst, finaldst)
+        if force:
+            dst = version_js(ctx, dst)
 
     return dst
 
