@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import textwrap
 import webbrowser
 from os.path import join
 
@@ -29,6 +30,20 @@ def _browse(ctx):  # pragma: nocover
     webbrowser.open_new(index)
 
 
+@task
+def make_api_docs(ctx):
+    """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
+    """
+    ctx.run("sphinx-apidoc -o {pkg.docsdir} {pkg.sourcedir}".format(pkg=ctx.pkg))
+    if ".. include:: modules.rst" not in open(ctx.pkg.docsdir / 'index.rst').read():
+        print textwrap.dedent("""\
+        WARNING: you need to include the following in docs/index.rst
+
+            .. include:: modules.rst
+
+        """)
+
+
 @task(default=True, help={
     'opts': "Extra sphinx-build options/args",
     'clean': "Remove build tree before building",
@@ -52,6 +67,8 @@ def build(ctx, clean=False, browse=False, warn=False,
 
     if clean:
         _clean(ctx)
+    make_api_docs(ctx)
+
     if opts is None:  # pragma: nocover
         opts = ""
     opts += " -b %s" % builder
