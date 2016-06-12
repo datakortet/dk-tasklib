@@ -7,6 +7,8 @@ from os.path import join
 
 from dkfileutils.changed import changed
 from invoke import ctask as task, Collection
+
+from dktasklib import concat
 from dktasklib import Package
 
 
@@ -31,10 +33,14 @@ def _browse(ctx):  # pragma: nocover
 
 
 @task
-def make_api_docs(ctx):
+def make_api_docs(ctx, force=False):
     """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
     """
-    ctx.run("sphinx-apidoc -o {pkg.docsdir} {pkg.sourcedir}".format(pkg=ctx.pkg))
+    ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
+    ctx.run("sphinx-apidoc -o {pkg.docsdir}/api {pkg.sourcedir}".format(pkg=ctx.pkg))
+    concat.copy(ctx, ctx.pkg.docsdir/'api'/'*', ctx.pkg.docsdir)
+    ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
+
     if ".. include:: modules.rst" not in open(ctx.pkg.docsdir / 'index.rst').read():
         print textwrap.dedent("""\
         WARNING: you need to include the following in docs/index.rst
@@ -67,7 +73,7 @@ def build(ctx, clean=False, browse=False, warn=False,
 
     if clean:
         _clean(ctx)
-    make_api_docs(ctx)
+    make_api_docs(ctx, force=force)
 
     if opts is None:  # pragma: nocover
         opts = ""
