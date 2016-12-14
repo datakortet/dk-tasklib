@@ -64,6 +64,8 @@ def _replace_version(fname, cur_version, new_version):
 def upversion(ctx, major=False, minor=False, patch=False):
     """Update package version (default patch-level increase).
     """
+    # while it may be tempting to make this task auto-tag the new version,
+    # this is generally a bad idea (bumpversion did this, and it was a mess)
     pkg = Package()
     if not (major or minor or patch):
         patch = True  # pragma: nocover
