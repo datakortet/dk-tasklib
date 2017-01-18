@@ -15,6 +15,12 @@ def test_build(ctx):
                 master_doc = 'index'
             - index.rst: |
                 hello *world*
+
+                .. toctree::
+                   modules
+
+                .. include:: modules.rst
+
     """
     with create_files(files) as directory:
         os.chdir('mypackage')
