@@ -8,7 +8,7 @@ from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
 from dktasklib.utils import cd, dest_is_newer_than_source, switch_extension
-from dktasklib.version import version_name, add_version
+from dktasklib.version import version_name, add_version, copy_to_version
 
 
 def ensure_package_json(ctx):
@@ -214,7 +214,7 @@ def buildjs(ctx, src, dst, force=False, **kw):
         finaldst = switch_extension(dst, '.min.js')
         dst = uglifyjs(ctx, dst, finaldst)
         if force:
-            dst = version_js(ctx, dst)
+            dst = copy_to_version(ctx, dst, force=force)
 
     return dst
 
