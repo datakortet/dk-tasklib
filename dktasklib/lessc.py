@@ -9,7 +9,7 @@ from invoke import ctask as task, Collection
 from . import urlinliner
 from .concat import copy
 from .environment import env
-from .utils import fmt, switch_extension
+from .utils import fmt, switch_extension, message
 from .version import get_version
 from .upversion import UpdateTemplateVersion
 
@@ -75,12 +75,13 @@ class LessRule(BuildRule):
             clean_css="-b --s0 --advanced",
         )
 
-        copy(  # create a copy without version number too..
-            self.ctx,
-            cssname,
-            Path(cssname).dirname() / switch_extension(source.basename(), '.css'),
-            force=True
-        )
+        with message("Creating copy without version number.."):
+            copy(  # create a copy without version number too..
+                self.ctx,
+                cssname,
+                Path(cssname).dirname() / switch_extension(source.basename(), '.css'),
+                force=True
+            )
         return cssname
 
 

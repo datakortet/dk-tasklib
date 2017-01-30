@@ -51,7 +51,7 @@ class Command(object):
                     if self.policy['negative_bool'] == 'prefix':
                         res += '--no' + flag
 
-            elif isinstance(v, (list, tuple)):
+            elif isinstance(v, (list, tuple)) and v:
                 res += flag + '=' + self.policy['list_join'].join(str(item) for item in v)
 
             elif isinstance(v, basestring):

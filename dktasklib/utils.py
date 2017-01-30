@@ -67,6 +67,18 @@ def filename(fname):
 
 
 @contextmanager
+def message(s):
+    try:
+        print (' %s ' % s).center(80, '-')
+        yield
+    except:
+        print 'error =====>', s, '<====== error'
+        raise
+    else:
+        print (' (ok: %s) ' % s).center(80, '=')
+
+
+@contextmanager
 def env(**kw):
     """Context amanger to temporarily override environment variables.
     """

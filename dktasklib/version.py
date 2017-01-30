@@ -69,7 +69,6 @@ def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
            (str) output file name
     """
     # where to place the versioned file..
-    # print "LOCALS:", locals()
     source = Path(source)
     outputdir = Path(outputdir) if outputdir else source.dirname()
     outputdir.makedirs()
