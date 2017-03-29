@@ -20,7 +20,8 @@ from distutils.core import setup, Command
 from setuptools.command.test import test as TestCommand
 from ConfigParser import RawConfigParser
 
-version = '0.2.8'
+version = '0.2.9'
+DIRNAME = os.path.dirname(__file__)
 
 
 class PyTest(TestCommand):
@@ -55,5 +56,10 @@ setup(
     long_description=open('README.rst').read(),
     cmdclass={'test': PyTest},
     packages=['dktasklib'],
+    entry_points={
+        'console_scripts': """
+            dk-tasklib = dktasklib.entry_points.dktasklib:main
+        """
+    },
     zip_safe=False,
 )
