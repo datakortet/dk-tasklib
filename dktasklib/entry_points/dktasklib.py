@@ -2,6 +2,7 @@
 
 """Commands installed by setup.py
 """
+# pragma: nocover
 import argparse
 import os
 import sys

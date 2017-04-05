@@ -4,6 +4,7 @@ Base version of package/tasks.py.
 
 Copy this file to your package and modify it.
 """
+# pragma: nocover
 import os
 
 from invoke import ctask as task, collection
@@ -17,7 +18,7 @@ from dktasklib import jstools
 from dktasklib import version, upversion
 from dktasklib.watch import Watcher
 
-DIRNAME = os.path.dirname(__file__)
+DIRNAME = Path(os.path.dirname(__file__))
 
 # collectstatic
 # --------------
