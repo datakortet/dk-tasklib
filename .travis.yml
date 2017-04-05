@@ -24,7 +24,7 @@ install:
   - npm install -g uglify-js
 
 # script: py.test -v --cov=dktasklib tests
-script: py.test -v tests
+script: py.test -s -v --cov=dktasklib tests
 
-#after_success:
-#  coveralls
+after_success:
+  coveralls
