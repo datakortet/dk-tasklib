@@ -6,6 +6,7 @@ import webbrowser
 from os.path import join
 
 from dkfileutils.changed import changed
+from dkfileutils.path import Path
 from invoke import ctask as task, Collection
 
 from dktasklib import concat
@@ -33,11 +34,24 @@ def _browse(ctx):  # pragma: nocover
 
 
 @task
-def make_api_docs(ctx, force=False):
+def make_api_docs(ctx, prefix='', force=False):
     """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
     """
     ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
     ctx.run("sphinx-apidoc -o {pkg.docsdir}/api {pkg.sourcedir} {pkg.sourcedir}/migrations {pkg.sourcedir}/models {pkg.sourcedir}/models.py".format(pkg=ctx.pkg))
+    if prefix:
+        for fname in (ctx.pkg.docsdir / 'api').glob('*.rst'):
+            f = Path(fname)
+            lines = f.read().split('\n')
+            for i, line in enumerate(lines):
+                lines[i] = line.replace(ctx.pkg.name, prefix + ctx.pkg.name)
+                if i > 0 and len(set(line)) == 1 and len(line) < len(lines[i-1]):
+                    lines[i] = line[0] * len(lines[i-1])
+            f.write('\n'.join(lines))
+            pre, pkgname, post = fname.rpartition(ctx.pkg.name)
+            if pkgname and os.path.sep not in post:
+                f.rename(pre + prefix + pkgname + post)
+
     concat.copy(ctx, ctx.pkg.docsdir/'api'/'*', ctx.pkg.docsdir)
     ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
 
@@ -52,6 +66,7 @@ def make_api_docs(ctx, force=False):
 
 @task(default=True, help={
     'opts': "Extra sphinx-build options/args",
+    'prefix': "Module prefix, for submodules",
     'clean': "Remove build tree before building",
     'browse': "Open docs index in browser after building",
     'warn': "Build with stricter warnings/errors enabled",
@@ -61,7 +76,7 @@ def make_api_docs(ctx, force=False):
 def build(ctx, clean=False, browse=False, warn=False,
           builder='html',
           force=False,
-          opts=""):
+          opts="", prefix=''):
     """
     Build the project's Sphinx docs.
     """
@@ -73,7 +88,7 @@ def build(ctx, clean=False, browse=False, warn=False,
 
     if clean:
         _clean(ctx)
-    make_api_docs(ctx, force=force)
+    make_api_docs(ctx, force=force, prefix=prefix)
 
     if opts is None:  # pragma: nocover
         opts = ""

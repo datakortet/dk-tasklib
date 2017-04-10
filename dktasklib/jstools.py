@@ -3,7 +3,7 @@ import os
 import textwrap
 
 from invoke import ctask as task, Collection
-
+from dkfileutils.path import Path
 from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
@@ -88,10 +88,19 @@ def ensure_babelify(ctx):
 
 @requires('nodejs', 'npm', 'babel')
 @task
-def babel(ctx, source, dest, source_maps=True, force=False):
+def babel(ctx, source, dest=None, source_maps=True, force=False):
     """
     --source-maps --out-file $ProjectFileDir$/$ProjectName$/static/$ProjectName$/$FileNameWithoutExtension$.js $FilePath$
     """
+    source = Path(source.format(pkg=ctx.pkg))
+    if dest is None:
+        dest = ctx.pkg.staticdir / ctx.pkg.name / 'js'
+        dest.makedirs()
+    else:
+        dest = Path(dest.format(pkg=ctx.pkg))
+    if dest.isdir():
+        dest += switch_extension(source.basename(), '.js')
+
     if not force and dest_is_newer_than_source(source, dest):
         print 'babel:', dest, 'is up-to-date.'
         return dest
