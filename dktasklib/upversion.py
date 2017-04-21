@@ -83,11 +83,20 @@ def upversion(ctx, major=False, minor=False, patch=False):
     new_version = '.'.join([str(n) for n in cur_version])
 
     changed = 0
-    for fname in files_with_version_numbers():
-        changed += _replace_version(fname, txt_version, new_version)
+    changed_files = []
+    addlfiles = set()
+    if hasattr(ctx, 'versionfiles'):
+        addlfiles = {pkg.root / fname for fname in ctx.versionfiles}
+    for fname in addlfiles | files_with_version_numbers():
+        was_changed = _replace_version(fname, txt_version, new_version)
+        changed += was_changed
+        if was_changed:
+            changed_files.append(fname)
     if changed == 0:
         warnings.warn("I didn't change any files...!")  # pragma: nocover
-    print "changed %d files" % changed
+    print "changed version to %s in %d files" % (new_version, changed)
+    for fname in changed_files:
+        print '  ', fname
     return new_version
 
 
