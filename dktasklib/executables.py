@@ -89,6 +89,18 @@ class Executables(object):
                 raise MissingCommand("Missing browserify (%s)" % npminstall)
         return exepath
 
+    def find_babili(self):
+        exename = 'babili'
+        exepath = get_executable(exename)
+        npminstall = "npm install -g babili --no-color"
+        if not exepath:
+            if win32:
+                self.ctx.run(npminstall, echo=False, encoding="utf-8")
+                exepath = get_executable(exename)
+            else:
+                raise MissingCommand("Missing babili (%s)" % npminstall)
+        return exepath
+
     def find_babel(self):
         exename = 'babel'
         exepath = get_executable(exename)

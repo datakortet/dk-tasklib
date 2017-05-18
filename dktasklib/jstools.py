@@ -76,6 +76,40 @@ def ensure_es2015(ctx):
     else:
         return True
 
+def ensure_preset_es2016(ctx):
+    if 'babel-preset-es2015' not in runners.run("npm ls --depth=0 babel-preset-es2016 --no-color"):
+        print "didn't find babel-preset-es2016, installing it.."
+        with cd(ctx.pkg.root):
+            ctx.run("npm install babel-preset-es2016 --save-dev")
+    else:
+        return True
+
+
+def ensure_preset_es2017(ctx):
+    if 'babel-preset-es2017' not in runners.run("npm ls --depth=0 babel-preset-es2017 --no-color"):
+        print "didn't find babel-preset-es2017, installing it.."
+        with cd(ctx.pkg.root):
+            ctx.run("npm install babel-preset-es2017 --save-dev")
+    else:
+        return True
+
+
+def ensure_preset_latest(ctx):
+    if 'babel-preset-latest' not in runners.run("npm ls --depth=0 babel-preset-env --no-color"):
+        print "didn't find babel-preset-env, installing it.."
+        with cd(ctx.pkg.root):
+            ctx.run("npm install babel-preset-env --save-dev")
+    else:
+        return True
+
+def ensure_preset_babili(ctx):
+    if 'babel-preset-babili' not in runners.run("npm ls --depth=0 babel-preset-babili --no-color"):
+        print "didn't find babel-preset-babili, installing it.."
+        with cd(ctx.pkg.root):
+            ctx.run("npm install babel-preset-babili --save-dev")
+    else:
+        return True
+
 
 def ensure_babelify(ctx):
     if 'babelify' not in runners.run("npm ls --depth=0 babelify --no-color"):
@@ -108,7 +142,8 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
     ensure_package_json(ctx)
     ensure_node_modules(ctx)
     # ensure_babel(ctx)
-    ensure_es2015(ctx)
+    # ensure_es2015(ctx)
+    ensure_preset_latest(ctx)
     ensure_babelrc(ctx)
 
     options = ""
@@ -174,7 +209,9 @@ def browserify(ctx,
     options = ""  # no source maps
     if babelify:
         print 'ensure babelify:', ensure_babelify(ctx)
+        print 'ensure preset latest:', ensure_preset_latest(ctx)
         options += ' -t babelify'
+        options += ' --presets latest'
     for r in require:
         options += ' -r "%s"' % r
     for e in external:
@@ -201,8 +238,26 @@ def babili(ctx, src, dst):
     babilicmd(
         ctx,
         src=src,
-        dst=dst
+        dst=dst,
     )
+    return dst
+
+
+@task(default=True)
+def buildjs(ctx, src, dst, force=False, **kw):
+    uglify = kw.pop('uglify', False)
+    if kw.pop('browserify', False):
+        dst = browserify(ctx, src, dst,
+                         babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
+    else:
+        dst = babel(ctx, src, dst, force=force)
+
+    if uglify:
+        finaldst = switch_extension(dst, '.min.js')
+        dst = uglifyjs(ctx, dst, finaldst)
+        if force:
+            dst = copy_to_version(ctx, dst, force=force)
+
     return dst
 
 
