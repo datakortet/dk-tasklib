@@ -22,6 +22,7 @@ install:
   - npm install -g babel-cli
   - npm install -g browserify
   - npm install -g uglify-js
+  - npm install -g babilify
 
 # script: py.test -v --cov=dktasklib tests
 script: py.test -s -v --cov=dktasklib tests
