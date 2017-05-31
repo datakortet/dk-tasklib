@@ -2,6 +2,7 @@
 
 from .setup_file import SetupPy
 from .package_ini import PackageIni
+from .dkbuild_ini import DkbuildIni
 from .package_json import PackageJson
 
 
@@ -9,6 +10,9 @@ def Package(*args, **kwargs):
     import os
 
     # these are listed in order of preference
+    # if DkbuildIni.exists():
+    #     return DkbuildIni(*args, **kwargs)
+    # el
     if PackageIni.exists():
         return PackageIni(*args, **kwargs)
     elif PackageJson.exists():

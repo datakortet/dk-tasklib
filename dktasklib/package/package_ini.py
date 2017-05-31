@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Package based on package.ini or dkbuild.ini
+"""Package based on package.ini
 """
 from ConfigParser import RawConfigParser, NoOptionError
 from dkfileutils.pfind import pfind
@@ -16,12 +16,12 @@ class PackageIni(PackageInterface):
     """
     @classmethod
     def exists(cls):
-        return pfind('.', 'package.ini')
+        return pfind('.', 'package.ini') #or pfind('.', 'dkbuild.ini')
 
     def __init__(self, ctx=None, *args, **kw):
         super(PackageIni, self).__init__(
             ctx,
-            fname=pfind('.', 'package.ini')
+            fname=pfind('.', 'package.ini') #or pfind('.', 'dkbuild.ini')
         )
         self._package = None
 

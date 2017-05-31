@@ -28,7 +28,7 @@ class PackageInterface(object):
         """Return the root of this package's source tree.
         """
         is_package = 'setup.py' in self.root
-        return Directory(self.root / self.name if is_package else self.root)
+        return Directory((self.root / self.name) if is_package else self.root)
 
     @property
     def docsdir(self):
@@ -41,7 +41,7 @@ class PackageInterface(object):
         """Return the root of this package's static tree.
         """
         is_package = 'setup.py' in self.root
-        return Directory(self.root / self.name / 'static'
+        return Directory((self.root / self.name / 'static')
                          if is_package else self.root / 'static')
 
     def config(self):  # pragma: nocover
@@ -58,6 +58,8 @@ class PackageInterface(object):
 
     def __getattr__(self, item):
         # for convenience (continue using [](__setitem__) for setting).
+        if item.startswith('_'):
+            raise AttributeError(item)
         return self.get(item)
 
     def __getitem__(self, key):
