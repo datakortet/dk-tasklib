@@ -191,6 +191,21 @@ def browserify(ctx,
     return dest
 
 
+babilicmd = Command('babili', '{src} {opts} -o {dst}',
+                    requirements=('nodejs', 'npm', 'babili'))
+
+
+@requires('nodejs', 'npm', 'babili')
+@task
+def babili(ctx, src, dst):
+    babilicmd(
+        ctx,
+        src=src,
+        dst=dst
+    )
+    return dst
+
+
 uglifycmd = Command('uglifyjs', '{src} {opts} -o {dst}',
                     requirements=('nodejs', 'npm', 'uglify'))
 
