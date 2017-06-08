@@ -24,20 +24,21 @@ class DkbuildIni(PackageInterface):
         if self._package is None:
             self._package = RawConfigParser()
             self._package.read(self.fname)
+        print "self._package", self._package
         return self._package
 
     def __iter__(self):
-        print 4
+        print 'iter', list(self.package.items('dkbuild'))
         return iter(self.package.items('dkbuild'))
 
     def save(self):
-        print 4
-        pass
+        print 'in save'
+        raise ValueError("No saving of dkbuild.ini")
 
-    def __getstate__(self):
-        res = {k: self[k] for k in self.package.options('dkbuild')}
-        print "GETSTATE:", res
-        return res
+    # def __getstate__(self):
+    #     res = {k: self[k] for k in self.package.options('dkbuild')}
+    #     print "GETSTATE:", res
+    #     return res
 
     # def __getattr__(self, item):
     #     print "GETattr:", item
@@ -49,13 +50,13 @@ class DkbuildIni(PackageInterface):
     #         raise AttributeError(item)
 
     def get(self, attr, default=None):
-        print "GET:", attr, default
-        print 4
-        return self.package.get('dkbuild', attr)
-        # try:
-        #     return self.package.get('dkbuild', attr)
-        # except (KeyError, NoOptionError):
-        #     return super(DkbuildIni, self).get(attr, default)
+        # print "GET:", attr, default
+        # print 4
+        # return self.package.get('dkbuild', attr)
+        try:
+            return self.package.get('dkbuild', attr)
+        except (KeyError, NoOptionError):
+            return super(DkbuildIni, self).get(attr, default)
 
     def set(self, attr, val):
         self.package.set('dkbuild', attr, val)

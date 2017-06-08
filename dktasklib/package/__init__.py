@@ -10,10 +10,9 @@ def Package(*args, **kwargs):
     import os
 
     # these are listed in order of preference
-    # if DkbuildIni.exists():
-    #     return DkbuildIni(*args, **kwargs)
-    # el
-    if PackageIni.exists():
+    if DkbuildIni.exists():
+        return DkbuildIni(*args, **kwargs)
+    elif PackageIni.exists():
         return PackageIni(*args, **kwargs)
     elif PackageJson.exists():
         return PackageJson(*args, **kwargs)
