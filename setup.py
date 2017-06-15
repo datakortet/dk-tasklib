@@ -58,7 +58,7 @@ setup(
     packages=['dktasklib'],
     entry_points={
         'console_scripts': """
-            dk-tasklib = dktasklib.entry_points.dktasklib:main
+            dk-tasklib = dktasklib.entry_points.dktasklibcmd:main
         """
     },
     zip_safe=False,

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from invoke import ctask as task
 
 from .setup_file import SetupPy
 from .package_ini import PackageIni
@@ -29,3 +30,29 @@ def Package(*args, **kwargs):
 
         Please create one of them in the root directory of your package.
         """.format(cwd=os.getcwd()))
+
+
+@task
+def package(ctx):
+    """Print detected package directories.
+    """
+    pkg = Package()
+    keys = ['package_name', 'name', 'fname', 'root', 'sourcedir',
+            'docsdir', 'staticdir']
+    keylen = 1 + max(len(k) for k in keys)
+    vallen = 1 + max(len(str(getattr(pkg, k))) for k in keys)
+    print "The dk-tasklib Package object thinks your code has the following layout:"
+    print
+    print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)
+    print 'attribute'.ljust(keylen), 'value'.ljust(vallen), 'description'
+    print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)
+
+    print 'package_name'.ljust(keylen), str(pkg.package_name).ljust(vallen), '(repo name)'
+    print 'name'.ljust(keylen), str(pkg.name).ljust(vallen), '(importable name)'
+    print 'fname'.ljust(keylen), str(pkg.fname).ljust(vallen), '(name of file providing package info)'
+    print 'root'.ljust(keylen), str(pkg.root).ljust(vallen), '(root of the package/wc)'
+    print 'sourcedir'.ljust(keylen), str(pkg.sourcedir).ljust(vallen), '(root of the source code)'
+    print 'docsdir'.ljust(keylen), str(pkg.docsdir).ljust(vallen), '(root of documentation)'
+    print 'staticdir'.ljust(keylen), str(pkg.staticdir).ljust(vallen), '(directory for static resources)'
+
+    print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)

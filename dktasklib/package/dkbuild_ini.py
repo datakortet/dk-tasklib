@@ -24,15 +24,15 @@ class DkbuildIni(PackageInterface):
         if self._package is None:
             self._package = RawConfigParser()
             self._package.read(self.fname)
-        print "self._package", self._package
+        # print "self._package", self._package
         return self._package
 
     def __iter__(self):
-        print 'iter', list(self.package.items('dkbuild'))
+        # print 'iter', list(self.package.items('dkbuild'))
         return iter(self.package.items('dkbuild'))
 
     def save(self):
-        print 'in save'
+        # print 'in save'
         raise ValueError("No saving of dkbuild.ini")
 
     # def __getstate__(self):

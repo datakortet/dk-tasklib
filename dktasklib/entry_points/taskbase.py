@@ -1,23 +1,46 @@
 # -*- coding: utf-8 -*-
 """
-Base version of package/tasks.py.
+Base version of package/tasks.py, created by
 
-Copy this file to your package and modify it.
+    package/root/dir> dk-tasklib install
+
+(it should reside in the root directory of your package)
+
+This file defines tasks for the Invoke tool: http://www.pyinvoke.org
+
+Basic usage::
+
+    inv -l               # list all available tasks
+    inv -e ...           # echo commands as tasks are executed
+    inv -e build -f      # build everything, forcefully
+    inv -e build --docs  # only build the docs
+
+dk-tasklib is a library of basic tasks that tries to automate common tasks.
+dk-tasklib will attempt to install any tools/libraries/etc. that are required,
+e.g. when running the task to compile x.less to x.css, it will check that
+the lessc compiler is installed (and if not it will attempt to install it).
+
+This file is an initial skeleton, you are supposed to edit and add to it so it
+will fit your use case.
+
+
 """
 # pragma: nocover
 import os
 
-from invoke import ctask as task, collection
-from dktasklib.package import Package
-from dkfileutils.path import Path
 from dkfileutils.changed import changed
-from dktasklib.manage import collectstatic
-from dktasklib import lessc
+from dkfileutils.path import Path
+from invoke import ctask as task, collection
+
 from dktasklib import docs as doctools
 from dktasklib import jstools
+from dktasklib import lessc
 from dktasklib import version, upversion
+from dktasklib.manage import collectstatic
+from dktasklib.package import Package, package
 from dktasklib.watch import Watcher
 
+#: where tasks.py is located (root of package)
 DIRNAME = Path(os.path.dirname(__file__))
 
 # collectstatic
@@ -109,6 +132,7 @@ ns = collection.Collection(
     lessc,
     doctools,
     version, upversion,
+    package,
     collectstatic,
 )
 ns.configure({
