@@ -37,10 +37,15 @@ class PackageJson(PackageInterface):
     def __iter__(self):
         return iter(self.package.items())
 
+    def _get(self, attr):
+        if not self.fname:
+            raise AttributeError(attr)
+        return self.package[attr]
+
     def get(self, attr, default=None):
         try:
-            return self.package[attr]
-        except KeyError:
+            return self._get(attr)
+        except (AttributeError, KeyError):
             return super(PackageJson, self).get(attr, default)
 
     def set(self, key, value):

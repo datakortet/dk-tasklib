@@ -6,10 +6,14 @@ from ConfigParser import NoOptionError, RawConfigParser
 
 from dkfileutils.pfind import pfind
 
+from .package_json import PackageJson
+from .setup_file import SetupPy
 from .package_interface import PackageInterface
 
 
 class DkbuildIni(PackageInterface):
+    fallback_modules = [m for m in [PackageJson, SetupPy] if m.exists()]
+
     @classmethod
     def exists(cls):
         return pfind('.', 'dkbuild.ini')
@@ -24,37 +28,20 @@ class DkbuildIni(PackageInterface):
         if self._package is None:
             self._package = RawConfigParser()
             self._package.read(self.fname)
-        # print "self._package", self._package
         return self._package
 
     def __iter__(self):
-        # print 'iter', list(self.package.items('dkbuild'))
         return iter(self.package.items('dkbuild'))
 
     def save(self):
-        # print 'in save'
         raise ValueError("No saving of dkbuild.ini")
 
-    # def __getstate__(self):
-    #     res = {k: self[k] for k in self.package.options('dkbuild')}
-    #     print "GETSTATE:", res
-    #     return res
-
-    # def __getattr__(self, item):
-    #     print "GETattr:", item
-    #     if item.startswith('_'):
-    #         raise AttributeError(item)
-    #     try:
-    #         return self.package.get('dkbuild', item)
-    #     except (KeyError, NoOptionError):
-    #         raise AttributeError(item)
+    def _get(self, attr):
+        return self.package.get('dkbuild', attr)
 
     def get(self, attr, default=None):
-        # print "GET:", attr, default
-        # print 4
-        # return self.package.get('dkbuild', attr)
         try:
-            return self.package.get('dkbuild', attr)
+            return self._get(attr)
         except (KeyError, NoOptionError):
             return super(DkbuildIni, self).get(attr, default)
 

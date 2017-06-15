@@ -7,7 +7,12 @@ from invoke.config import Config
 
 
 class PackageInterface(object):
+    fallback_modules = []
+
     def __init__(self, ctx=None, fname=None):
+        self._args = ()
+        self._kwargs = dict(ctx=ctx, fname=fname)
+
         self.ctx = ctx or invoke.Context()
         self.fname = fname
 
@@ -54,7 +59,8 @@ class PackageInterface(object):
         return cfg
 
     def __repr__(self):
-        return pprint.pformat(self.config())
+        return self.__class__.__name__
+        # return pprint.pformat(self.config())
 
     def __getattr__(self, item):
         # for convenience (continue using [](__setitem__) for setting).
@@ -96,6 +102,14 @@ class PackageInterface(object):
                     return super(SubClass, self).get(attr, default)
 
         """
+        for backend in self.__class__.fallback_modules:
+            m = backend(*self._args, **self._kwargs)
+            try:
+                # print 'dkinterface-get:', attr, 'backend:', m.__class__.__name__
+                return m._get(attr)
+            except AttributeError:
+                pass
+
         if default is not None:
             return default
         raise AttributeError(

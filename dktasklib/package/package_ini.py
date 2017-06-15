@@ -38,9 +38,12 @@ class PackageIni(PackageInterface):
     def save(self):
         self.package.write(open(self.fname, 'w'))
 
+    def _get(self, attr):
+        return self.package.get('package', attr)
+
     def get(self, attr, default=None):
         try:
-            return self.package.get('package', attr)
+            return self._get(attr)
         except (KeyError, NoOptionError):
             return super(PackageIni, self).get(attr, default)
 

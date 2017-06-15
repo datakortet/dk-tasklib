@@ -31,11 +31,17 @@ class SetupPy(PackageInterface):
     def __iter__(self):
         return iter([])
 
-    def get(self, key, default=None):
-        if key == 'version':
+    def _get(self, attr):
+        if attr == 'version':
             with self.root.cd():
-                return self.ctx.run('python setup.py --version', hide=True).stdout.strip()
-        else:
+                return self.ctx.run('python setup.py --version',
+                                    hide=True).stdout.strip()
+        raise KeyError(attr)
+
+    def get(self, key, default=None):
+        try:
+            return self._get(attr)
+        except KeyError:
             return super(SetupPy, self).get(key, default)
 
     def set(self, attr, val):
