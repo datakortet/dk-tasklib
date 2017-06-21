@@ -39,7 +39,10 @@ class PackageInterface(object):
     def docsdir(self):
         """Return the root of this package's documentation tree.
         """
-        return Directory(self.get('docsdir', self.root / 'docs'))
+        try:
+            return Directory(self.get('docsdir'))
+        except KeyError:
+            return Directory(self.root / 'docs')
 
     @property
     def staticdir(self):
@@ -107,11 +110,12 @@ class PackageInterface(object):
             try:
                 # print 'dkinterface-get:', attr, 'backend:', m.__class__.__name__
                 return m._get(attr)
-            except AttributeError:
+            except (AttributeError, KeyError):
                 pass
 
         if default is not None:
             return default
+
         raise AttributeError(
             self.fname + " does not have an attribute named: " + attr
         )

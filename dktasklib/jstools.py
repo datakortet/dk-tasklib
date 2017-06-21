@@ -102,6 +102,7 @@ def ensure_preset_latest(ctx):
     else:
         return True
 
+
 def ensure_preset_babili(ctx):
     if 'babel-preset-babili' not in runners.run("npm ls --depth=0 babel-preset-babili --no-color"):
         print "didn't find babel-preset-babili, installing it.."
@@ -142,7 +143,7 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
     ensure_package_json(ctx)
     ensure_node_modules(ctx)
     # ensure_babel(ctx)
-    # ensure_es2015(ctx)
+    ensure_es2015(ctx)
     ensure_preset_latest(ctx)
     ensure_babelrc(ctx)
 
