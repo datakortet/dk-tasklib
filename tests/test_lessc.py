@@ -9,7 +9,7 @@ from dktasklib import lessc
 from dktasklib.commands import tree
 
 
-def test_lessc(ctx):
+def test_less_simple(ctx):
     files = """
         foo.less: |
             .foo {
@@ -17,14 +17,16 @@ def test_lessc(ctx):
             }
     """
     with create_files(files) as directory:
+        assert 'foo.css' not in os.listdir('.')
         print lessc.lessc(
             ctx.init(), src='foo.less', dst='foo.css',
             autoprefix="ie > 8, last 4 versions"
         )
         assert 'foo.css' in os.listdir('.')
-        print open('foo.css').read()
-        assert len(open('foo.css').read()) > len(open('foo.less').read())
-
+        csstxt = open('foo.css').read()
+        print csstxt
+        # assert len(open('foo.css').read()) > len(open('foo.less').read())
+        assert '-ms-flexbox' in csstxt
 
 def test_less_rule_default(ctx):
     # standard package structure..

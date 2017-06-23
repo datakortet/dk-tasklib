@@ -40,7 +40,7 @@ class PackageInterface(object):
         """Return the root of this package's documentation tree.
         """
         try:
-            return Directory(self.get('docsdir'))
+            return Directory(self.get('docs_dir'))
         except KeyError:
             return Directory(self.root / 'docs')
 
@@ -105,6 +105,11 @@ class PackageInterface(object):
                     return super(SubClass, self).get(attr, default)
 
         """
+        try:
+            return getattr(self, attr)
+        except AttributeError:
+            print "COULDN'T GET", attr, "FROM SELF"
+
         for backend in self.__class__.fallback_modules:
             m = backend(*self._args, **self._kwargs)
             try:

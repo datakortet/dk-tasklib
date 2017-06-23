@@ -39,6 +39,7 @@ from dktasklib import version, upversion
 from dktasklib.manage import collectstatic
 from dktasklib.package import Package, package
 from dktasklib.watch import Watcher
+# from dktasklib.publish import publish
 
 #: where tasks.py is located (root of package)
 DIRNAME = Path(os.path.dirname(__file__))
@@ -134,6 +135,7 @@ ns = collection.Collection(
     version, upversion,
     package,
     collectstatic,
+    # publish,
 )
 ns.configure({
     'pkg': Package()

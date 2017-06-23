@@ -36,12 +36,12 @@ class SetupPy(PackageInterface):
             with self.root.cd():
                 return self.ctx.run('python setup.py --version',
                                     hide=True).stdout.strip()
-        raise KeyError(attr)
+        raise AttributeError(attr)
 
     def get(self, key, default=None):
         try:
-            return self._get(attr)
-        except KeyError:
+            return self._get(key)
+        except AttributeError:
             return super(SetupPy, self).get(key, default)
 
     def set(self, attr, val):

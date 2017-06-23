@@ -11,11 +11,11 @@ def Package(*args, **kwargs):
     import os
 
     # these are listed in order of preference
-    if DkbuildIni.exists():
-        return DkbuildIni(*args, **kwargs)
-    elif PackageIni.exists():
-        return PackageIni(*args, **kwargs)
-    elif PackageJson.exists():
+    # if DkbuildIni.exists():
+    #     return DkbuildIni(*args, **kwargs)
+    # elif PackageIni.exists():
+    #     return PackageIni(*args, **kwargs)
+    if PackageJson.exists():
         return PackageJson(*args, **kwargs)
     elif SetupPy.exists():
         return SetupPy(*args, **kwargs)
@@ -40,7 +40,7 @@ def package(ctx):
     keys = ['package_name', 'name', 'fname', 'root', 'sourcedir',
             'docsdir', 'staticdir']
     keylen = 1 + max(len(k) for k in keys)
-    vallen = 1 + max(len(str(getattr(pkg, k))) for k in keys)
+    vallen = 1 + max(len(str(getattr(pkg, k, ''))) for k in keys)
     print "The dk-tasklib Package object thinks your code has the following layout:"
     print
     print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)

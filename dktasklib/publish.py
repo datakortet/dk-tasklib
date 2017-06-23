@@ -3,9 +3,11 @@
 
 from invoke import ctask as task
 
+from dktasklib.executables import requires
 from . import Package
 
 
+@requires('twine')
 @task(
     default=True
 )
@@ -17,8 +19,11 @@ def publish(ctx, force=False):
         if force:  # pramga: nocover
             ctx.run("python setup.py sdist bdist_wheel")
             ctx.run("python setup.py build_sphinx")
-            ctx.run("python setup.py sdist bdist_wheel upload")
-            ctx.run("python setup.py upload_docs")
+            ctx.run("python setup.py sdist bdist_wheel")
+            ctx.run("twine upload dist/*")
+
+            # we can't upload docs to pypi anymore..
+            # ctx.run("python setup.py upload_docs")
         else:
             ctx.run("python setup.py sdist")
             print 'You need to add --force to invoke the upload commands'

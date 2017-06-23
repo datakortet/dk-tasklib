@@ -5,6 +5,7 @@ import invoke
 from dkfileutils.which import get_executable
 
 from dktasklib.utils import win32
+from dktasklib import runners
 
 
 class MissingCommand(Exception):
@@ -64,6 +65,21 @@ class Executables(object):
             raise MissingCommand(install_txt)
         return fexe
 
+    def find_twine(self):
+        exename = 'twine'
+        exepath = get_executable(exename)
+        if not exepath:
+            pip = get_executable('pip')
+            cmd = pip + ' install twine'
+            if win32:
+                # self.ctx.run(cmd, echo=True)
+                runners.run(cmd)
+                exepath = get_executable(exename)
+            else:
+                raise MissingCommand("Missing twine (%s)" % cmd)
+            print 'Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section'
+        return exepath
+
     def find_uglify(self):
         exename = 'uglifyjs'
         exepath = get_executable(exename)
@@ -113,18 +129,6 @@ class Executables(object):
                 raise MissingCommand("Missing babel (%s)" % npminstall)
         return exepath
 
-    def find_babili(self):
-        exename = 'babili'
-        exepath = get_executable(exename)
-        npminstall = "npm install -g babili --no-color"
-        if not exepath:
-            if win32:
-                self.ctx.run(npminstall, echo=False, encoding="utf-8")
-                exepath = get_executable(exename)
-            else:
-                raise MissingCommand("Missing babili (%s)" % npminstall)
-        return exepath
-    
     def find_nodejs(self):  # pragma: nocover
         """Find :program:`node`.
         """
