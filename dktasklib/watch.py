@@ -14,7 +14,7 @@ Usage::
             action=lambda e: build(ctx, js=True)
         )
         watcher.watch_directory(
-            path='{pkg.docsdir}', ext='.rst',
+            path='{pkg.docs}', ext='.rst',
             action=lambda e: build(ctx, docs=True)
         )
         watcher.start()

@@ -36,16 +36,16 @@ class PackageInterface(object):
         return Directory((self.root / self.name) if is_package else self.root)
 
     @property
-    def docsdir(self):  # -> docs
+    def docs(self):
         """Return the root of this package's documentation tree.
         """
         try:
-            return Directory(self.get('docsdir'))
+            return Directory(self.get('docs'))
         except KeyError:
             return Directory(self.root / 'docs')
 
     @property
-    def django_static(self):  # django_static -> django_static
+    def django_static(self):
         """Return the root of this package's static tree.
         """
         is_package = 'setup.py' in self.root
@@ -57,9 +57,9 @@ class PackageInterface(object):
         cfg = Config(dict(iter(self)))
         cfg.name = self.name
         cfg.root = self.root
-        cfg.sourcedir = self.source
-        cfg.docsdir = self.docsdir
-        cfg.staticdir = self.django_static
+        cfg.source = self.source
+        cfg.docs = self.docs
+        cfg.django_static = self.django_static
         return cfg
 
     def __repr__(self):
