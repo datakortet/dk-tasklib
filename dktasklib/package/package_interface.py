@@ -17,19 +17,19 @@ class PackageInterface(object):
         self.fname = fname
 
     @property
-    def root(self):  # ok
+    def root(self):
         return Path(self.fname).dirname()
 
     @property
-    def package_name(self): # ok
+    def package_name(self):
         return self.root.split()[1]
 
     @property
-    def name(self):  # ok
+    def name(self):
         return self.package_name.replace('-', '')
 
     @property
-    def source(self):  # source
+    def source(self):
         """Return the root of this package's source tree.
         """
         is_package = 'setup.py' in self.root
@@ -45,7 +45,7 @@ class PackageInterface(object):
             return Directory(self.root / 'docs')
 
     @property
-    def staticdir(self):  # staticdir -> django_static
+    def django_static(self):  # django_static -> django_static
         """Return the root of this package's static tree.
         """
         is_package = 'setup.py' in self.root
@@ -59,7 +59,7 @@ class PackageInterface(object):
         cfg.root = self.root
         cfg.sourcedir = self.source
         cfg.docsdir = self.docsdir
-        cfg.staticdir = self.staticdir
+        cfg.staticdir = self.django_static
         return cfg
 
     def __repr__(self):

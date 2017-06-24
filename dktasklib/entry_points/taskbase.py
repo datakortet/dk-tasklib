@@ -70,7 +70,7 @@ def build_js(ctx, force=False):
         jstools.babel(
             ctx,
             '{pkg.source}/js/' + fname,
-            '{pkg.staticdir}/{pkg.name}/js/' + fname + '.js',
+            '{pkg.django_static}/{pkg.name}/js/' + fname + '.js',
             force=force
         )
 
@@ -88,7 +88,7 @@ def build(ctx, less=False, docs=False, js=False, force=False):
             lessc.LessRule(
                 ctx,
                 src='{pkg.source}/less/{pkg.name}.less',
-                dst='{pkg.staticdir}/{pkg.name}/css/{pkg.name}-{version}.min.css',
+                dst='{pkg.django_static}/{pkg.name}/css/{pkg.name}-{version}.min.css',
                 force=force
             )
         elif less:
@@ -100,7 +100,7 @@ def build(ctx, less=False, docs=False, js=False, force=False):
     if buildall or js:
         build_js(ctx, force)
 
-    if DJANGO_SETTINGS_MODULE and (force or changed(ctx.pkg.staticdir)):
+    if DJANGO_SETTINGS_MODULE and (force or changed(ctx.pkg.django_static)):
         collectstatic(ctx, DJANGO_SETTINGS_MODULE)
 
 

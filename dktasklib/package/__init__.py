@@ -38,7 +38,7 @@ def package(ctx):
     """
     pkg = Package()
     keys = ['package_name', 'name', 'fname', 'root', 'source',
-            'docsdir', 'staticdir']
+            'docsdir', 'django_static']
     keylen = 1 + max(len(k) for k in keys)
     vallen = 1 + max(len(str(getattr(pkg, k))) for k in keys)
     print "The dk-tasklib Package object thinks your code has the following layout:"
@@ -53,6 +53,6 @@ def package(ctx):
     print 'root'.ljust(keylen), str(pkg.root).ljust(vallen), '(root of the package/wc)'
     print 'source'.ljust(keylen), str(pkg.source).ljust(vallen), '(root of the source code)'
     print 'docsdir'.ljust(keylen), str(pkg.docsdir).ljust(vallen), '(root of documentation)'
-    print 'staticdir'.ljust(keylen), str(pkg.staticdir).ljust(vallen), '(directory for static resources)'
+    print 'django_static'.ljust(keylen), str(pkg.django_static).ljust(vallen), '(directory for static resources)'
 
     print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)
