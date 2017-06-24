@@ -38,7 +38,7 @@ def make_api_docs(ctx, prefix='', force=False):
     """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
     """
     ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
-    ctx.run("sphinx-apidoc -o {pkg.docsdir}/api {pkg.sourcedir} {pkg.sourcedir}/migrations {pkg.sourcedir}/models {pkg.sourcedir}/models.py".format(pkg=ctx.pkg))
+    ctx.run("sphinx-apidoc -o {pkg.docsdir}/api {pkg.source} {pkg.source}/migrations {pkg.source}/models {pkg.source}/models.py".format(pkg=ctx.pkg))
     if prefix:
         for fname in (ctx.pkg.docsdir / 'api').glob('*.rst'):
             f = Path(fname)

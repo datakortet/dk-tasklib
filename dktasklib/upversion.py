@@ -24,8 +24,8 @@ def files_with_version_numbers():
         root / 'package.yaml',
         root / 'docs' / 'conf.py',
         root / 'src' / 'version.js',
-        pkg.sourcedir / '__init__.py',
-        pkg.sourcedir / '_version.py',
+        pkg.source / '__init__.py',
+        pkg.source / '_version.py',
     }
     return default
 

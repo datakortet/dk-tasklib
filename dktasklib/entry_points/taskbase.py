@@ -69,7 +69,7 @@ def build_js(ctx, force=False):
     for fname in JSX_FILENAMES:
         jstools.babel(
             ctx,
-            '{pkg.sourcedir}/js/' + fname,
+            '{pkg.source}/js/' + fname,
             '{pkg.staticdir}/{pkg.name}/js/' + fname + '.js',
             force=force
         )
@@ -83,11 +83,11 @@ def build(ctx, less=False, docs=False, js=False, force=False):
     buildall = not specified
 
     if buildall or less:
-        less_fname = ctx.pkg.sourcedir / 'less' / ctx.pkg.name + '.less'
+        less_fname = ctx.pkg.source / 'less' / ctx.pkg.name + '.less'
         if less_fname.exists():
             lessc.LessRule(
                 ctx,
-                src='{pkg.sourcedir}/less/{pkg.name}.less',
+                src='{pkg.source}/less/{pkg.name}.less',
                 dst='{pkg.staticdir}/{pkg.name}/css/{pkg.name}-{version}.min.css',
                 force=force
             )
@@ -110,11 +110,11 @@ def watch(ctx):
     """
     watcher = Watcher(ctx)
     watcher.watch_directory(
-        path='{pkg.sourcedir}/less', ext='.less',
+        path='{pkg.source}/less', ext='.less',
         action=lambda e: build(ctx, less=True)
     )
     watcher.watch_directory(
-        path='{pkg.sourcedir}/js', ext='.jsx',
+        path='{pkg.source}/js', ext='.jsx',
         action=lambda e: build(ctx, js=True)
     )
     watcher.watch_directory(

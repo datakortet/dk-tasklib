@@ -17,26 +17,26 @@ class PackageInterface(object):
         self.fname = fname
 
     @property
-    def root(self):
+    def root(self):  # ok
         return Path(self.fname).dirname()
 
     @property
-    def package_name(self):
+    def package_name(self): # ok
         return self.root.split()[1]
 
     @property
-    def name(self):
+    def name(self):  # ok
         return self.package_name.replace('-', '')
 
     @property
-    def sourcedir(self):
+    def source(self):  # source
         """Return the root of this package's source tree.
         """
         is_package = 'setup.py' in self.root
         return Directory((self.root / self.name) if is_package else self.root)
 
     @property
-    def docsdir(self):
+    def docsdir(self):  # -> docs
         """Return the root of this package's documentation tree.
         """
         try:
@@ -45,18 +45,19 @@ class PackageInterface(object):
             return Directory(self.root / 'docs')
 
     @property
-    def staticdir(self):
+    def staticdir(self):  # staticdir -> django_static
         """Return the root of this package's static tree.
         """
         is_package = 'setup.py' in self.root
         return Directory((self.root / self.name / 'static')
                          if is_package else self.root / 'static')
 
+    # invoke'ism?
     def config(self):  # pragma: nocover
         cfg = Config(dict(iter(self)))
         cfg.name = self.name
         cfg.root = self.root
-        cfg.sourcedir = self.sourcedir
+        cfg.sourcedir = self.source
         cfg.docsdir = self.docsdir
         cfg.staticdir = self.staticdir
         return cfg
@@ -79,14 +80,9 @@ class PackageInterface(object):
         self.save()
         return result
 
-    # maybe override next methods
-
-    def set_version(self, version):
-        # override this for special handling of versions
-        return self.set('version', version)
-
     # must override next methods
 
+    # save is a bad idea!
     def save(self):
         """Save the package config file with current values.
         """

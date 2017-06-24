@@ -37,7 +37,7 @@ def package(ctx):
     """Print detected package directories.
     """
     pkg = Package()
-    keys = ['package_name', 'name', 'fname', 'root', 'sourcedir',
+    keys = ['package_name', 'name', 'fname', 'root', 'source',
             'docsdir', 'staticdir']
     keylen = 1 + max(len(k) for k in keys)
     vallen = 1 + max(len(str(getattr(pkg, k))) for k in keys)
@@ -51,7 +51,7 @@ def package(ctx):
     print 'name'.ljust(keylen), str(pkg.name).ljust(vallen), '(importable name)'
     print 'fname'.ljust(keylen), str(pkg.fname).ljust(vallen), '(name of file providing package info)'
     print 'root'.ljust(keylen), str(pkg.root).ljust(vallen), '(root of the package/wc)'
-    print 'sourcedir'.ljust(keylen), str(pkg.sourcedir).ljust(vallen), '(root of the source code)'
+    print 'source'.ljust(keylen), str(pkg.source).ljust(vallen), '(root of the source code)'
     print 'docsdir'.ljust(keylen), str(pkg.docsdir).ljust(vallen), '(root of documentation)'
     print 'staticdir'.ljust(keylen), str(pkg.staticdir).ljust(vallen), '(directory for static resources)'
 

@@ -36,13 +36,13 @@ class LessRule(BuildRule):
     def __init__(self, *args, **kw):
         self.after = [UpdateTemplateVersion(
             kw.pop('import_fname',
-                   '{pkg.sourcedir}/templates/{pkg.name}/{pkg.name}-css.html')
+                   '{pkg.source}/templates/{pkg.name}/{pkg.name}-css.html')
         )]
         super(LessRule.body, self).__init__(*args, **kw)
 
     def __call__(self,
-                 src='{pkg.sourcedir}/less/{pkg.name}.less',
-                 dst='{pkg.sourcedir}/static/{pkg.name}/css/{pkg.name}-{version}.min.css',
+                 src='{pkg.source}/less/{pkg.name}.less',
+                 dst='{pkg.source}/static/{pkg.name}/css/{pkg.name}-{version}.min.css',
                  version='pkg',
                  bootstrap=True,
                  force=False,
@@ -91,7 +91,7 @@ ns.configure({
     'pkg': {
         'root': '<package-root-directory>',
         'name': '<package-name>',
-        'sourcedir': '<source-dir>',
+        'source': '<source-dir>',
         'version': '<version-string>',
     },
     'bootstrap': {
@@ -100,9 +100,9 @@ ns.configure({
     'lessc': {
         'use_bootstrap': False,
         'build_dir': 'build/css',
-        'input_dir': '{pkg.sourcedir}/less',
+        'input_dir': '{pkg.source}/less',
         'input_fname': '{pkg.name}.less',
-        'output_dir': '{pkg.sourcedir}/static/{pkg.name}/css/',
+        'output_dir': '{pkg.source}/static/{pkg.name}/css/',
         'output_fname': '{pkg.name}.css',
     }
 })
