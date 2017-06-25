@@ -8,7 +8,7 @@ invoke==0.12.2
 PyYAML==3.11
 
 # dk
-dkfileutils>=1.2.1
+dkfileutils>=1.3.0
 yamldirs>=1.0.9
 
 # building
