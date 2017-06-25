@@ -9,7 +9,8 @@ import textwrap
 import warnings
 
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 from .rule import BuildRule
 from .package import Package
 

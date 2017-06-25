@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
-
+from dktasklib.wintask import task
 from .rule import BuildRule
 from .commands import Command
 from dkfileutils.changed import Directory
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from invoke import Collection
 from . import urlinliner
 from .concat import copy
 from .environment import env

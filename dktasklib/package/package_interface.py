@@ -18,7 +18,7 @@ def pfind(path, *fnames):
 
 class Package(DKPKGPackage):
     def overrides(self, **res):
-        overridables = DKPKGPackage.KEYS
+        overridables = DKPKGPackage.KEYS | {'version'}
         setup_py = pfind('.', 'setup.py')
         if setup_py:
             root = setup_py.dirname()

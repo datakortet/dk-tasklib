@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from invoke import ctask as task
+from dktasklib.wintask import task
 from .package_interface import Package
 
 # from .setup_file import SetupPy

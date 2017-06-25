@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from invoke import ctask as task
-
+from dktasklib.wintask import task
 from . import Package
 
 

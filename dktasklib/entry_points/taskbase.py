@@ -30,7 +30,8 @@ import os
 
 from dkfileutils.changed import changed
 from dkfileutils.path import Path
-from invoke import ctask as task, collection
+from dktasklib.wintask import task
+from invoke import Collection
 
 from dktasklib import docs as doctools
 from dktasklib import jstools

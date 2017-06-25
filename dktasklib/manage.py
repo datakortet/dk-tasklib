@@ -5,7 +5,8 @@ import os
 from dkfileutils.path import Path
 from dkfileutils.pfind import pfind
 from dkfileutils.changed import changed
-from invoke import ctask as task, run
+from dktasklib.wintask import task
+from invoke import run
 from .utils import cd, env, find_pymodule
 from .package import Package
 

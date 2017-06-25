@@ -2,7 +2,8 @@
 import os
 import textwrap
 
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 from dkfileutils.path import Path
 from dktasklib import runners
 from dktasklib.commands import Command

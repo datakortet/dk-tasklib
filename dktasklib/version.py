@@ -3,7 +3,8 @@ import os
 import hashlib
 
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 from dktasklib.concat import copy
 from .package import Package
 

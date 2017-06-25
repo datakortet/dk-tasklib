@@ -7,7 +7,8 @@ from os.path import join
 
 from dkfileutils.changed import changed
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 
 from dktasklib import concat
 from dktasklib import Package
