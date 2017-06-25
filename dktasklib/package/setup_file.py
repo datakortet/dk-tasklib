@@ -40,7 +40,7 @@ class SetupPy(PackageInterface):
 
     def get(self, key, default=None):
         try:
-            return self._get(attr)
+            return self._get(key)
         except KeyError:
             return super(SetupPy, self).get(key, default)
 
