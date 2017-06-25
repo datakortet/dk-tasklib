@@ -6,23 +6,11 @@ import pytest
 
 class DkContext(object):
     def init(self, default=None, **kw):
-
-        def cfg_dict(d):
-            res = invoke.Config()
-            for k, v in d.items():
-                res[k] = cfg_obj(v)
-            return res
-
-        def cfg_obj(obj):
-            return {
-                dict: cfg_dict
-            }.get(type(obj), lambda x: x)(obj)
-
-        cfg = invoke.Config().config
+        overrides = {}
         if default is not None:
-            cfg.update(default)
-        cfg.update(kw)
-        return invoke.Context(cfg_dict(cfg))
+            overrides.update(default)
+        overrides.update(kw)
+        return invoke.Context(config=invoke.Config(overrides=overrides))
 
 
 @pytest.fixture
