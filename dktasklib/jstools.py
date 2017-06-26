@@ -2,7 +2,8 @@
 import os
 import textwrap
 
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 from dkfileutils.path import Path
 from dktasklib import runners
 from dktasklib.commands import Command
@@ -129,7 +130,7 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
     """
     source = Path(source.format(pkg=ctx.pkg))
     if dest is None:
-        dest = ctx.pkg.staticdir / ctx.pkg.name / 'js'
+        dest = ctx.pkg.django_static / ctx.pkg.name / 'js'
         dest.makedirs()
     else:
         dest = Path(dest.format(pkg=ctx.pkg))

@@ -5,7 +5,8 @@ import os
 from dkfileutils.path import Path
 from dkfileutils.pfind import pfind
 from dkfileutils.changed import changed
-from invoke import ctask as task, run
+from dktasklib.wintask import task
+from invoke import run
 from .utils import cd, env, find_pymodule
 from .package import Package
 
@@ -44,7 +45,7 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
     if not hasattr(ctx, 'pkg'):
         ctx.pkg = Package()
 
-    if not (force or ctx.pkg.staticdir.changed()):
+    if not (force or ctx.pkg.django_static.changed()):
         print "Skipping collectstic: no changes to static dir."
         return
 
@@ -52,8 +53,8 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
         # check that we don't overwrite versioned resources
         changed_versioned_resources = False
         static = Path(os.environ['SRV']) / 'data' / 'static'
-        for fname in ctx.pkg.staticdir.glob('**/*\d+.min.*'):
-            pubname = static / fname.relpath(ctx.pkg.staticdir)
+        for fname in ctx.pkg.django_static.glob('**/*\d+.min.*'):
+            pubname = static / fname.relpath(ctx.pkg.django_static)
             if pubname.exists():
                 # print 'checking:', pubname
                 if pubname.open('rb').read() != fname.open('rb').read():
@@ -76,4 +77,4 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
     print "using settings:", settings, 'venv:', venv
     manage(ctx, "collectstatic --noinput", settings=settings, venv=venv)
     # record changes made by collectstatic
-    changed(ctx.pkg.staticdir)
+    changed(ctx.pkg.django_static)

@@ -1,129 +1,88 @@
 # -*- coding: utf-8 -*-
+import json
 import pprint
+from ConfigParser import RawConfigParser
+
 import invoke
+from dkfileutils.pfind import pfind as _pfind
 from dkfileutils.path import Path
 from dkfileutils.changed import Directory
 from invoke.config import Config
+from dkpkg import Package as DKPKGPackage
 
 
-class PackageInterface(object):
-    fallback_modules = []
+def pfind(path, *fnames):
+    res = _pfind(path, *fnames)
+    return Path(res) if res is not None else None
 
-    def __init__(self, ctx=None, fname=None):
-        self._args = ()
-        self._kwargs = dict(ctx=ctx, fname=fname)
 
+class Package(DKPKGPackage):
+    def overrides(self, **res):
+        overridables = DKPKGPackage.KEYS | {'version'}
+        setup_py = pfind('.', 'setup.py')
+        if setup_py:
+            root = setup_py.dirname()
+            with root.abspath().cd():
+                res['version'] = self.ctx.run(
+                    'python setup.py --version',
+                    hide=True
+                ).stdout.strip()
+
+        dkbuild_ini = pfind('.', 'dkbuild.ini')
+        if dkbuild_ini:
+            # root = dkbuild_ini.dirname()
+            cp = RawConfigParser()
+            cp.read(dkbuild_ini)
+            for k, v in cp.items('dkbuild'):
+                if k in overridables:
+                    res[k] = v
+
+        package_json = pfind('.', 'package.json')
+        if package_json:
+            # root = package_json.dirname()
+            with open(package_json, 'rb') as fp:
+                pj = json.load(fp)
+                for k, v in pj.items():
+                    if k in overridables:
+                        res[k] = v
+
+        return res
+
+    def __init__(self, ctx=None):
         self.ctx = ctx or invoke.Context()
-        self.fname = fname
+        root = pfind('.',
+                     'setup.py',
+                     'dkbuild.ini',
+                     'package.json').dirname()
+        ispkg = 'setup.py' in root
+        overrides = self.overrides() if ispkg else self.overrides(source=root)
+        super(Package, self).__init__(root, **overrides)
 
-    @property
-    def root(self):
-        return Path(self.fname).dirname()
-
-    @property
-    def package_name(self):
-        return self.root.split()[1]
-
-    @property
-    def name(self):
-        return self.package_name.replace('-', '')
-
-    @property
-    def sourcedir(self):
-        """Return the root of this package's source tree.
-        """
-        is_package = 'setup.py' in self.root
-        return Directory((self.root / self.name) if is_package else self.root)
-
-    @property
-    def docsdir(self):
-        """Return the root of this package's documentation tree.
-        """
-        try:
-            return Directory(self.get('docs_dir'))
-        except KeyError:
-            return Directory(self.root / 'docs')
-
-    @property
-    def staticdir(self):
-        """Return the root of this package's static tree.
-        """
-        is_package = 'setup.py' in self.root
-        return Directory((self.root / self.name / 'static')
-                         if is_package else self.root / 'static')
-
+    # invoke'ism?
     def config(self):  # pragma: nocover
         cfg = Config(dict(iter(self)))
         cfg.name = self.name
         cfg.root = self.root
-        cfg.sourcedir = self.sourcedir
-        cfg.docsdir = self.docsdir
-        cfg.staticdir = self.staticdir
+        cfg.source = self.source
+        cfg.docs = self.docs
+        cfg.django_static = self.django_static
         return cfg
 
     def __repr__(self):
         return self.__class__.__name__
         # return pprint.pformat(self.config())
 
-    def __getattr__(self, item):
-        # for convenience (continue using [](__setitem__) for setting).
-        if item.startswith('_'):
-            raise AttributeError(item)
-        return self.get(item)
-
     def __getitem__(self, key):
-        return self.get(key)
+        try:
+            return getattr(self, key)
+        except AttributeError as e:
+            raise KeyError(str(e))
 
-    def __setitem__(self, key, value):
-        result = self.set(key, value)
-        self.save()
-        return result
-
-    # maybe override next methods
-
-    def set_version(self, version):
-        # override this for special handling of versions
-        return self.set('version', version)
-
-    # must override next methods
-
-    def save(self):
-        """Save the package config file with current values.
-        """
-        raise NotImplementedError
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
 
     def __iter__(self):
         return iter([])
-
-    def get(self, attr, default=None):
-        """Override this method, and call super if the attribute is not found::
-
-            def get(self, attr, default=None):
-                try:
-                    return ...
-                except ...:
-                    return super(SubClass, self).get(attr, default)
-
-        """
-        try:
-            return getattr(self, attr)
-        except AttributeError:
-            print "COULDN'T GET", attr, "FROM SELF"
-
-        for backend in self.__class__.fallback_modules:
-            m = backend(*self._args, **self._kwargs)
-            try:
-                # print 'dkinterface-get:', attr, 'backend:', m.__class__.__name__
-                return m._get(attr)
-            except (AttributeError, KeyError):
-                pass
-
-        if default is not None:
-            return default
-
-        raise AttributeError(
-            self.fname + " does not have an attribute named: " + attr
-        )
-
-    def set(self, key, value):  # pragma: nocover
-        raise NotImplementedError

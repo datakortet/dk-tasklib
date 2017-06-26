@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from invoke import ctask as task
+from dktasklib.wintask import task
 import base64
 import os
 import re

@@ -9,7 +9,8 @@ import textwrap
 import warnings
 
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 from .rule import BuildRule
 from .package import Package
 
@@ -24,8 +25,8 @@ def files_with_version_numbers():
         root / 'package.yaml',
         root / 'docs' / 'conf.py',
         root / 'src' / 'version.js',
-        pkg.sourcedir / '__init__.py',
-        pkg.sourcedir / '_version.py',
+        pkg.source / '__init__.py',
+        pkg.source / '_version.py',
     }
     return default
 

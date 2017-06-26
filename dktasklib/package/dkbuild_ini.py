@@ -12,16 +12,14 @@ from .package_interface import PackageInterface
 
 
 class DkbuildIni(PackageInterface):
-    fallback_modules = [m for m in [PackageJson, SetupPy] if m.exists()]
-
     @classmethod
     def exists(cls):
         return pfind('.', 'dkbuild.ini')
 
     def __init__(self, ctx=None, fname='dkbuild.ini'):
-        self._package = None
+        super(DkbuildIni, self).__init__(ctx)
         fname = pfind('.', fname or 'dkbuild.ini')
-        super(DkbuildIni, self).__init__(ctx, fname=fname)
+
 
     @property
     def package(self):
@@ -32,9 +30,6 @@ class DkbuildIni(PackageInterface):
 
     def __iter__(self):
         return iter(self.package.items('dkbuild'))
-
-    def save(self):
-        raise ValueError("No saving of dkbuild.ini")
 
     def _get(self, attr):
         return self.package.get('dkbuild', attr)

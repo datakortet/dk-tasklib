@@ -7,7 +7,8 @@ from os.path import join
 
 from dkfileutils.changed import changed
 from dkfileutils.path import Path
-from invoke import ctask as task, Collection
+from dktasklib.wintask import task
+from invoke import Collection
 
 from dktasklib import concat
 from dktasklib import Package
@@ -37,10 +38,10 @@ def _browse(ctx):  # pragma: nocover
 def make_api_docs(ctx, prefix='', force=False):
     """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
     """
-    ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
-    ctx.run("sphinx-apidoc -o {pkg.docsdir}/api {pkg.sourcedir} {pkg.sourcedir}/migrations {pkg.sourcedir}/models {pkg.sourcedir}/models.py".format(pkg=ctx.pkg))
+    ctx.run("rm -rf {pkg.docs}/api".format(pkg=ctx.pkg))
+    ctx.run("sphinx-apidoc -o {pkg.docs}/api {pkg.source} {pkg.source}/migrations {pkg.source}/models {pkg.source}/models.py".format(pkg=ctx.pkg))
     if prefix:
-        for fname in (ctx.pkg.docsdir / 'api').glob('*.rst'):
+        for fname in (ctx.pkg.docs / 'api').glob('*.rst'):
             f = Path(fname)
             lines = f.read().split('\n')
             for i, line in enumerate(lines):
@@ -52,10 +53,10 @@ def make_api_docs(ctx, prefix='', force=False):
             if pkgname and os.path.sep not in post:
                 f.rename(pre + prefix + pkgname + post)
 
-    concat.copy(ctx, ctx.pkg.docsdir/'api'/'*', ctx.pkg.docsdir)
-    ctx.run("rm -rf {pkg.docsdir}/api".format(pkg=ctx.pkg))
+    concat.copy(ctx, ctx.pkg.docs / 'api' / '*', ctx.pkg.docs)
+    ctx.run("rm -rf {pkg.docs}/api".format(pkg=ctx.pkg))
 
-    if ".. include:: modules.rst" not in open(ctx.pkg.docsdir / 'index.rst').read():
+    if ".. include:: modules.rst" not in open(ctx.pkg.docs / 'index.rst').read():
         print textwrap.dedent("""\
         WARNING: you need to include the following in docs/index.rst
 
@@ -81,10 +82,10 @@ def build(ctx, clean=False, browse=False, warn=False,
     Build the project's Sphinx docs.
     """
     # import pdb;pdb.set_trace()
-    if not force and not changed(ctx.pkg.docsdir):
+    if not force and not changed(ctx.pkg.docs):
         print """
         No changes detected in {}, add --force to build docs anyway.
-        """.format(ctx.pkg.docsdir)
+        """.format(ctx.pkg.docs)
         return  # should perhaps check if code has changed too? (autodoc)
 
     if clean:
@@ -98,7 +99,7 @@ def build(ctx, clean=False, browse=False, warn=False,
         opts += " -n -W"
     if force:
         opts += " -a -E"
-    cmd = "sphinx-build {opts} {ctx.pkg.docsdir} {ctx.pkg.root}/build/docs".format(opts=opts, ctx=ctx)
+    cmd = "sphinx-build {opts} {ctx.pkg.docs} {ctx.pkg.root}/build/docs".format(opts=opts, ctx=ctx)
     dj_settings = ctx.pkg.get('django_settings_module', "")
     if dj_settings:
         os.environ['DJANGO_SETTINGS_MODULE'] = dj_settings
@@ -112,7 +113,7 @@ def tree(ctx):
     """Display the docs tree.
     """
     ignore = ".git|*.pyc|*.swp|dist|*.egg-info|_static|_build|_templates"
-    ctx.run('tree -Ca -I "{0}" {1}'.format(ignore, ctx.pkg.docsdir))
+    ctx.run('tree -Ca -I "{0}" {1}'.format(ignore, ctx.pkg.docs))
 
 
 # Vanilla/default/parameterized collection for normal use

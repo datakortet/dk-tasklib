@@ -6,15 +6,15 @@ Usage::
     def watch(ctx):
         watcher = Watcher(ctx)
         watcher.watch_file(
-            name='{pkg.sourcedir}/less/{pkg.name}.less',
+            name='{pkg.source}/less/{pkg.name}.less',
             action=lambda e: build(ctx, less=True)
         )
         watcher.watch_directory(
-            path='{pkg.sourcedir}/js', ext='.jsx',
+            path='{pkg.source}/js', ext='.jsx',
             action=lambda e: build(ctx, js=True)
         )
         watcher.watch_directory(
-            path='{pkg.docsdir}', ext='.rst',
+            path='{pkg.docs}', ext='.rst',
             action=lambda e: build(ctx, docs=True)
         )
         watcher.start()

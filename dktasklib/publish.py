@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
-
-from invoke import ctask as task
-
 from dktasklib.executables import requires
+from dktasklib.wintask import task
 from . import Package
 
 

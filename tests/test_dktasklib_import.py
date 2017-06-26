@@ -15,10 +15,10 @@ import dktasklib.lessc
 import dktasklib.manage
 import dktasklib.npm
 import dktasklib.package
-import dktasklib.package.package_ini
+# import dktasklib.package.package_ini
 import dktasklib.package.package_interface
-import dktasklib.package.package_json
-import dktasklib.package.setup_file
+# import dktasklib.package.package_json
+# import dktasklib.package.setup_file
 import dktasklib.pset
 import dktasklib.publish
 import dktasklib.rule
@@ -43,10 +43,10 @@ def test_import_():
     assert dktasklib.manage
     assert dktasklib.npm
     assert dktasklib.package
-    assert dktasklib.package.package_ini
+    # assert dktasklib.package.package_ini
     assert dktasklib.package.package_interface
-    assert dktasklib.package.package_json
-    assert dktasklib.package.setup_file
+    # assert dktasklib.package.package_json
+    # assert dktasklib.package.setup_file
     assert dktasklib.pset
     assert dktasklib.publish
     assert dktasklib.rule
