@@ -4,7 +4,7 @@
 
 # direct external dependencies
 # invoke==0.12.2
-invoke==0.19
+invoke>=0.19
 PyYAML==3.11
 
 # dk
@@ -16,8 +16,9 @@ sphinx==1.3.4
 watchdog
 
 # testing
-pytest==2.8.5
+pytest>=2.8.5
 pytest-cov>=2.2.1
-coverage==4.0.3
+coverage>=4.0.3
 
+twine>=1.9.1
 dkpkg>=1.0.0

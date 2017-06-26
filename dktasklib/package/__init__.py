@@ -20,7 +20,6 @@ def package(ctx):
 
     print 'package_name'.ljust(keylen), str(pkg.package_name).ljust(vallen), '(repo name)'
     print 'name'.ljust(keylen), str(pkg.name).ljust(vallen), '(importable name)'
-    print 'fname'.ljust(keylen), str(pkg.fname).ljust(vallen), '(name of file providing package info)'
     print 'root'.ljust(keylen), str(pkg.root).ljust(vallen), '(root of the package/wc)'
     print 'source'.ljust(keylen), str(pkg.source).ljust(vallen), '(root of the source code)'
     print 'docs'.ljust(keylen), str(pkg.docs).ljust(vallen), '(root of documentation)'
