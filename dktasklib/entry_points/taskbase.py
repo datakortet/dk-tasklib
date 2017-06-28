@@ -127,7 +127,7 @@ def watch(ctx):
 
 
 # individual tasks that can be run from this project
-ns = collection.Collection(
+ns = Collection(
     build,
     watch,
     build_js,
