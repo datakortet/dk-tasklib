@@ -18,6 +18,13 @@ class Command(object):
                  requirements=(),
                  policy=default_command_policy,
                  **optdefs):
+        self._args = (name, argspec, requirements, policy, optdefs)
+        self._initialized = False
+
+    def _initialize(self):
+        if self._initialized:
+            return
+        name, argspec, requirements, policy, optdefs = self._args
         # handle any required params attached to the command, i.e. if the
         # command is specified as foo = Command('foo -v', ...)
         exename, reqparams = (name + ' ').split(' ', 1)
@@ -33,6 +40,7 @@ class Command(object):
         self.argspec = argspec
         self.policy = policy
         self.optdefs = optdefs
+        self._initialized = True
 
     def _kw_to_opts(self, kw):
         res = ""
@@ -63,6 +71,7 @@ class Command(object):
         return res
 
     def __call__(self, ctx=None, *args, **kwargs):
+        self._initialize()
         if ctx is not None and not isinstance(ctx, invoke.Context):
             # we've been passed a real argument in position 0
             args = (ctx,) + args

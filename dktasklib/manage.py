@@ -4,7 +4,7 @@ import os
 
 from dkfileutils.path import Path
 from dkfileutils.pfind import pfind
-from dkfileutils.changed import changed
+from dkfileutils.changed import changed, Directory
 from dktasklib.wintask import task
 from invoke import run
 from .utils import cd, env, find_pymodule
@@ -45,7 +45,7 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
     if not hasattr(ctx, 'pkg'):
         ctx.pkg = Package()
 
-    if not (force or ctx.pkg.django_static.changed()):
+    if not (force or Directory(ctx.pkg.django_static).changed()):
         print "Skipping collectstic: no changes to static dir."
         return
 

@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-
-from dktasklib.wintask import task
 from dktasklib.wintask import task
 
 

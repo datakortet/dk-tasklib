@@ -14,7 +14,8 @@ from .package import Package
     autoprint=True,     # print return value
 )
 def version(ctx):
-    "Print this package's version number."
+    """Print this package's version number.
+    """
     return Package().version
 
 

@@ -6,7 +6,7 @@
    :target: https://coveralls.io/github/datakortet/dk-tasklib?branch=master
 
 dk-tasklib -- pyinvoke  task library
-==================================================
+====================================
 
 
 Installing from PyPI
@@ -23,8 +23,6 @@ This is what you want if you are developing dk-tasklib or want
 to make local changes to the source code.
 
    pip install -e <path>
-
-
 
 
 See docs/ folder for documentation.

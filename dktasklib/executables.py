@@ -61,7 +61,9 @@ class Executables(object):
         fexe = get_executable(name)
         if not fexe:  # pragma: nocover
             if not install_txt:  # pragma: nocover
-                install_txt = "Missing command: %r [requires: %s]" % (name, requires)
+                install_txt = "Missing command: %r" % name
+                if requires:
+                    install_txt += " [requires: %s]" % requires
             raise MissingCommand(install_txt)
         return fexe
 
