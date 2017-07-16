@@ -17,8 +17,9 @@ def pfind(path, *fnames):
 
 
 class Package(DKPKGPackage):
+    overridables = DKPKGPackage.KEYS | {'version'}
+
     def overrides(self, **res):
-        overridables = DKPKGPackage.KEYS | {'version'}
         setup_py = pfind('.', 'setup.py')
         if setup_py:
             root = setup_py.dirname()
@@ -28,14 +29,7 @@ class Package(DKPKGPackage):
                     hide=True
                 ).stdout.strip()
 
-        dkbuild_ini = pfind('.', 'dkbuild.ini')
-        if dkbuild_ini:
-            # root = dkbuild_ini.dirname()
-            cp = RawConfigParser()
-            cp.read(dkbuild_ini)
-            for k, v in cp.items('dkbuild'):
-                if k in overridables:
-                    res[k] = v
+        res.update(self._read_dkbuild_ini())
 
         package_json = pfind('.', 'package.json')
         if package_json:
@@ -43,10 +37,19 @@ class Package(DKPKGPackage):
             with open(package_json, 'rb') as fp:
                 pj = json.load(fp)
                 for k, v in pj.items():
-                    if k in overridables:
+                    if k in Package.overridables:
                         res[k] = v
 
         return res
+
+    def _read_dkbuild_ini(self):
+        dkbuild_ini = pfind('.', 'dkbuild.ini')
+        if not dkbuild_ini:
+            return {}
+        cp = RawConfigParser()
+        cp.read(dkbuild_ini)
+        return dict((k, v) for k, v in cp.items('dkbuild')
+                    if k in Package.overridables)
 
     def __init__(self, ctx=None):
         self.ctx = ctx or invoke.Context()
