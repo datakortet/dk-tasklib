@@ -27,6 +27,7 @@ will fit your use case.
 """
 # pragma: nocover
 import os
+import warnings
 
 from dkfileutils.changed import changed
 from dkfileutils.path import Path
@@ -63,6 +64,16 @@ DJANGO_SETTINGS_MODULE = ''
 # The files should reside in mypkg/mypkg/js/ directory.
 JSX_FILENAMES = []
 
+# ============================================================================
+# autodoc is in a separate process, so can't use settings.configure().
+HAVE_SETTINGS = bool(DJANGO_SETTINGS_MODULE)
+if not HAVE_SETTINGS and (DIRNAME / 'settings.py').exists():
+    # look for a dummy settings.py module in the root of the package.
+    DJANGO_SETTINGS_MODULE = 'settings'
+if DJANGO_SETTINGS_MODULE:
+    os.environ['DJANGO_SETTINGS_MODULE'] = DJANGO_SETTINGS_MODULE
+WARN_ABOUT_SETTINGS = not bool(DJANGO_SETTINGS_MODULE)
+
 
 @task
 def build_js(ctx, force=False):
@@ -97,12 +108,18 @@ def build(ctx, less=False, docs=False, js=False, force=False):
             print "WARNING: build --less specified, but no file at:", less_fname
 
     if buildall or docs:
+        if WARN_ABOUT_SETTINGS:
+            warnings.warn(
+                "autodoc might need a dummy settings file in the root of "
+                "your package. Since it runs in a separate process you cannot"
+                "use settings.configure()"
+            )
         doctools.build(ctx, force=force)
 
     if buildall or js:
         build_js(ctx, force)
 
-    if DJANGO_SETTINGS_MODULE and (force or changed(ctx.pkg.django_static)):
+    if HAVE_SETTINGS and (force or changed(ctx.pkg.django_static)):
         collectstatic(ctx, DJANGO_SETTINGS_MODULE)
 
 
