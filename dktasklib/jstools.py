@@ -96,7 +96,7 @@ def ensure_preset_es2017(ctx):
 
 
 def ensure_preset_latest(ctx):
-    if 'babel-preset-latest' not in runners.run("npm ls --depth=0 babel-preset-env --no-color"):
+    if 'babel-preset-env' not in runners.run("npm ls --depth=0 babel-preset-env --no-color"):
         print "didn't find babel-preset-env, installing it.."
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-env --save-dev")

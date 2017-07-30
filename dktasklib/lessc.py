@@ -51,6 +51,10 @@ class LessRule(BuildRule):
         source = Path(fmt(src, c))
         dest = Path(fmt(dst, c))
 
+        if not source.exists():
+            print "Missing source:", source, '(skipping)'
+            return
+
         for fname in source.dirname().glob("*.inline"):
             urlinliner.inline(self.ctx, fname)
 
