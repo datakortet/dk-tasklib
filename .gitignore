@@ -71,3 +71,4 @@ target/
 .idea/libraries
 .idea/mongoSettings.xml
 .idea/deployment.xml
+.idea/markdown-navigator
