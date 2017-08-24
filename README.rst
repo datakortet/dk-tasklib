@@ -17,6 +17,14 @@ This is what you want if you just want to use dk-tasklib:
    pip install dk-tasklib
 
 
+Creating a default tasks.py file
+--------------------------------
+You can create a default ``tasks.py`` file. From the root of your package::
+
+    dk-tasklib install
+
+You'll need to specify ``--force`` to overwrite an existing file.
+
 As a source package
 -------------------
 This is what you want if you are developing dk-tasklib or want 
