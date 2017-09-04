@@ -213,7 +213,7 @@ def browserify(ctx,
         print 'ensure babelify:', ensure_babelify(ctx)
         print 'ensure preset latest:', ensure_preset_latest(ctx)
         options += ' -t babelify'
-        options += ' --presets latest'
+        options += ' --presets env'
     for r in require:
         options += ' -r "%s"' % r
     for e in external:
