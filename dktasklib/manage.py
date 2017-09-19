@@ -12,7 +12,6 @@ from .package import Package
 
 
 DEFAULT_SETTINGS_MODULE = 'settings'
-# DEFAULT_MANAGE_PY_PATH = os.path.join(os.environ.get('SRV', ''), 'src', 'datakortet')
 
 
 @task
