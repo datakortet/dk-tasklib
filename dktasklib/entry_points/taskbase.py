@@ -26,6 +26,7 @@ will fit your use case.
 
 """
 # pragma: nocover
+from __future__ import print_function
 import os
 import warnings
 
@@ -105,7 +106,7 @@ def build(ctx, less=False, docs=False, js=False, force=False):
                 force=force
             )
         elif less:
-            print "WARNING: build --less specified, but no file at:", less_fname
+            print("WARNING: build --less specified, but no file at:", less_fname)
 
     if buildall or docs:
         if WARN_ABOUT_SETTINGS:

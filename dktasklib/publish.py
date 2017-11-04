@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from dktasklib.executables import requires
 from dktasklib.wintask import task
 from . import Package
@@ -23,4 +24,4 @@ def publish(ctx, force=False):
             # ctx.run("python setup.py upload_docs")
         else:
             ctx.run("python setup.py sdist")
-            print 'You need to add --force to invoke the upload commands'
+            print('You need to add --force to invoke the upload commands')
