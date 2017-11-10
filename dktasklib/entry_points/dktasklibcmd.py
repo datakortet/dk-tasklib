@@ -9,6 +9,7 @@ import sys
 
 import shutil
 from dkfileutils.path import Path
+from .._version import __version__
 
 DIRNAME = Path(os.path.dirname(__file__))
 
@@ -44,6 +45,10 @@ def main(args=None):
     p.add_argument(
         '--verbose', '-v', action='store_true',
         help="verbose output"
+    )
+    p.add_argument(
+        '--version', action='version',
+        version='%(prog)s ' + __version__
     )
 
     # print "ARGS1:", args

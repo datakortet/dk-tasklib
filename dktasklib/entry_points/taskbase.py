@@ -11,9 +11,8 @@ This file defines tasks for the Invoke tool: http://www.pyinvoke.org
 Basic usage::
 
     inv -l               # list all available tasks
-    inv -e ...           # echo commands as tasks are executed
-    inv -e build -f      # build everything, forcefully
-    inv -e build --docs  # only build the docs
+    inv build -f         # build everything, forcefully
+    inv build --docs     # only build the docs
 
 dk-tasklib is a library of basic tasks that tries to automate common tasks.
 dk-tasklib will attempt to install any tools/libraries/etc. that are required,
@@ -157,5 +156,8 @@ ns = Collection(
     # publish,
 )
 ns.configure({
-    'pkg': Package()
+    'pkg': Package(),
+    'run': {
+        'echo': True
+    }
 })

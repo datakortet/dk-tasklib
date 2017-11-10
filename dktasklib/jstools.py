@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import textwrap
 
@@ -17,7 +18,7 @@ def ensure_package_json(ctx):
     """
     package_json = os.path.join(ctx.pkg.root, 'package.json')
     if not os.path.exists(package_json):
-        print "Missing package.json file, creating default version.."
+        print("Missing package.json file, creating default version..")
         with cd(ctx.pkg.root):
             ctx.run("npm init -f")
     else:
@@ -29,7 +30,7 @@ def ensure_babelrc(ctx):
     """
     babelrc = os.path.join(ctx.pkg.root, '.babelrc')
     if not os.path.exists(babelrc):
-        print 'Misssing %s (creating default version)' % babelrc
+        print('Misssing %s (creating default version)' % babelrc)
         with open(babelrc, 'w') as fp:
             fp.write(textwrap.dedent("""
             {
@@ -53,7 +54,7 @@ def ensure_node_modules(ctx):
 
 # def ensure_babel(ctx):
 #     if 'babel' not in runners.run("npm ls -g --depth=0 babel --no-color"):
-#         print "didn't find babel, installing it.."
+#         print("didn't find babel, installing it..")
 #         with cd(ctx.pkg.root):
 #             ctx.run("npm install -g babel")
 #     else:
@@ -62,7 +63,7 @@ def ensure_node_modules(ctx):
 
 # def ensure_browserify(ctx):
 #     if 'browserify' not in runners.run("npm ls -g --depth=0 browserify --no-color"):
-#         print "didn't find browserify, installing it.."
+#         print("didn't find browserify, installing it..")
 #         with cd(ctx.pkg.root):
 #             ctx.run("npm install -g browserify")
 #     else:
@@ -71,7 +72,7 @@ def ensure_node_modules(ctx):
 
 def ensure_es2015(ctx):
     if 'babel-preset-es2015' not in runners.run("npm ls --depth=0 babel-preset-es2015 --no-color"):
-        print "didn't find babel-preset-es2015, installing it.."
+        print("didn't find babel-preset-es2015, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-es2015 --save-dev")
     else:
@@ -79,7 +80,7 @@ def ensure_es2015(ctx):
 
 def ensure_preset_es2016(ctx):
     if 'babel-preset-es2015' not in runners.run("npm ls --depth=0 babel-preset-es2016 --no-color"):
-        print "didn't find babel-preset-es2016, installing it.."
+        print("didn't find babel-preset-es2016, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-es2016 --save-dev")
     else:
@@ -88,7 +89,7 @@ def ensure_preset_es2016(ctx):
 
 def ensure_preset_es2017(ctx):
     if 'babel-preset-es2017' not in runners.run("npm ls --depth=0 babel-preset-es2017 --no-color"):
-        print "didn't find babel-preset-es2017, installing it.."
+        print("didn't find babel-preset-es2017, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-es2017 --save-dev")
     else:
@@ -97,7 +98,7 @@ def ensure_preset_es2017(ctx):
 
 def ensure_preset_latest(ctx):
     if 'babel-preset-env' not in runners.run("npm ls --depth=0 babel-preset-env --no-color"):
-        print "didn't find babel-preset-env, installing it.."
+        print("didn't find babel-preset-env, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-env --save-dev")
     else:
@@ -106,7 +107,7 @@ def ensure_preset_latest(ctx):
 
 def ensure_preset_babili(ctx):
     if 'babel-preset-babili' not in runners.run("npm ls --depth=0 babel-preset-babili --no-color"):
-        print "didn't find babel-preset-babili, installing it.."
+        print("didn't find babel-preset-babili, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install babel-preset-babili --save-dev")
     else:
@@ -115,7 +116,7 @@ def ensure_preset_babili(ctx):
 
 def ensure_babelify(ctx):
     if 'babelify' not in runners.run("npm ls --depth=0 babelify --no-color"):
-        print "didn't find babelify, installing it.."
+        print("didn't find babelify, installing it..")
         with cd(ctx.pkg.root):
             ctx.run("npm install --save-dev babelify --no-color", echo=False, encoding='utf-8')
     else:
@@ -138,7 +139,7 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
         dest += switch_extension(source.basename(), '.js')
 
     if not force and dest_is_newer_than_source(source, dest):
-        print 'babel:', dest, 'is up-to-date.'
+        print('babel:', dest, 'is up-to-date.')
         return dest
 
     ensure_package_json(ctx)
@@ -172,7 +173,7 @@ def version_js(ctx, fname, kind='pkg', force=False):
     #         dst=dst
     #     ))
     # else:
-    #     print """
+    #     print(""")
     #     Filename already exists, add --force or call upversion: {}
     #     """.format(dst)
     # return dst
@@ -203,15 +204,15 @@ def browserify(ctx,
         None
 
     """
-    print 'ensure package.json:', ensure_package_json(ctx)
-    print 'ensure node_modules:', ensure_node_modules(ctx)
-    # print 'ensure browserify:', ensure_browserify(ctx)
+    print('ensure package.json:', ensure_package_json(ctx))
+    print('ensure node_modules:', ensure_node_modules(ctx))
+    # print('ensure browserify:', ensure_browserify(ctx))
 
     # options = "--debug"  # source maps
     options = ""  # no source maps
     if babelify:
-        print 'ensure babelify:', ensure_babelify(ctx)
-        print 'ensure preset latest:', ensure_preset_latest(ctx)
+        print('ensure babelify:', ensure_babelify(ctx))
+        print('ensure preset latest:', ensure_preset_latest(ctx))
         options += ' -t babelify'
         options += ' --presets env'
     for r in require:

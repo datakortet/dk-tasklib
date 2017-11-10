@@ -67,6 +67,23 @@ class Executables(object):
             raise MissingCommand(install_txt)
         return fexe
 
+    def find_wheel(self):
+        exename = 'wheel'
+        exepath = get_executable(exename)
+        if not exepath:
+            pip = get_executable('pip')
+            cmd = pip + ' install wheel[signatures]'
+            if win32:
+                # self.ctx.run(cmd, echo=True)
+                runners.run(cmd)
+                wheel = get_executable(exename)
+                # generate signing key if downloading wheel
+                runners.run(wheel + ' keygen')
+            else:
+                raise MissingCommand("Missing twine (%s)" % cmd)
+            print 'Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section'
+        return exepath
+
     def find_twine(self):
         exename = 'twine'
         exepath = get_executable(exename)
