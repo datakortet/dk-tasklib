@@ -30,6 +30,9 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
         upload = True
         sign = True
 
+    if not wheel:
+        sign = False
+
     with pkg.root.cd():
         if clean:
             ctx.run("rm -rf dist")

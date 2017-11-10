@@ -78,6 +78,7 @@ def ensure_es2015(ctx):
     else:
         return True
 
+
 def ensure_preset_es2016(ctx):
     if 'babel-preset-es2015' not in runners.run("npm ls --depth=0 babel-preset-es2016 --no-color"):
         print("didn't find babel-preset-es2016, installing it..")

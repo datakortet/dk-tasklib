@@ -45,7 +45,7 @@ def test_publish(ctx):
         print "DIRECTORY:", directory
         os.chdir('mypackage')  # into the package directory
         ctx = ctx.init(echo=True)
-        publish(ctx)
+        publish(ctx, wheel=False)
         ctx.run('tree')
         if sys.platform == 'win32':
             assert 'mypackage-1.0.0.zip' in os.listdir('dist')

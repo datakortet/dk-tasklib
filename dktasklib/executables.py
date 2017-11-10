@@ -80,7 +80,7 @@ class Executables(object):
                 # generate signing key if downloading wheel
                 runners.run(wheel + ' keygen')
             else:
-                raise MissingCommand("Missing twine (%s)" % cmd)
+                raise MissingCommand("Missing wheel (%s)" % cmd)
             print 'Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section'
         return exepath
 
