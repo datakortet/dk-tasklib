@@ -14,6 +14,7 @@ from . import Package
     help={
         'force': 'sets all other options to True',
         'clean': 'remove the build/ and dist/ directory before starting',
+        'docs': 'build and upload docs to PyPi',
         'wheel': 'build wheel (in addition to sdist)',
         'sign': 'sign the wheel using weel sign pkgname',
         'upload': 'upload to PyPI after building'
@@ -49,10 +50,12 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
 
         if docs:
             ctx.run("python setup.py build_sphinx")
-            # we can't upload docs to pypi anymore..
-            # ctx.run("python setup.py upload_docs")
 
         if upload:
             ctx.run("twine upload dist/*")
         else:
             print("Not uploading (use --upload flag to upload).")
+
+        if docs and upload:
+            # we can't upload docs to pypi anymore.. (or can we..?)
+            ctx.run("python setup.py upload_docs")
