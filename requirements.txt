@@ -2,7 +2,7 @@
 # recursive dependencies
 
 # direct external dependencies
-invoke>=0.20
+invoke>=0.22
 PyYAML==3.11
 
 # dk

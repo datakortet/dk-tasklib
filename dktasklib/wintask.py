@@ -15,7 +15,7 @@ elif invoke.__version_info__ < (0, 22 + 22-13):  # broken since 13..
     try:
         _run('rem')
         _should_patch = False
-    except WindowsError:
+    except OSError:
         _should_patch = True
 
 
