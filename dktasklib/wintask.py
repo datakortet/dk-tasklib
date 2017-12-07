@@ -10,13 +10,8 @@ except ImportError:
 
 if invoke.__version_info__ < (0, 22):
     _should_patch = True
-elif invoke.__version_info__ < (0, 22 + 22-13):  # broken since 13..
-    from invoke import run as _run
-    try:
-        _run('rem')
-        _should_patch = False
-    except OSError:
-        _should_patch = True
+elif invoke.__version_info__ >= (0, 22):
+    _should_patch = False
 
 
 if _should_patch:
