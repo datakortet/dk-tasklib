@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
-import pprint
+# import pprint
 from ConfigParser import RawConfigParser
 
 import invoke
 from dkfileutils.pfind import pfind as _pfind
 from dkfileutils.path import Path
-from dkfileutils.changed import Directory
+# from dkfileutils.changed import Directory
 from invoke.config import Config
 from dkpkg import Package as DKPKGPackage
 
