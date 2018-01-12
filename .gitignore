@@ -61,6 +61,7 @@ target/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dataSources.ids
+.idea/codeStyles/*
 .idea/datasources.xml
 .idea/*.iml
 .idea/dictionaries

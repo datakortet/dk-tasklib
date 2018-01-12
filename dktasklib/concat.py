@@ -62,12 +62,13 @@ def concat(ctx, dest, *sources, **kw):
     placement = Path(dest).dirname()
     placement.makedirs()
 
-    with open(dest, 'wb') as out:
+    with open(dest, 'w') as out:
         print "Opened:", dest, "for writing."
         for s in sources:
-            with open(s, 'rb') as inp:
+            with open(s, 'r') as inp:
                 print "  appending:", s
                 out.write(inp.read())
+        out.write('\n')
 
     # flags = ""
     # if sys.platform == 'win32':
@@ -84,7 +85,8 @@ def concat(ctx, dest, *sources, **kw):
     #     # print 'cat {flags} {source} > {dest}'.format(**locals())
     #     ctx.run('cat {flags} {source} > {dest}'.format(**locals()))
 
-    if len(line_endings(dest)) > 1:
-        fix_line_endings(dest)
+    fix_line_endings(dest)
+    # if len(line_endings(dest)) > 1:
+    #     fix_line_endings(dest)
 
     return dest
