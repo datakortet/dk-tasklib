@@ -49,7 +49,7 @@ def copy(ctx, source, dest, force=False):
             flags += " /Y"
         # print 'copy {flags} {source} {dest}'.format(**locals())
         ctx.run('copy {flags} {source} {dest}'.format(**locals()))
-    else:
+    else:  # pragma: nocover
         if force:
             flags += " --force"
         ctx.run('cp {flags} {source} {dest}'.format(**locals()))
@@ -63,7 +63,7 @@ def concat(ctx, dest, *sources, **kw):
             flags += " /Y"
         source = '+'.join(sources)
         ctx.run('copy {flags} {source} {dest}'.format(**locals()))
-    else:
+    else:  # pragma: nocover
         if force:
             pass
             # flags += " --force"
