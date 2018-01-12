@@ -2,6 +2,8 @@
 import os
 import sys
 
+from dkfileutils.path import Path
+
 
 def line_endings(fname):
     """Return all line endings in the file.
@@ -57,19 +59,32 @@ def copy(ctx, source, dest, force=False):
 
 def concat(ctx, dest, *sources, **kw):
     force = kw.pop('force', False)
-    flags = ""
-    if sys.platform == 'win32':
-        if force:
-            flags += " /Y"
-        source = '+'.join(sources)
-        ctx.run('copy {flags} {source} {dest}'.format(**locals()))
-    else:  # pragma: nocover
-        if force:
-            pass
-            # flags += " --force"
-        source = ' '.join(sources)
-        # print 'cat {flags} {source} > {dest}'.format(**locals())
-        ctx.run('cat {flags} {source} > {dest}'.format(**locals()))
+    placement = Path(dest).dirname()
+    placement.makedirs()
+
+    with open(dest, 'wb') as out:
+        print "Opened:", dest, "for writing."
+        for s in sources:
+            with open(s, 'rb') as inp:
+                print "  appending:", s
+                out.write(inp.read())
+
+    # flags = ""
+    # if sys.platform == 'win32':
+    #     if force:
+    #         flags += " /Y"
+    #     source = '+'.join(sources)
+    #     source = source.replace('/', '\\')
+    #     ctx.run('copy {flags} {source} {dest}'.format(**locals()))
+    # else:  # pragma: nocover
+    #     if force:
+    #         pass
+    #         # flags += " --force"
+    #     source = ' '.join(sources)
+    #     # print 'cat {flags} {source} > {dest}'.format(**locals())
+    #     ctx.run('cat {flags} {source} > {dest}'.format(**locals()))
 
     if len(line_endings(dest)) > 1:
         fix_line_endings(dest)
+
+    return dest

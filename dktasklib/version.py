@@ -36,6 +36,7 @@ def versioned_name(fname):
     else:
         return min_name(fname, '-{version}')
 
+
 version_name = versioned_name
 
 
@@ -88,6 +89,7 @@ def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
         """.format(dst)
 
     return dst
+
 
 add_version = copy_to_version
 

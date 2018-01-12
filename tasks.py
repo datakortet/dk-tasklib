@@ -42,7 +42,7 @@ from dktasklib.utils import switch_extension
 from dktasklib.manage import collectstatic
 from dktasklib.package import Package, package
 from dktasklib.watch import Watcher
-# from dktasklib.publish import publish
+from dktasklib.publish import publish
 
 #: where tasks.py is located (root of package)
 DIRNAME = Path(os.path.dirname(__file__))
@@ -154,7 +154,7 @@ ns = Collection(
     version, upversion,
     package,
     collectstatic,
-    # publish,
+    publish,
 )
 ns.configure({
     'pkg': Package(),

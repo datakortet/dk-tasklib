@@ -10,7 +10,8 @@ from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
 from dktasklib.utils import cd, dest_is_newer_than_source, switch_extension
-from dktasklib.version import version_name, add_version, copy_to_version
+from dktasklib.version import version_name, add_version, copy_to_version, \
+    get_version
 
 
 def ensure_package_json(ctx):
@@ -137,7 +138,7 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
     else:
         dest = Path(dest.format(pkg=ctx.pkg))
     if dest.isdir():
-        dest += switch_extension(source.basename(), '.js')
+        dest = dest / switch_extension(source.basename(), '.js')
 
     if not force and dest_is_newer_than_source(source, dest):
         print('babel:', dest, 'is up-to-date.')
@@ -161,23 +162,13 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
 def version_js(ctx, fname, kind='pkg', force=False):
     """Add version number to a .js file.
     """
-    dst = add_version(
+    dst = copy_to_version(
         ctx,
-        fname, version_name(fname),
+        fname,
         kind=kind,
         force=force
     )
     return dst
-    # if force or not os.path.exists(dst):
-    #     ctx.run('cp {src} {dst}'.format(
-    #         src=fname,
-    #         dst=dst
-    #     ))
-    # else:
-    #     print(""")
-    #     Filename already exists, add --force or call upversion: {}
-    #     """.format(dst)
-    # return dst
 
 
 @requires('nodejs', 'npm', 'browserify')

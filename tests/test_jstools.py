@@ -5,7 +5,7 @@ import invoke
 from yamldirs import create_files
 
 from dktasklib import Package
-from dktasklib.jstools import babel
+from dktasklib.jstools import babel, version_js
 
 
 def test_babel(ctx):
@@ -28,21 +28,23 @@ def test_babel(ctx):
         assert 'return' in output
 
 
-# def test_babel2(ctx):
-#     files = """
-#         - foo.js: |
-#             [1,2,3].map(x => x*x)
-#     """
-#     with create_files(files) as directory:
-#         # os.chdir(directory)
-#         ctx.update({
-#             'pkg': Package().config()
-#         })
-#         babel(
-#             ctx,
-#             'foo.js',
-#             'foo-compiled.js',
-#         )
-#         output = open('foo-compiled.js').read()
-#         assert 'function (x)' in output
-#         assert 'return' in output
+def test_version_js(ctx):
+    fname = 'dkuser/static/js/create-user.js'
+    assert version_js(ctx, fname) == ''
+
+
+def test_babel2(ctx):
+    files = """
+        - foo.js: |
+            [1,2,3].map(x => x*x)
+    """
+    with create_files(files) as directory:
+        ctx = ctx.init(pkg=Package())
+        babel(
+            ctx,
+            'foo.js',
+            'foo-compiled.js',
+        )
+        output = open('foo-compiled.js').read()
+        assert 'function (x)' in output
+        assert 'return' in output
