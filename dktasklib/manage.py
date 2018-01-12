@@ -19,7 +19,7 @@ def manage(ctx, cmd, settings=None, manage_path=None, venv=None):
     """Run manage.py with `settings` in a separate process.
     """
     settings = settings or DEFAULT_SETTINGS_MODULE
-    with env(DJANGO_SETTINGS_MODULE=settings):
+    with env(DJANGO_SETTINGS_MODULE=settings, PYTHONWARNINGS='ignore'):
         if manage_path is None:
             settings_dir = find_pymodule(settings)
             manage_path = Path(pfind(settings_dir, 'manage.py')).dirname()
