@@ -27,6 +27,7 @@ def files_with_version_numbers():
         root / 'src' / 'version.js',
         pkg.source / '__init__.py',
         pkg.source / '_version.py',
+        pkg.source / 'package.json',
     }
     return default
 
