@@ -40,8 +40,12 @@ def fix_line_endings(fname, eol='\n'):
 
 
 def copy(ctx, source, dest, force=False):
+    """Copy ``source`` to ``dest``, which can be a file or directory.
+    """
+    # print "COPY:", locals()
+    # print "COPY:", ctx.force, ctx.verbose
     if source == dest:
-        return
+        return dest
 
     source = os.path.normcase(os.path.normpath(str(source)))
     dest = os.path.normcase(os.path.normpath(str(dest)))
@@ -55,6 +59,7 @@ def copy(ctx, source, dest, force=False):
         if force:
             flags += " --force"
         ctx.run('cp {flags} {source} {dest}'.format(**locals()))
+    return dest
 
 
 def concat(ctx, dest, *sources, **kw):
@@ -67,7 +72,7 @@ def concat(ctx, dest, *sources, **kw):
         for s in sources:
             with open(s, 'r') as inp:
                 print "  appending:", s
-                out.write(inp.read())
+                out.writelines(inp.readlines())
         out.write('\n')
 
     # flags = ""
