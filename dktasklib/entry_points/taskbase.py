@@ -105,7 +105,9 @@ def build(ctx, less=False, docs=False, js=False, force=False):
                 force=force
             )
         elif less:
-            print("WARNING: build --less specified, but no file at:", less_fname)
+            warnings.warn(
+                "WARNING: build --less specified, but no file at: " + less_fname
+            )
 
     if buildall or docs:
         if WARN_ABOUT_SETTINGS:
@@ -120,7 +122,7 @@ def build(ctx, less=False, docs=False, js=False, force=False):
         build_js(ctx, force)
 
     if HAVE_SETTINGS and (force or changed(ctx.pkg.django_static)):
-        collectstatic(ctx, DJANGO_SETTINGS_MODULE)
+        collectstatic(ctx, DJANGO_SETTINGS_MODULE, force=force)
 
 
 @task
