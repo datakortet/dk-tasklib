@@ -76,7 +76,7 @@ class LessRule(BuildRule):
             strict_imports=True,
             inline_urls=False,
             autoprefix="last 4 versions",
-            clean_css="-b --s0 --advanced",
+            clean_css="-b --s0",
         )
 
         with message("Creating copy without version number.."):

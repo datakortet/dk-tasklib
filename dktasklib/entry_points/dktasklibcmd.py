@@ -8,8 +8,11 @@ import os
 import sys
 
 import shutil
+import textwrap
+
 from dkfileutils.path import Path
 from .._version import __version__
+from .pytemplate import PyTemplate
 
 DIRNAME = Path(os.path.dirname(__file__))
 
@@ -22,9 +25,31 @@ def install_cmd(args):
     if tasks_file.exists() and not args.force:
         print "tasks.py exists (use --force to overwrite)"
         sys.exit(1)
-    shutil.copyfile(
-        DIRNAME / 'taskbase.py',
-        cwd / 'tasks.py'
+    taskbase = DIRNAME / 'taskbase.py'
+    t = PyTemplate(taskbase.read('rb'))
+    tasks_file.write(t.substitute(
+        VERSION=__version__
+    ))
+    if args.django:
+        add_django_to_docs_conf()
+
+
+def add_django_to_docs_conf():
+    cwd = Path.curdir()
+    conf_file = cwd / 'docs' / 'conf.py'
+    if 'django.setup()' in conf_file.read():
+        print "./docs/conf.py already contains django.setup()"
+        return
+
+    src = conf_file.read('rT')
+    pre, post = src.split('\n\n', 1)
+    conf_file.write(
+        pre + "\n\n" +
+        textwrap.dedent("""\
+        import django
+        django.setup()
+        """) + "\n\n" +
+        post
     )
 
 
@@ -34,26 +59,13 @@ def main(args=None):
     commands = list(sorted([name[:-4] for name in globals()
                             if name.endswith('_cmd')]))
 
-    p.add_argument(
-        'command',
-        help="run command (available commands: %s)" % ', '.join(commands)
-    )
-    p.add_argument(
-        '--force', '-f', action='store_true',
-        help="force execution of commands."
-    )
-    p.add_argument(
-        '--verbose', '-v', action='store_true',
-        help="verbose output"
-    )
-    p.add_argument(
-        '--version', action='version',
-        version='%(prog)s ' + __version__
-    )
+    p.add_argument('command', help="run command (available commands: %s)" % ', '.join(commands))
+    p.add_argument('--version', action='version', version='%(prog)s ' + __version__)
+    p.add_argument('--verbose', '-v', action='store_true', help="verbose output")
+    p.add_argument('--force', '-f', action='store_true', help="force execution of commands.")
+    p.add_argument('--django', '-d', action='store_true', help="make django specific changes.")
 
-    # print "ARGS1:", args
     args = p.parse_args(args)
-    # print "ARGS2:", args
 
     if args.verbose:
         print "ARGS:", args

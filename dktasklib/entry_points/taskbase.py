@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Base version of package/tasks.py, created by
+Base version of package/tasks.py, created by version ##{VERSION} of
 
     package/root/dir> dk-tasklib install
 
