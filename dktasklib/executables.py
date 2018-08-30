@@ -3,7 +3,7 @@ import sys
 
 import invoke
 from dkfileutils.which import get_executable
-
+from dktasklib import Package
 from dktasklib.utils import win32
 from dktasklib import runners
 
@@ -60,6 +60,11 @@ class Executables(object):
     def _find_exe(self, name, requires=(), install_txt=None):
         fexe = get_executable(name)
         if not fexe:  # pragma: nocover
+            # try $PKG/node_modules/.bin/<exe|cmd>
+            noderoot = Package().root / 'node_modules/.bin'
+            if name + '.cmd' in noderoot:
+                return str(noderoot / (name + '.cmd'))
+
             if not install_txt:  # pragma: nocover
                 install_txt = "Missing command: %r" % name
                 if requires:

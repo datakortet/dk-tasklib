@@ -125,6 +125,17 @@ def ensure_babelify(ctx):
         return True
 
 
+def ensure_babel_minify(ctx):
+    nodepkgs = runners.run("npm ls --depth=0 babelify --no-color")
+    if 'babel-minify' not in nodepkgs and 'minify' not in nodepkgs:
+        print("didn't find babelify, installing it..")
+        with cd(ctx.pkg.root):
+            ctx.run("npm install --save-dev babelify --no-color", echo=False, encoding='utf-8')
+    else:
+        return True
+
+
+
 @requires('nodejs', 'npm', 'babel')
 @task
 def babel(ctx, source, dest=None, source_maps=True, force=False):
@@ -234,6 +245,83 @@ def babili(ctx, src, dst):
         ctx,
         src=src,
         dst=dst,
+    )
+    return dst
+
+
+# babel-minify is linked to minify
+babel_minifycmd = Command('babel-minify', '{src} {opts} -o {dst}',
+                          requirements=('nodejs', 'npm', 'babel-minify'))
+
+
+@requires('nodejs', 'npm', 'babel-minify')
+@task
+def babel_minify(ctx, src, dst):
+    """
+    dkjs/node_modules/.bin> babel-minify --help
+
+      Usage: minify index.js [options]
+
+      IO Options:
+        --out-file, -o          Output to a specific file
+        --out-dir, -d           Output to a specific directory
+
+      Transform Options:
+        --mangle                Context and scope aware variable renaming
+        --simplify              Simplifies code for minification by reducing statements into
+                                expressions
+        --booleans              Transform boolean literals into !0 for true and !1 for false
+        --builtIns              Minify standard built-in objects
+        --consecutiveAdds       Inlines consecutive property assignments, array pushes, etc.
+        --deadcode              Inlines bindings and tries to evaluate expressions.
+        --evaluate              Tries to evaluate expressions and inline the result. Deals
+                                with numbers and strings
+        --flipComparisons       Optimize code for repetition-based compression algorithms
+                                such as gzip.
+        --infinity              Minify Infinity to 1/0
+        --memberExpressions     Convert valid member expression property literals into plain
+                                identifiers
+        --mergeVars             Merge sibling variables into single variable declaration
+        --numericLiterals       Shortening of numeric literals via scientific notation
+        --propertyLiterals      Transform valid identifier property key literals into identifiers
+        --regexpConstructors    Change RegExp constructors into literals
+        --removeConsole         Removes all console.* calls
+        --removeDebugger        Removes all debugger statements
+        --removeUndefined       Removes rval's for variable assignments, return arguments from
+                                functions that evaluate to undefined
+        --replace               Replaces matching nodes in the tree with a given replacement node
+        --simplifyComparisons   Convert === and !== to == and != if their types are inferred
+                                to be the same
+        --typeConstructors      Minify constructors to equivalent version
+        --undefinedToVoid       Transforms undefined into void 0
+
+      Other Options:
+        --keepFnName            Preserve Function Name (useful for code depending on fn.name)
+        --keepClassName         Preserve Class Name (useful for code depending on c.name)
+        --keepFnArgs            Don't remove unused fn arguments (useful for code depending on fn.length)
+        --tdz                   Detect usages of variables in the Temporal Dead Zone
+
+      Nested Options:
+        To use nested options (plugin specfic options) simply use the pattern
+        --pluginName.featureName.
+
+        For example,
+        minify index.js --mangle.keepClassName --deadcode.keepFnArgs --outFile index.min.js
+    """
+    # if os.path.exists(dst):
+    #     os.unlink(dst)
+
+    babel_minifycmd(
+        ctx,
+        src=src,
+        dst=dst,
+        keepFnName=True,
+        keepClassName=True,
+        mangle=False,
+        simplify=False,
+        builtins=False,
+        deadcode=False,
+        evaluate=False
     )
     return dst
 
