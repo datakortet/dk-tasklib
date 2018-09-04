@@ -17,7 +17,7 @@ lessc = Command('lessc', '{opts} {src} {dst}',
                 requirements=('nodejs', 'npm', 'lessc'))
 
 
-BOOTSTRAP = Path(os.environ.get('SRV', '')) / 'lib' / 'bootstrap' / 'less'
+BOOTSTRAP = Path(os.environ.get('SRV', '')) / 'ext' / 'bootstrap' / 'less'
 
 
 @task(
