@@ -149,6 +149,8 @@ def ensure_babel_minify(ctx):
         return True
 
 
+# FIXME: cannot use @requires this way since it causes download/install of
+# requirements when this file is imported (not when the function is used!)
 
 @requires('nodejs', 'npm', 'babel')
 @task
