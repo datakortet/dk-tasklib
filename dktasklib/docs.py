@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
-
+import datetime
 import os
+import sys
 import textwrap
 import webbrowser
 from os.path import join
 
 from dkfileutils.changed import changed
 from dkfileutils.path import Path
+
+from dktasklib.entry_points.pytemplate import PyTemplate
+from dktasklib.runners import run
 from dktasklib.wintask import task
 from invoke import Collection
 
 from dktasklib import concat
 from dktasklib import Package
+
+
+DIRNAME = Path(__file__).dirname()
 
 
 @task(name='clean')
@@ -43,7 +50,7 @@ def initdocs(ctx, author, language):
     """Run sphinx-quickstart to create an initial docs folder.
     """
     pkg = Package()
-    ctx.run((
+    cmd = (
         'sphinx-quickstart '
         ' --dot _'
         ' -a "{author}"'
@@ -65,8 +72,57 @@ def initdocs(ctx, author, language):
         docsdir=pkg.docs.relpath(pkg.root),
         author=author,
         language=language,
+    )
+    print("""
+    
+    invoke can't run this command on windows..
+    
+    {cmd}
+    """.format(cmd=cmd))
+
+
+@task
+def create_docs_directory(ctx, force=False):
+    """Create docs/conf.py
+    """
+    cwd = Path.curdir()
+    ctx.pkg.docs = ctx.pkg.docs
+    if ctx.pkg.docs.exists() and not force:
+        print "docs directory exists (use --force to overwrite)"
+        sys.exit(1)
+    ctx.pkg.docs.makedirs()
+    ctx.pkg.docs.makedirs('_static')
+    ctx.pkg.docs.makedirs('_templates')
+    confbase = DIRNAME / 'entry_points/confbase.py'
+    txt = confbase.read('rb')
+    txt = txt.replace('\r\n', '\n')
+    t = PyTemplate(txt)
+
+    (ctx.pkg.docs / 'conf.py').write(t.substitute(
+        VERSION=ctx.pkg.version,
+        PACKAGE=ctx.pkg.name,
+        YEAR=datetime.date.today().year,
+        AUTHOR=run('python setup.py --author').strip()
     ))
 
+
+@task
+def create_index(ctx, force=False):
+    """Create docs/index.rst
+    """
+    index = ctx.pkg.docs / 'index.rst'
+    if index.exists() and not force:
+        print "docs/index.rst exists (use --force to overwrite)"
+        sys.exit(1)
+    confbase = DIRNAME / 'entry_points/index.rst'
+    txt = confbase.read('rb')
+    txt = txt.replace('\r\n', '\n')
+    t = PyTemplate(txt)
+
+    index.write(t.substitute(
+        PACKAGE=ctx.pkg.name,
+        SOURCEDIR=ctx.pkg.source,
+    ))
 
 
 @task
@@ -159,6 +215,8 @@ ns = Collection(
     build,
     tree,
     initdocs,
+    create_docs_directory,
+    create_index,
 )
 ns.configure({
     'docs': {

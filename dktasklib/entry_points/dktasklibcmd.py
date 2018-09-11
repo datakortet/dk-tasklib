@@ -4,6 +4,7 @@
 """
 # pragma: nocover
 import argparse
+import datetime
 import os
 import sys
 
@@ -13,6 +14,7 @@ import textwrap
 from dkfileutils.path import Path
 from .._version import __version__
 from .pytemplate import PyTemplate
+from ..runners import run
 
 DIRNAME = Path(os.path.dirname(__file__))
 
@@ -26,12 +28,33 @@ def install_cmd(args):
         print "tasks.py exists (use --force to overwrite)"
         sys.exit(1)
     taskbase = DIRNAME / 'taskbase.py'
-    t = PyTemplate(taskbase.read('rb'))
+    txt = taskbase.read('rb')
+    txt = txt.replace('\r\n', '\n')
+    t = PyTemplate(txt)
     tasks_file.write(t.substitute(
         VERSION=__version__
     ))
     if args.django:
         add_django_to_docs_conf()
+
+
+def create_docs_cmd(args):
+    cwd = Path.curdir()
+    docsdir = cwd / 'docs'
+    if docsdir.exists() and not args.force:
+        print "docs directory exists (use --force to overwrite)"
+        sys.exit(1)
+    confbase = DIRNAME / 'confbase.py'
+    txt = confbase.read('rb')
+    txt = txt.replace('\r\n', '\n')
+    t = PyTemplate(txt)
+
+    (docsdir / 'conf.py').write(t.substitute(
+        VERSION=run('python setup.py --version'),
+        PACKAGE=run('python setup.py --name'),
+        YEAR=datetime.date.today().year,
+        AUTHOR=run('python setup.py --author').strip()
+    ))
 
 
 def add_django_to_docs_conf():
