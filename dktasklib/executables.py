@@ -144,7 +144,7 @@ class Executables(object):
     def find_babel(self):
         exename = 'babel'
         exepath = get_executable(exename)
-        npminstall = "npm install -g babel --no-color"
+        npminstall = "npm install -g babel-cli --no-color"
         if not exepath:
             if win32:
                 self.ctx.run(npminstall, echo=False, encoding="utf-8")
@@ -152,6 +152,18 @@ class Executables(object):
             else:
                 raise MissingCommand("Missing babel (%s)" % npminstall)
         return exepath
+
+    # def find_babel(self):
+    #     exename = 'babel'
+    #     exepath = get_executable(exename)
+    #     npminstall = "npm install -g babel --no-color"
+    #     if not exepath:
+    #         if win32:
+    #             self.ctx.run(npminstall, echo=False, encoding="utf-8")
+    #             exepath = get_executable(exename)
+    #         else:
+    #             raise MissingCommand("Missing babel (%s)" % npminstall)
+    #     return exepath
 
     def find_nodejs(self):  # pragma: nocover
         """Find :program:`node`.

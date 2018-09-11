@@ -34,6 +34,41 @@ def _browse(ctx):  # pragma: nocover
     webbrowser.open_new(index)
 
 
+@task(help=dict(
+    author='full name of author',
+    language='two letter language code (en, no, etc.)',
+
+))
+def initdocs(ctx, author, language):
+    """Run sphinx-quickstart to create an initial docs folder.
+    """
+    pkg = Package()
+    ctx.run((
+        'sphinx-quickstart '
+        ' --dot _'
+        ' -a "{author}"'
+        ' -l {language}'
+        ' -v {pkg.version}'
+        ' -r {pkg.version}'
+        ' -p {pkg.name}'
+        ' --no-makefile'
+        ' --no-batchfile'
+        ' --ext-autodoc'
+        ' --ext-intersphinx'
+        ' --ext-todo'
+        ' --ext-viewcode'
+        ' --suffix=".rst"'
+        ' --master="index"'
+        ' {docsdir}'
+    ).format(
+        pkg=pkg,
+        docsdir=pkg.docs.relpath(pkg.root),
+        author=author,
+        language=language,
+    ))
+
+
+
 @task
 def make_api_docs(ctx, prefix='', force=False):
     """Run sphinx-apidoc to write autodoc documentation to `docs/api/*`
@@ -117,7 +152,14 @@ def tree(ctx):
 
 
 # Vanilla/default/parameterized collection for normal use
-ns = Collection('docs', _clean, _browse, build, tree)
+ns = Collection(
+    'docs',
+    _clean,
+    _browse,
+    build,
+    tree,
+    initdocs,
+)
 ns.configure({
     'docs': {
         'source': 'docs',

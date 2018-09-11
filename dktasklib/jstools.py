@@ -35,7 +35,21 @@ def ensure_babelrc(ctx):
         with open(babelrc, 'w') as fp:
             fp.write(textwrap.dedent("""
             {
-                "presets": ["es2015"]
+              "presets": [
+                ["env", {
+                  "targets": {
+                    "browsers": [
+                      "last 2 versions",
+                      "IE >= 11"
+                    ],
+                    "useBuiltIns": true,
+                    "node": "current"
+                  }
+                }]
+              ],
+              "ignore": [
+                "node_modules"
+              ]
             }
             """))
     else:
@@ -158,7 +172,7 @@ def babel(ctx, source, dest=None, source_maps=True, force=False):
     ensure_package_json(ctx)
     ensure_node_modules(ctx)
     # ensure_babel(ctx)
-    ensure_es2015(ctx)
+    # ensure_es2015(ctx)
     ensure_preset_latest(ctx)
     ensure_babelrc(ctx)
 
