@@ -335,7 +335,7 @@ def babel_minify(ctx, src, dst):
         keepClassName=True,
         mangle=False,
         simplify=False,
-        builtins=False,
+        builtIns=True,
         deadcode=False,
         evaluate=False
     )
