@@ -56,7 +56,7 @@ target/
 *.rst~
 
 .md5
-
+node_modules/
 .idea/misc.xml
 .idea/workspace.xml
 .idea/tasks.xml
