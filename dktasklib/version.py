@@ -45,7 +45,10 @@ def get_version(ctx, fname, kind='pkg'):
     """
     fname = Path(fname)
     if kind == "pkg":
+        if not hasattr(ctx, 'pkg'):
+            ctx.pkg = Package()
         return ctx.pkg.version
+
     elif kind == "hash":
         md5 = fname.dirname() / '.md5'
         if md5.exists():

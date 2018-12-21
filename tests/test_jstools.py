@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-
+import pytest
 import invoke
 from yamldirs import create_files
 
@@ -28,13 +28,28 @@ def test_babel(ctx):
         assert 'return' in output
 
 
+# def test_version_js_noversion(ctx):
+#     with pytest.raises(IOError):
+#         version_js(ctx.init(), 'foo.js') == ''
+
+
 def test_version_js(ctx):
-    fname = 'dkuser/static/js/create-user.js'
-    assert version_js(ctx, fname) == ''
+    files = """
+        - package.json: |
+            { "version": "1.1.2", "description": "",
+              "repository": "", "license": ""}
+        - foo.js: |
+            [1,2,3].map(x => x*x)
+    """
+    with create_files(files) as directory:
+        assert version_js(ctx.init(), 'foo.js') == 'foo-1.1.2.js'
 
 
 def test_babel2(ctx):
     files = """
+        - package.json: |
+            { "version": "1.1.2", "description": "",
+              "repository": "", "license": ""}
         - foo.js: |
             [1,2,3].map(x => x*x)
     """

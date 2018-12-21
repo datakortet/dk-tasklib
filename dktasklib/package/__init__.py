@@ -7,7 +7,7 @@ from .package_interface import Package
 def package(ctx):
     """Print detected package directories.
     """
-    pkg = ctx.pkg or Package()
+    pkg = ctx.pkg if hasattr(ctx, 'pkg') else Package()
     keys = ['package_name', 'name', 'fname', 'root', 'source',
             'docs', 'django_static']
     keylen = 1 + max(len(k) for k in keys)
@@ -24,7 +24,7 @@ def package(ctx):
     print 'source'.ljust(keylen), str(pkg.source).ljust(vallen), '(root of the source code)'
     print 'docs'.ljust(keylen), str(pkg.docs).ljust(vallen), '(root of documentation)'
 
-    if pkg.is_django():
+    if hasattr(pkg, 'is_django') and pkg.is_django():
         print 'django_static'.ljust(keylen), str(pkg.django_static).ljust(vallen), '(directory for static resources)'
 
     print '-' * keylen, '-' * vallen, '-' * (80 - keylen - vallen)

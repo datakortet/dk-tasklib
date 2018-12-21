@@ -53,10 +53,14 @@ class Package(DKPKGPackage):
 
     def __init__(self, ctx=None):
         self.ctx = ctx or invoke.Context()
-        root = pfind('.',
-                     'setup.py',
-                     'dkbuild.ini',
-                     'package.json').dirname()
+        pkgdir = pfind('.',
+                       'setup.py',
+                       'dkbuild.ini',
+                       'package.json')
+        if pkgdir is None:
+            raise IOError("Didn't find setup.py|dkbuild.ini|package.json in "
+                          "any parent directory up to, and including root.")
+        root = pkgdir.dirname()
         ispkg = 'setup.py' in root
         overrides = self.overrides() if ispkg else self.overrides(source=root)
         super(Package, self).__init__(root, **overrides)
