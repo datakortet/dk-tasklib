@@ -3,7 +3,7 @@
 
 # direct external dependencies
 invoke>=0.22
-PyYAML==3.11
+PyYAML>=4.2b1
 
 # dk
 dkfileutils>=1.3.0
