@@ -28,12 +28,14 @@ setup(
     version=version,
     setup_requires=[] + pytest_runner,
     tests_require=[
-        'pytest>=3.2.1'
+        'pytest==3.9.3'
     ],
-    requires=[
-        
+    install_requires=[
+        "invoke>=0.22",
+        "PyYAML>=4.2b1",
+        "dkfileutils>=1.3.0",
+        "yamldirs>=1.1.5",
     ],
-    install_requires=[],
     author='Bjorn Pettersen',
     author_email='bp@datakortet.no',
     url='https://github.com/datakortet/dk-tasklib',
