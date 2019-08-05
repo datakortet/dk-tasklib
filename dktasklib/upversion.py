@@ -23,6 +23,7 @@ def files_with_version_numbers():
         root / 'package.json',
         root / 'package.ini',
         root / 'package.yaml',
+        root / 'dkbuild.yml',
         root / 'docs' / 'conf.py',
         root / 'src' / 'version.js',
         pkg.source / '__init__.py',
