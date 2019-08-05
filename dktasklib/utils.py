@@ -5,10 +5,110 @@ import sys
 from contextlib import contextmanager
 
 from dkfileutils.path import Path
+import operator
 
 join = os.path.join
 null = "NUL" if sys.platform == 'win32' else '/dev/null'
 win32 = sys.platform == 'win32'
+
+
+class Column(dict):
+    pass
+
+
+# from dkbuild/utils/tableprinter.py
+def format_table(data, *columns, **kw):
+    """Format data into a .rst-like formatted table.
+
+       Args:
+           data: list of dict/object (having fields corresponding to `columns`)
+           columns: one-or-more
+
+                 dict(title='',
+                      field='',
+                      align='left',
+                      format=lambda x:x)
+
+               title is optional and defaults to field, other defaults as
+               indicated.
+           kw[get_field]: function to extract fields from data objects, ie.:
+               ``get_field(data[i], columns[i]['field']) => data[i].field``
+               Default value is :fn:`operator.itemgetter`
+
+       Usage::
+
+           >>> print format_table(
+           ...     [
+           ...         dict(field1=42, field2='world', field3='n/a'),
+           ...         dict(field1=12, field2='hello')
+           ...     ],
+           ...     Column(field='field1', format=str, align='center'),
+           ...     Column(field='field2', title='f2           ', align='right')
+           ... )
+           ====== =============
+           field1 f2
+           ====== =============
+             42           world
+             12           hello
+           ====== =============
+
+    """
+    fields = [col['field'] for col in columns]
+    titles = [col.get('title', col['field']) for col in columns]
+    identity = lambda x: x
+    fmt = [col.get('format', identity) for col in columns]
+    _align = [col.get('align', 'left') for col in columns]
+    _alignselect = {'left': '', 'right': '>', 'center': '^'}
+    align = [_alignselect[a] for a in _align]
+    getter = kw.get('get_field', operator.itemgetter)
+    get_fields = [getter(field) for field in fields]
+
+    field_lengths = [len(t) for t in titles]
+    for item in data:
+        values = [fmtfn(getfn(item)) for fmtfn, getfn in zip(fmt, get_fields)]
+        value_lengths = [max([0] + [len(ln) for ln in v.splitlines()]) for v in
+                         values]
+        field_lengths = [max(fieldval) for fieldval in zip(value_lengths,
+                                                           field_lengths)]
+    rst_line = ['=' * clen for clen in field_lengths]
+    thead = [
+        rst_line,
+        ['%-*s' % (clen, title) for clen, title in zip(field_lengths, titles)],
+        rst_line
+    ]
+
+    def get_lineno(n, val):
+        lines = val.splitlines()
+        if n >= len(lines):
+            return ''
+        return lines[n]
+
+    rows = []
+    for item in data:
+        values = [fmtfn(getfn(item)) for fmtfn, getfn in zip(fmt, get_fields)]
+        multiline = [v.count('\n') for v in values]
+        if any(multiline):
+            for i in range(max(multiline) + 1):
+                line = [get_lineno(i, val) for val in values]
+                rows.append([
+                    '{:{align}{width}}'.format(value, align=a, width=w)
+                    # line, align=align[i], width=field_lengths[i])
+                    for a, w, value in zip(align, field_lengths, line)
+                ])
+        else:
+            rows.append(
+                ['{:{align}{width}}'.format(value, align=a, width=w)
+                 for a, w, value in zip(align, field_lengths, values)]
+            )
+        if kw.get('rowspace'):
+            rows.append(['' * len(columns)])
+    if kw.get('rowspace'):
+        del rows[-1]
+    tfoot = [rst_line]
+    header = '\n'.join([' '.join(row) for row in thead])
+    body = '\n'.join([' '.join(row) for row in rows])
+    footer = '\n'.join([' '.join(row) for row in tfoot])
+    return '\n'.join([header, body, footer])
 
 
 def dest_is_newer_than_source(src, dst):

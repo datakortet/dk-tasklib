@@ -19,4 +19,4 @@ pytest-cov==2.6.1
 coverage>=4.4.1
 
 twine>=1.9.1
-dkpkg>=1.0.0
+dkpkg>=1.1.1

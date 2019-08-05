@@ -65,6 +65,18 @@ class Package(DKPKGPackage):
         overrides = self.overrides() if ispkg else self.overrides(source=root)
         super(Package, self).__init__(root, **overrides)
 
+    def vcs(self):
+        """Return the name of the version control system handling this package.
+        """
+        if (self.root / '.svn').exists():
+            return 'svn'
+        elif (self.root / '.git').exists():
+            return 'git'
+        elif (self.root / '.hg').exists():
+            return 'hg'
+        else:
+            return ''
+
     # invoke'ism?
     def config(self):  # pragma: nocover
         cfg = Config(dict(iter(self)))

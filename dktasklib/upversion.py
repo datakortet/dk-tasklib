@@ -2,7 +2,7 @@
 """
 Update a package's version number.
 """
-
+from __future__ import print_function
 import re
 import os
 import textwrap
@@ -61,9 +61,15 @@ def _replace_version(fname, cur_version, new_version):
 
 @task(
     autoprint=True,
-    default=True
+    default=True,
+    help=dict(
+        major="update major version number (set minor and patch to 0)",
+        minor="update minor version number (set patch to 0)",
+        patch="(default) update patch version",
+        tag="create a tag (git only)"
+    )
 )
-def upversion(ctx, major=False, minor=False, patch=False):
+def upversion(ctx, major=False, minor=False, patch=False, tag=False):
     """Update package version (default patch-level increase).
     """
     # while it may be tempting to make this task auto-tag the new version,
@@ -96,9 +102,15 @@ def upversion(ctx, major=False, minor=False, patch=False):
             changed_files.append(fname)
     if changed == 0:
         warnings.warn("I didn't change any files...!")  # pragma: nocover
-    print "changed version to %s in %d files" % (new_version, changed)
+    elif tag and pkg.vcs() == 'git':
+        with pkg.root.abspath().cd():
+            ctx.run('git tag -a v{version} -m "Version {version}"'.format(
+                version=new_version
+            ))
+            ctx.run('git push origin --tags')
+    print("changed version to %s in %d files" % (new_version, changed))
     for fname in changed_files:
-        print '  ', fname
+        print('  ', fname)
     return new_version
 
 
@@ -133,7 +145,7 @@ class UpdateTemplateVersion(BuildRule):
         )
         with open(fname, 'w') as fp:
             fp.write(newtxt)
-        print 'Updated {% import %} template:', fname
+        print('Updated {% import %} template:', fname)
 
 
 ns = Collection(
