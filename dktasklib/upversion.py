@@ -15,8 +15,8 @@ from .rule import BuildRule
 from .package import Package
 
 
-def files_with_version_numbers():
-    pkg = Package()
+def files_with_version_numbers(pkg=None):
+    pkg = pkg or Package()
     root = pkg.root
     default = {
         root / 'setup.py',
@@ -26,6 +26,10 @@ def files_with_version_numbers():
         root / 'dkbuild.yml',
         root / 'docs' / 'conf.py',
         root / 'src' / 'version.js',
+        root / 'js' / 'version.js',
+        root / 'styles' / 'index.less',
+        root / 'styles' / 'index.scss',
+        root / 'less' / 'index.less',
         pkg.source / '__init__.py',
         pkg.source / '_version.py',
         pkg.source / 'package.json',
