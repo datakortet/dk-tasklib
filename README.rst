@@ -5,7 +5,7 @@
 .. image:: https://coveralls.io/repos/github/datakortet/dk-tasklib/badge.svg?branch=master
    :target: https://coveralls.io/github/datakortet/dk-tasklib?branch=master
 
-dk-tasklib -- pyinvoke  task library
+dk-tasklib - pyinvoke task library
 ====================================
 
 
