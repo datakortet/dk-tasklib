@@ -12,168 +12,168 @@ Subpackages
 Submodules
 ----------
 
-dktasklib\.clean module
------------------------
+dktasklib.clean module
+----------------------
 
 .. automodule:: dktasklib.clean
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.commands module
---------------------------
+dktasklib.commands module
+-------------------------
 
 .. automodule:: dktasklib.commands
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.concat module
-------------------------
+dktasklib.concat module
+-----------------------
 
 .. automodule:: dktasklib.concat
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.docs module
-----------------------
+dktasklib.docs module
+---------------------
 
 .. automodule:: dktasklib.docs
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.environment module
------------------------------
+dktasklib.environment module
+----------------------------
 
 .. automodule:: dktasklib.environment
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.executables module
------------------------------
+dktasklib.executables module
+----------------------------
 
 .. automodule:: dktasklib.executables
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.help module
-----------------------
+dktasklib.help module
+---------------------
 
 .. automodule:: dktasklib.help
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.jstools module
--------------------------
+dktasklib.jstools module
+------------------------
 
 .. automodule:: dktasklib.jstools
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.lessc module
------------------------
+dktasklib.lessc module
+----------------------
 
 .. automodule:: dktasklib.lessc
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.manage module
-------------------------
+dktasklib.manage module
+-----------------------
 
 .. automodule:: dktasklib.manage
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.npm module
----------------------
+dktasklib.npm module
+--------------------
 
 .. automodule:: dktasklib.npm
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.pset module
-----------------------
+dktasklib.pset module
+---------------------
 
 .. automodule:: dktasklib.pset
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.publish module
--------------------------
+dktasklib.publish module
+------------------------
 
 .. automodule:: dktasklib.publish
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.rule module
-----------------------
+dktasklib.rule module
+---------------------
 
 .. automodule:: dktasklib.rule
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.runners module
--------------------------
+dktasklib.runners module
+------------------------
 
 .. automodule:: dktasklib.runners
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.upversion module
----------------------------
+dktasklib.upversion module
+--------------------------
 
 .. automodule:: dktasklib.upversion
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.urlinliner module
-----------------------------
+dktasklib.urlinliner module
+---------------------------
 
 .. automodule:: dktasklib.urlinliner
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.utils module
------------------------
+dktasklib.utils module
+----------------------
 
 .. automodule:: dktasklib.utils
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.version module
--------------------------
+dktasklib.version module
+------------------------
 
 .. automodule:: dktasklib.version
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.watch module
------------------------
+dktasklib.watch module
+----------------------
 
 .. automodule:: dktasklib.watch
     :members:
     :undoc-members:
     :show-inheritance:
 
-dktasklib\.wintask module
--------------------------
+dktasklib.wintask module
+------------------------
 
 .. automodule:: dktasklib.wintask
     :members:

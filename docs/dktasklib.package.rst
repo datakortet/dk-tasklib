@@ -1,11 +1,11 @@
-dktasklib\.package package
-==========================
+dktasklib.package package
+=========================
 
 Submodules
 ----------
 
-dktasklib\.package\.package\_interface module
----------------------------------------------
+dktasklib.package.package\_interface module
+-------------------------------------------
 
 .. automodule:: dktasklib.package.package_interface
     :members:

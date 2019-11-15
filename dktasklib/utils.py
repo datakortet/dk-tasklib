@@ -33,7 +33,7 @@ def format_table(data, *columns, **kw):
                indicated.
            kw[get_field]: function to extract fields from data objects, ie.:
                ``get_field(data[i], columns[i]['field']) => data[i].field``
-               Default value is :fn:`operator.itemgetter`
+               Default value is :func:`operator.itemgetter`
 
        Usage::
 

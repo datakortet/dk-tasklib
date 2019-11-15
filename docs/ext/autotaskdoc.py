@@ -105,7 +105,7 @@ import invoke
 from docutils import nodes
 from docutils.statemachine import StringList
 from invoke.parser import Parser
-from sphinx.util.compat import Directive
+from docutils.parsers.rst import Directive
 
 
 class AutoTaskdocDirective(Directive):

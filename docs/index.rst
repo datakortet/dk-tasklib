@@ -10,6 +10,8 @@ dk-tasklib
 
    develop
 
+.. include:: modules
+
 Indices and tables
 ==================
 
