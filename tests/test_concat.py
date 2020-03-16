@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 
 from yamldirs import create_files
@@ -14,7 +15,7 @@ def test_line_endings():
         with open('foo.txt', 'wb') as fp:
             fp.write("a\nb\r\nc\nd\n")
 
-        print repr(open('foo.txt', 'rb').read())
+        print(repr(open('foo.txt', 'rb').read()))
 
         assert len(line_endings('foo.txt')) == 2
         fix_line_endings('foo.txt')
@@ -49,9 +50,9 @@ def test_concat(ctx):
             fp.write('a\r\n')
         with open('bar.txt', 'wb') as fp:
             fp.write('b\n')
-        print "LISTDIR", os.listdir('.')
-        print "FOO:", `open('foo.txt', 'rb').read()`
-        print "BAR:", `open('bar.txt', 'rb').read()`
+        print("LISTDIR", os.listdir('.'))
+        print("FOO:", repr(open('foo.txt', 'rb').read()))
+        print("BAR:", repr(open('bar.txt', 'rb').read()))
         concat(ctx.init(), 'baz.txt', 'foo.txt', 'bar.txt', force=True)
-        print "BAZ:", `open('baz.txt', 'rb').read()`
+        print("BAZ:", repr(open('baz.txt', 'rb').read()))
         assert open('baz.txt').read().split() == ['a', 'b']

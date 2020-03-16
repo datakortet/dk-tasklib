@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 
 import sys
@@ -42,7 +43,7 @@ def test_publish(ctx):
                 -----------
     """
     with create_files(files, cleanup=True) as directory:
-        print "DIRECTORY:", directory
+        print("DIRECTORY:", directory)
         os.chdir('mypackage')  # into the package directory
         ctx = ctx.init(echo=True)
         publish(ctx, wheel=False)

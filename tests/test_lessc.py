@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 
 import invoke
@@ -18,13 +19,13 @@ def test_less_simple(ctx):
     """
     with create_files(files) as directory:
         assert 'foo.css' not in os.listdir('.')
-        print lessc.lessc(
+        print(lessc.lessc(
             ctx.init(), src='foo.less', dst='foo.css',
             autoprefix="ie > 8, last 4 versions"
-        )
+        ))
         assert 'foo.css' in os.listdir('.')
         csstxt = open('foo.css').read()
-        print csstxt
+        print(csstxt)
         # assert len(open('foo.css').read()) > len(open('foo.less').read())
         assert '-ms-flexbox' in csstxt
 

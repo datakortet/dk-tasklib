@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import pytest
 
 from dktasklib.pset import pset
@@ -104,6 +105,6 @@ def test_add():
     p3.a = 1
     p3.b = 2
     assert p1 + p2 == p3
-    print 'p1 + p2:', p1 + p2
-    print 'p2 + p1:', p2 + p1
+    print('p1 + p2:', p1 + p2)
+    print('p2 + p1:', p2 + p1)
     assert p1 + p2 == p2 + p1  # key order not considered for equality

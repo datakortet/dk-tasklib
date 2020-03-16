@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 
 import invoke
@@ -67,7 +68,7 @@ def test_copy_to_version(ctx):
             'foo.txt',
             kind='pkg'
         )
-        print open('foo-1.1.2.txt').read()
+        print(open('foo-1.1.2.txt').read())
         assert open('foo-1.1.2.txt').read() == 'hello world'
 
         # .. update versioned resources when forcing
@@ -77,7 +78,7 @@ def test_copy_to_version(ctx):
             kind='pkg',
             force=True
         )
-        print open('foo-1.1.2.txt').read()
+        print(open('foo-1.1.2.txt').read())
         assert open('foo-1.1.2.txt').read() == 'goodbye world'
 
 
@@ -93,5 +94,5 @@ def test_add_version_hash(ctx):
             'foo.txt',
             kind='hash'
         )
-        print os.listdir('.')
+        print(os.listdir('.'))
         assert len(os.listdir('.')) == 3
