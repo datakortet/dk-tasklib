@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import string
 import sys
@@ -169,13 +170,13 @@ def filename(fname):
 @contextmanager
 def message(s):
     try:
-        print (' %s ' % s).center(80, '-')
+        print((' %s ' % s).center(80, '-'))
         yield
     except:
-        print 'error =====>', s, '<====== error'
+        print('error =====>', s, '<====== error')
         raise
     else:
-        print (' (ok: %s) ' % s).center(80, '=')
+        print((' (ok: %s) ' % s).center(80, '='))
 
 
 @contextmanager
@@ -227,6 +228,6 @@ def find_pymodule(dotted_name):
         except OSError:
             continue
         except Exception as e:
-            print 'error', pth, e
+            print('error', pth, e)
             raise
     raise ValueError("Path not found for: " + dotted_name)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import sys
 
@@ -68,10 +69,10 @@ def concat(ctx, dest, *sources, **kw):
     placement.makedirs()
 
     with open(dest, 'w') as out:
-        print "Opened:", dest, "for writing."
+        print("Opened:", dest, "for writing.")
         for s in sources:
             with open(s, 'r') as inp:
-                print "  appending:", s
+                print("  appending:", s)
                 out.writelines(inp.readlines())
         out.write('\n')
 

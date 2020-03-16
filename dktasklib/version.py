@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 import hashlib
 
@@ -87,9 +88,9 @@ def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
         copy(ctx, source, dst, force=force)
 
     elif open(source).read() != open(dst).read():
-        print """
+        print("""
         Filename already exists, add --force or call upversion: {}
-        """.format(dst)
+        """.format(dst))
 
     return dst
 

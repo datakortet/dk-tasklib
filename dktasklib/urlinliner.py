@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 from dktasklib.wintask import task
 import base64
 import os
@@ -11,7 +12,7 @@ def inline_data(data, type='image/png', name=""):
     """Inline (encode) the ``data``.
     """
     if len(data) > 10 * 1024:
-        print "%s is too big (%d bytes), max is 10KB" % (name, len(data))
+        print("%s is too big (%d bytes), max is 10KB" % (name, len(data)))
         return name
 
     encoded = base64.b64encode(data)
@@ -89,4 +90,4 @@ def list_urls(ctx, filename):
     """List all url(..) targets in the filename.
     """
     for match in re.findall(r'url\((.*?)\)', open(filename, 'rb').read()):
-        print match
+        print(match)

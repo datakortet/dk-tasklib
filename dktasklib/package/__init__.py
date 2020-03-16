@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from dktasklib.wintask import task
 from .package_interface import Package
 from ..utils import format_table, Column
@@ -13,9 +14,9 @@ def package(ctx):
     def row(attribute, value, description=''):
         return dict(attribute=attribute, value=value, description=description)
 
-    print "The dk-tasklib Package object thinks your code has the following layout:"
+    print("The dk-tasklib Package object thinks your code has the following layout:")
 
-    print format_table(
+    print(format_table(
         [
             row('package_name', pkg.package_name, '(repo/pip-installable name)'),
             row('name', pkg.name, '(importable name)'),
@@ -29,7 +30,7 @@ def package(ctx):
         Column(field='attribute'),
         Column(field='value'),
         Column(field='description'),
-    )
+    ))
 
     # keys = ['package_name', 'name', 'fname', 'root', 'source',
     #         'docs', 'django_static']

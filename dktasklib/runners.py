@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import subprocess
 
 
@@ -38,7 +39,7 @@ def command(executable, dryrun=False):
                 cmdline += ' --%s=%s' % (k, v)
 
         if dryrun:
-            print cmdline
+            print(cmdline)
         else:
             return run(cmdline)
     return _call

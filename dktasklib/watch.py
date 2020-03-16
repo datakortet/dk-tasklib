@@ -25,6 +25,7 @@ Usage::
     })
 
 """
+from __future__ import print_function
 import time
 from dkfileutils.path import Path
 from watchdog.observers import Observer
@@ -83,7 +84,7 @@ class Watcher(object):
         )
 
     def start(self):
-        print 'watching for changes.. (Ctrl-C to exit)'
+        print('watching for changes.. (Ctrl-C to exit)')
         self.observer.start()
         try:
             while 1:

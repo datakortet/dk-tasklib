@@ -2,6 +2,7 @@
 
 """Commands installed by setup.py
 """
+from __future__ import print_function
 # pragma: nocover
 import argparse
 import datetime
@@ -25,7 +26,7 @@ def install_cmd(args):
     cwd = Path.curdir()
     tasks_file = cwd / 'tasks.py'
     if tasks_file.exists() and not args.force:
-        print "tasks.py exists (use --force to overwrite)"
+        print("tasks.py exists (use --force to overwrite)")
         sys.exit(1)
     taskbase = DIRNAME / 'taskbase.py'
     txt = taskbase.read('rb')
@@ -42,7 +43,7 @@ def create_docs_cmd(args):
     cwd = Path.curdir()
     docsdir = cwd / 'docs'
     if docsdir.exists() and not args.force:
-        print "docs directory exists (use --force to overwrite)"
+        print("docs directory exists (use --force to overwrite)")
         sys.exit(1)
     confbase = DIRNAME / 'confbase.py'
     txt = confbase.read('rb')
@@ -61,7 +62,7 @@ def add_django_to_docs_conf():
     cwd = Path.curdir()
     conf_file = cwd / 'docs' / 'conf.py'
     if 'django.setup()' in conf_file.read():
-        print "./docs/conf.py already contains django.setup()"
+        print("./docs/conf.py already contains django.setup()")
         return
 
     src = conf_file.read('rT')
@@ -91,10 +92,10 @@ def main(args=None):
     args = p.parse_args(args)
 
     if args.verbose:
-        print "ARGS:", args
+        print("ARGS:", args)
 
     if args.command not in commands:
-        print "Unknown command:", args.command
+        print("Unknown command:", args.command)
         sys.exit(1)
 
     globals()[args.command + '_cmd'](args)

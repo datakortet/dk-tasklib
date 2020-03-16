@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import datetime
 import os
 import sys
@@ -88,7 +89,7 @@ def create_docs_directory(ctx, force=False):
     cwd = Path.curdir()
     ctx.pkg.docs = ctx.pkg.docs
     if ctx.pkg.docs.exists() and not force:
-        print "docs directory exists (use --force to overwrite)"
+        print("docs directory exists (use --force to overwrite)")
         sys.exit(1)
     ctx.pkg.docs.makedirs()
     ctx.pkg.docs.makedirs('_static')
@@ -112,7 +113,7 @@ def create_index(ctx, force=False):
     """
     index = ctx.pkg.docs / 'index.rst'
     if index.exists() and not force:
-        print "docs/index.rst exists (use --force to overwrite)"
+        print("docs/index.rst exists (use --force to overwrite)")
         sys.exit(1)
     confbase = DIRNAME / 'entry_points/index.rst'
     txt = confbase.read('rb')
@@ -148,12 +149,12 @@ def make_api_docs(ctx, prefix='', force=False):
     ctx.run("rm -rf {pkg.docs}/api".format(pkg=ctx.pkg))
 
     if ".. include:: modules.rst" not in open(ctx.pkg.docs / 'index.rst').read():
-        print textwrap.dedent("""\
+        print(textwrap.dedent("""\
         WARNING: you need to include the following in docs/index.rst
 
             .. include:: modules.rst
 
-        """)
+        """))
 
 
 @task(default=True, help={
@@ -174,9 +175,9 @@ def build(ctx, clean=False, browse=False, warn=False,
     """
     # import pdb;pdb.set_trace()
     if not force and not changed(ctx.pkg.docs):
-        print """
+        print("""
         No changes detected in {}, add --force to build docs anyway.
-        """.format(ctx.pkg.docs)
+        """.format(ctx.pkg.docs))
         return  # should perhaps check if code has changed too? (autodoc)
 
     if clean:

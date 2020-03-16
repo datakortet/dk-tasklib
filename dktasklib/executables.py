@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sys
 
 import invoke
@@ -86,7 +87,7 @@ class Executables(object):
                 runners.run(wheel + ' keygen')
             else:
                 raise MissingCommand("Missing wheel (%s)" % cmd)
-            print 'Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section'
+            print('Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section')
         return exepath
 
     def find_twine(self):
@@ -101,7 +102,7 @@ class Executables(object):
                 exepath = get_executable(exename)
             else:
                 raise MissingCommand("Missing twine (%s)" % cmd)
-            print 'Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section'
+            print('Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section')
         return exepath
 
     def find_uglify(self):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import sys
 import os
 
@@ -45,7 +46,7 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
         ctx.pkg = Package()
 
     if not (force or Directory(ctx.pkg.django_static).changed()):
-        print "Skipping collectstic: no changes to static dir."
+        print("Skipping collectstic: no changes to static dir.")
         return
 
     if not clobber:
@@ -58,22 +59,22 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
                 # print 'checking:', pubname
                 if pubname.open('rb').read() != fname.open('rb').read():
                     changed_versioned_resources = True
-                    print
-                    print "ERROR: versioned file has changes:"
-                    print "  contents of:      ", fname
-                    print "  is different from:", pubname
-                    print
+                    print()
+                    print("ERROR: versioned file has changes:")
+                    print("  contents of:      ", fname)
+                    print("  is different from:", pubname)
+                    print()
         if changed_versioned_resources:
-            print "Exiting due to changes in versioned resources. " \
+            print("Exiting due to changes in versioned resources. " \
                   "You should probably revert the changes and create " \
-                  "a new version."
+                  "a new version.")
             sys.exit(1)
 
     try:
         settings = settings or ctx.pkg.django_settings_module
     except AttributeError:
         settings = DEFAULT_SETTINGS_MODULE
-    print "using settings:", settings, 'venv:', venv
+    print("using settings:", settings, 'venv:', venv)
     manage(ctx, "collectstatic --noinput", settings=settings, venv=venv)
     # record changes made by collectstatic
     changed(ctx.pkg.django_static)

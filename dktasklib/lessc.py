@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import os
 from dktasklib.wintask import task
 from .rule import BuildRule
@@ -52,15 +53,15 @@ class LessRule(BuildRule):
         dest = Path(fmt(dst, c))
 
         if not source.exists():
-            print "Missing source:", source, '(skipping)'
+            print("Missing source:", source, '(skipping)')
             return
 
         for fname in source.dirname().glob("*.inline"):
             urlinliner.inline(self.ctx, fname)
 
         if not force and not Directory(source.dirname()).changed(glob='**/*.less'):
-            print "No changes: {input_dir}/{glob}, add --force to build.".format(
-                input_dir=source.dirname(), glob='**/*.less')
+            print("No changes: {input_dir}/{glob}, add --force to build.".format(
+                input_dir=source.dirname(), glob='**/*.less'))
             return
 
         path = kw.pop('path', [])
