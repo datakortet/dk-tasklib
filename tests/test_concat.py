@@ -13,20 +13,22 @@ def test_line_endings():
     """
     with create_files(files) as directory:
         with open('foo.txt', 'wb') as fp:
-            fp.write("a\nb\r\nc\nd\n")
+            fp.write(b"a\nb\r\nc\nd\n")
 
         print(repr(open('foo.txt', 'rb').read()))
 
+        print(repr(line_endings('foo.txt')))
         assert len(line_endings('foo.txt')) == 2
         fix_line_endings('foo.txt')
+        print(repr(line_endings('foo.txt')))
         assert len(line_endings('foo.txt')) == 1
 
 
 def test_chomp():
-    assert chomp('ab\r\n') == 'ab'
-    assert chomp('ab\n') == 'ab'
-    assert chomp('') == ''
-    assert chomp('ab') == 'ab'
+    assert chomp(b'ab\r\n') == b'ab'
+    assert chomp(b'ab\n') == b'ab'
+    assert chomp(b'') == b''
+    assert chomp(b'ab') == b'ab'
 
 
 def test_copy(ctx):
@@ -47,9 +49,9 @@ def test_concat(ctx):
     """
     with create_files(files) as directory:
         with open('foo.txt', 'wb') as fp:
-            fp.write('a\r\n')
+            fp.write(b'a\r\n')
         with open('bar.txt', 'wb') as fp:
-            fp.write('b\n')
+            fp.write(b'b\n')
         print("LISTDIR", os.listdir('.'))
         print("FOO:", repr(open('foo.txt', 'rb').read()))
         print("BAR:", repr(open('bar.txt', 'rb').read()))

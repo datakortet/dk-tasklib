@@ -54,7 +54,7 @@ def get_version(ctx, fname, kind='pkg'):
         md5 = fname.dirname() / '.md5'
         if md5.exists():
             return md5.open().read()
-        return hashlib.md5(open(fname).read()).hexdigest()
+        return hashlib.md5(open(fname, 'rb').read()).hexdigest()
     # elif kind == "svn":
     #     ver = get_svn_version(source)
     return ""

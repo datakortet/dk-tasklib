@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 # import pprint
-from ConfigParser import RawConfigParser
+from configparser import RawConfigParser
 
 import invoke
 from dkfileutils.pfind import pfind as _pfind
@@ -34,7 +34,7 @@ class Package(DKPKGPackage):
         package_json = pfind('.', 'package.json')
         if package_json:
             # root = package_json.dirname()
-            with open(package_json, 'rb') as fp:
+            with open(package_json, 'r') as fp:
                 pj = json.load(fp)
                 for k, v in pj.items():
                     if k in Package.overridables:

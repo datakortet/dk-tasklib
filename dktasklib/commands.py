@@ -5,6 +5,7 @@ import invoke
 
 from .executables import exe
 from .utils import fmt
+from past.builtins import basestring
 
 
 default_command_policy = dict(

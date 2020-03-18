@@ -29,6 +29,7 @@ def test_less_simple(ctx):
         # assert len(open('foo.css').read()) > len(open('foo.less').read())
         assert '-ms-flexbox' in csstxt
 
+
 def test_less_rule_default(ctx):
     # standard package structure..
     files = """

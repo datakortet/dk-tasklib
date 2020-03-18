@@ -12,26 +12,26 @@ def line_endings(fname):
     _endings = {line[-2:] for line in open(fname, 'rb').readlines()}
     res = set()
     for e in _endings:
-        if e.endswith('\r'):
-            res.add('\r')
-        elif e.endswith('\r\n'):
-            res.add('\r\n')
-        elif e.endswith('\n'):
-            res.add('\n')
+        if e.endswith(b'\r'):
+            res.add(b'\r')
+        elif e.endswith(b'\r\n'):
+            res.add(b'\r\n')
+        elif e.endswith(b'\n'):
+            res.add(b'\n')
     return res
 
 
 def chomp(s):
     """Remove line terminator if it exists.
     """
-    if s[-2:] == '\r\n':
+    if s[-2:] == b'\r\n':
         return s[:-2]
-    if s[-1:] == '\r' or s[-1:] == '\n':
+    if s[-1:] == b'\r' or s[-1:] == b'\n':
         return s[:-1]
     return s
 
 
-def fix_line_endings(fname, eol='\n'):
+def fix_line_endings(fname, eol=b'\n'):
     """Change all line endings to ``eol``.
     """
     lines = [chomp(line) for line in open(fname, 'rb').readlines()]
