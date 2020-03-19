@@ -16,7 +16,7 @@ Programming Language :: Python :: 2.7
 Topic :: Software Development :: Libraries
 """
 
-version = '3.0.0'
+version = '3.0.1'
 DIRNAME = os.path.dirname(__file__)
 
 
