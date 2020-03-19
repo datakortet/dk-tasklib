@@ -37,6 +37,8 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
     with pkg.root.cd():
         if clean:
             ctx.run("rm -rf dist")
+            ctx.run("rm -rf build/lib")
+            ctx.run("rm -rf build/bdist.win32")
 
         targets = 'sdist'
         if wheel:
