@@ -13,10 +13,12 @@ Intended Audience :: Developers
 Programming Language :: Python
 Programming Language :: Python :: 2
 Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.5
 Topic :: Software Development :: Libraries
 """
 
-version = '3.0.1'
+version = '3.0.2'
 DIRNAME = os.path.dirname(__file__)
 
 
