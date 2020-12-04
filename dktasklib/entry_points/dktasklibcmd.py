@@ -30,7 +30,7 @@ def install_cmd(args):
         sys.exit(1)
     taskbase = DIRNAME / 'taskbase.py'
     txt = taskbase.read('rb')
-    txt = txt.replace('\r\n', '\n')
+    txt = txt.replace(b'\r\n', b'\n')
     t = PyTemplate(txt)
     tasks_file.write(t.substitute(
         VERSION=__version__
@@ -47,7 +47,7 @@ def create_docs_cmd(args):
         sys.exit(1)
     confbase = DIRNAME / 'confbase.py'
     txt = confbase.read('rb')
-    txt = txt.replace('\r\n', '\n')
+    txt = txt.replace(b'\r\n', b'\n')
     t = PyTemplate(txt)
 
     (docsdir / 'conf.py').write(t.substitute(
