@@ -27,7 +27,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         "invoke==1.2.0",
-        "PyYAML==5.1.2",
+        "PyYAML==5.4",
         "dkfileutils>=1.4.2",
         "yamldirs>=1.1.8",
     ],
