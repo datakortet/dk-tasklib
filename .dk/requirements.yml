@@ -1,0 +1,17 @@
+build:
+  PyYAML: 5.3.1
+  configparser: 4.0.2
+  future: 0.18.1
+  invoke: 1.2.0
+  sphinx: 3.5.1
+  watchdog: 0.10.2
+  yamldirs: 1.1.8
+local:
+- dkfileutils
+- dkpkg
+tests:
+  coverage: '5.5'
+  pytest: 6.1.2
+  pytest-cov: 2.12.1
+  twine: 1.9.1
+
