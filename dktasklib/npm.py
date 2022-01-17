@@ -6,7 +6,7 @@ from dktasklib.executables import exe
 
 
 def npm(cmdline):
-    npm_exe = exe.find('npm', requires=['nodejs'])
+    npm_exe = exe.find('npm', requires=['nodejs'])      # noqa
     return subprocess.check_output("npm " + cmdline, shell=True).decode('u8')
 
 #
