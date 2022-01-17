@@ -151,38 +151,38 @@ def ensure_babel_minify(ctx):
 # FIXME: cannot use @requires this way since it causes download/install of
 # requirements when this file is imported (not when the function is used!)
 
-@requires('nodejs', 'npm', 'babel')
-@task
-def babel(ctx, source, dest=None, source_maps=True, force=False):
-    """
-    --source-maps --out-file $ProjectFileDir$/$ProjectName$/static/$ProjectName$/$FileNameWithoutExtension$.js $FilePath$
-    """
-    source = Path(source.format(pkg=ctx.pkg))
-    if dest is None:
-        dest = ctx.pkg.django_static / ctx.pkg.name / 'js'
-        dest.makedirs()
-    else:
-        dest = Path(dest.format(pkg=ctx.pkg))
-    if dest.isdir():
-        dest = dest / switch_extension(source.basename(), '.js')
+# @requires('nodejs', 'npm', 'babel')
+# @task
+# def babel(ctx, source, dest=None, source_maps=True, force=False):
+#     """
+#     --source-maps --out-file $ProjectFileDir$/$ProjectName$/static/$ProjectName$/$FileNameWithoutExtension$.js $FilePath$
+#     """
+#     source = Path(source.format(pkg=ctx.pkg))
+#     if dest is None:
+#         dest = ctx.pkg.django_static / ctx.pkg.name / 'js'
+#         dest.makedirs()
+#     else:
+#         dest = Path(dest.format(pkg=ctx.pkg))
+#     if dest.isdir():
+#         dest = dest / switch_extension(source.basename(), '.js')
 
-    if not force and dest_is_newer_than_source(source, dest):
-        print('babel:', dest, 'is up-to-date.')
-        return dest
+#     if not force and dest_is_newer_than_source(source, dest):
+#         print('babel:', dest, 'is up-to-date.')
+#         return dest
 
-    ensure_package_json(ctx)
-    ensure_node_modules(ctx)
-    # ensure_babel(ctx)
-    # ensure_es2015(ctx)
-    ensure_preset_latest(ctx)
-    ensure_babelrc(ctx)
+#     ensure_package_json(ctx)
+#     ensure_node_modules(ctx)
+#     # ensure_babel(ctx)
+#     # ensure_es2015(ctx)
+#     ensure_preset_latest(ctx)
+#     ensure_babelrc(ctx)
 
-    options = ""
-    if source_maps:
-        options += " --source-maps"
+#     options = ""
+#     if source_maps:
+#         options += " --source-maps"
 
-    ctx.run("babel {options} --out-file {dest} {source}".format(**locals()))
-    return dest
+#     ctx.run("babel {options} --out-file {dest} {source}".format(**locals()))
+#     return dest
 
 
 def version_js(ctx, fname, kind='pkg', force=False):
