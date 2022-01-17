@@ -26,8 +26,8 @@ setuptools.setup(
     name='dk-tasklib',
     version=version,
     install_requires=[
-        "invoke==1.2.0",
-        "PyYAML==5.1.2",
+        "invoke",
+        "PyYAML",
         "dkfileutils>=1.4.2",
         "yamldirs>=1.1.8",
     ],
