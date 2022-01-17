@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import os
 import textwrap
 
 from dktasklib.wintask import task
 from invoke import Collection
-from dkfileutils.path import Path
+# from dkfileutils.path import Path
 from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
-from dktasklib.utils import cd, dest_is_newer_than_source, switch_extension
+from dktasklib.utils import cd, switch_extension
 from dktasklib.version import copy_to_version
 
 
@@ -385,7 +383,8 @@ def buildjs(ctx, src, dst, force=False, **kw):
         dst = browserify(ctx, src, dst,
                          babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
     else:
-        dst = babel(ctx, src, dst, force=force)
+        # dst = babel(ctx, src, dst, force=force)
+        pass
 
     if uglify:
         finaldst = switch_extension(dst, '.min.js')
@@ -396,7 +395,7 @@ def buildjs(ctx, src, dst, force=False, **kw):
     return dst
 
 
-ns = Collection(babel, browserify, uglifyjs)
+ns = Collection(browserify, uglifyjs)
 ns.configure({
     'static': 'static/{pkg.name}'
 })
