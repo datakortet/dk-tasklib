@@ -91,7 +91,7 @@ class Command(object):
 
         cmd = '"%s"' % self.cmd if ' ' in self.cmd else self.cmd
         cmd += ' ' + self.required_params + fparams
-        ctx.run(cmd)
+        ctx.run(cmd, warn=True)
         return cmd
 
 

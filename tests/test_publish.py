@@ -48,7 +48,4 @@ def test_publish(ctx):
         ctx = ctx.init(echo=True)
         publish(ctx, wheel=False)
         ctx.run('tree')
-        if sys.platform == 'win32':
-            assert 'mypackage-1.0.0.zip' in os.listdir('dist')
-        else:
-            assert 'mypackage-1.0.0.tar.gz' in os.listdir('dist')
+        assert 'mypackage-1.0.0.tar.gz' in os.listdir('dist')

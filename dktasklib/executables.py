@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+from functools import wraps
 import sys
+import warnings
 
 import invoke
 from dkfileutils.which import get_executable
@@ -208,8 +210,14 @@ def requires(*deps):
 
     """
     def _wrapper(fn):
-        def _inner(*args, **kwargs):
+        try:
             exe.require(*deps)
-            return fn(*args, **kwargs)
-        return _inner
+        except MissingCommand as e:
+            warnings.warn(str(e))
+        return fn
+        # @wraps(fn)
+        # def _inner(*args, **kwargs):
+        #     exe.require(*deps)
+        #     return fn(*args, **kwargs)
+        # return _inner
     return _wrapper
