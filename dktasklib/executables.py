@@ -123,7 +123,7 @@ class Executables(object):
         npminstall = "npm install -g browserify --no-color"
         if not exepath:
             if win32:
-                #self.ctx.run(npminstall, echo=False, encoding="utf-8")
+                # self.ctx.run(npminstall, echo=False, encoding="utf-8")
                 self.ctx.run(npminstall, echo=True, encoding="utf-8")
                 exepath = get_executable(exename)
             else:
@@ -211,7 +211,3 @@ def requires(*deps):
         exe.require(*deps)
         return fn
     return _wrapper
-
-
-
-

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-import shlex
 import subprocess
 
 # from invoke import run
 from dktasklib.executables import exe
-from .utils import null, win32
+# from .utils import null, win32
 
 
 def npm(cmdline):

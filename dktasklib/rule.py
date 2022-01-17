@@ -40,7 +40,7 @@ class BuildRule(object):
                 task_obj.run(ctx)
 
     def __call__(self, *args, **kwargs):
-        raise NotImplemented
+        raise NotImplementedError
 
     def needs_to_run(self):
         return True

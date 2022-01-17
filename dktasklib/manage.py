@@ -53,7 +53,7 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
         # check that we don't overwrite versioned resources
         changed_versioned_resources = False
         static = Path(os.environ['SRV']) / 'data' / 'static'
-        for fname in ctx.pkg.django_static.glob('**/*\d+.min.*'):
+        for fname in ctx.pkg.django_static.glob(r'**/*\d+.min.*'):
             pubname = static / fname.relpath(ctx.pkg.django_static)
             if pubname.exists():
                 # print 'checking:', pubname
@@ -65,8 +65,8 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
                     print("  is different from:", pubname)
                     print()
         if changed_versioned_resources:
-            print("Exiting due to changes in versioned resources. " \
-                  "You should probably revert the changes and create " \
+            print("Exiting due to changes in versioned resources. "
+                  "You should probably revert the changes and create "
                   "a new version.")
             sys.exit(1)
 

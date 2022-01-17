@@ -56,7 +56,7 @@ def format_table(data, *columns, **kw):
     """
     fields = [col['field'] for col in columns]
     titles = [col.get('title', col['field']) for col in columns]
-    identity = lambda x: x
+    identity = lambda x: x      # noqa
     fmt = [col.get('format', identity) for col in columns]
     _align = [col.get('align', 'left') for col in columns]
     _alignselect = {'left': '', 'right': '>', 'center': '^'}
@@ -153,7 +153,7 @@ def switch_extension(fname, ext="", old_ext=None):
        Usage::
 
            switch_extension('a/b/c/d.less', '.css')
-    
+
     """
     name, _ext = os.path.splitext(fname)
     if old_ext:
@@ -172,7 +172,7 @@ def message(s):
     try:
         print((' %s ' % s).center(80, '-'))
         yield
-    except:
+    except:     # noqa
         print('error =====>', s, '<====== error')
         raise
     else:

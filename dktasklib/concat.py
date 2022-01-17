@@ -64,7 +64,7 @@ def copy(ctx, source, dest, force=False):
 
 
 def concat(ctx, dest, *sources, **kw):
-    force = kw.pop('force', False)
+    force = kw.pop('force', False)      # noqa
     placement = Path(dest).dirname()
     placement.makedirs()
 

@@ -10,8 +10,7 @@ from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
 from dktasklib.utils import cd, dest_is_newer_than_source, switch_extension
-from dktasklib.version import version_name, add_version, copy_to_version, \
-    get_version
+from dktasklib.version import copy_to_version
 
 
 def ensure_package_json(ctx):
@@ -342,22 +341,22 @@ def babel_minify(ctx, src, dst):
     return dst
 
 
-@task(default=True)
-def buildjs(ctx, src, dst, force=False, **kw):
-    uglify = kw.pop('uglify', False)
-    if kw.pop('browserify', False):
-        dst = browserify(ctx, src, dst,
-                         babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
-    else:
-        dst = babel(ctx, src, dst, force=force)
+# @task(default=True)
+# def buildjs(ctx, src, dst, force=False, **kw):
+#     uglify = kw.pop('uglify', False)
+#     if kw.pop('browserify', False):
+#         dst = browserify(ctx, src, dst,
+#                          babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
+#     else:
+#         dst = babel(ctx, src, dst, force=force)
 
-    if uglify:
-        finaldst = switch_extension(dst, '.min.js')
-        dst = uglifyjs(ctx, dst, finaldst)
-        if force:
-            dst = copy_to_version(ctx, dst, force=force)
+#     if uglify:
+#         finaldst = switch_extension(dst, '.min.js')
+#         dst = uglifyjs(ctx, dst, finaldst)
+#         if force:
+#             dst = copy_to_version(ctx, dst, force=force)
 
-    return dst
+#     return dst
 
 
 uglifycmd = Command('uglifyjs', '{src} {opts} -o {dst}',

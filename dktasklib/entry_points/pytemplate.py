@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from string import Template
-import re
 
 
 class PyTemplate(Template):

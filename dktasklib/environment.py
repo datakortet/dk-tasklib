@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 Global state.
 """
-import six
 
 
 class Environment(object):
@@ -11,5 +9,3 @@ class Environment(object):
 
 
 env = Environment()
-
-

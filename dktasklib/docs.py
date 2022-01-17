@@ -75,9 +75,9 @@ def initdocs(ctx, author, language):
         language=language,
     )
     print("""
-    
+
     invoke can't run this command on windows..
-    
+
     {cmd}
     """.format(cmd=cmd))
 
@@ -86,7 +86,7 @@ def initdocs(ctx, author, language):
 def create_docs_directory(ctx, force=False):
     """Create docs/conf.py
     """
-    cwd = Path.curdir()
+    cwd = Path.curdir()     # noqa
     ctx.pkg.docs = ctx.pkg.docs
     if ctx.pkg.docs.exists() and not force:
         print("docs directory exists (use --force to overwrite)")

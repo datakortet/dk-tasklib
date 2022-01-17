@@ -51,7 +51,7 @@ def _replace_version(fname, cur_version, new_version):
         cur_version in txt
         uc = False
     except UnicodeDecodeError:
-        uc = True 
+        uc = True
         txt = txt.decode('u8')
 
     if cur_version not in txt:  # pragma: nocover

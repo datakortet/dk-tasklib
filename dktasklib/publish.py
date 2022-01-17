@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
-
-import glob
-
 from dktasklib.executables import requires
 from dktasklib.wintask import task
 from . import Package
@@ -29,10 +24,10 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
         wheel = True
         docs = True
         upload = True
-        sign = True
+        sign = True     # noqa
 
     if not wheel:
-        sign = False
+        sign = False    # noqa
 
     with pkg.root.cd():
         if clean:

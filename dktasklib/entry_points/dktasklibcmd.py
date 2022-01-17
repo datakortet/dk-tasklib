@@ -9,7 +9,6 @@ import datetime
 import os
 import sys
 
-import shutil
 import textwrap
 
 from dkfileutils.path import Path
