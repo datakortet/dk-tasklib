@@ -208,6 +208,8 @@ def requires(*deps):
 
     """
     def _wrapper(fn):
-        exe.require(*deps)
-        return fn
+        def _inner(*args, **kwargs):
+            exe.require(*deps)
+            return fn(*args, **kwargs)
+        return _inner
     return _wrapper
