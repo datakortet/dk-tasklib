@@ -15,7 +15,7 @@ import dktasklib.entry_points.taskbase
 import dktasklib.environment
 import dktasklib.executables
 import dktasklib.help
-import dktasklib.jstools
+# import dktasklib.jstools
 import dktasklib.lessc
 import dktasklib.manage
 import dktasklib.npm
@@ -47,7 +47,7 @@ def test_import_():
     assert dktasklib.environment
     assert dktasklib.executables
     assert dktasklib.help
-    assert dktasklib.jstools
+    # assert dktasklib.jstools
     assert dktasklib.lessc
     assert dktasklib.manage
     assert dktasklib.npm
