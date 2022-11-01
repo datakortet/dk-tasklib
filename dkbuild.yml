@@ -3,7 +3,7 @@ _schema: https://static.datakortet.no/schema/dkbuild.schema.yaml
 package:
   name: dk-tasklib
   description: pyinvoke task library
-  version: 3.0.5
+  version: 3.0.6
   created: 2015
 
 build:
