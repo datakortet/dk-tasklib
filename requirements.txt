@@ -1,18 +1,17 @@
-invoke==2.0.0
-PyYAML==6.0.1
+configparser==6.0.0
+coverage==7.4.1
 dkfileutils==1.4.2
-yamldirs==1.1.8
-Sphinx==5.2.3
-watchdog==0.8.3
-pytest==6.1.2                  ; python_version < '3.9'
-pytest==7.2.1                  ; python_version >= '3.9'
-pytest-cov==2.12.1             ; python_version < '3.9'
-pytest-cov==4.0.0              ; python_version >= '3.9'
-coverage==5.5                  ; python_version < '3.9'
-coverage==7.0.5                ; python_version >= '3.9'
-twine==1.12.1
 dkpkg==2.0.1
-future==0.18.2
-configparser==5.2.0
+future==0.18.3
+invoke==2.2.0
 pathtools==0.1.2
+pytest==8.0.0
+pytest-cov==4.1.0
+PyYAML==6.0.1
+Sphinx==7.2.6
+twine==4.0.2                   ; python_version < '3.11'
+twine==5.0.0                   ; python_version >= '3.11'
+watchdog==3.0.0                ; python_version < '3.11'
+watchdog==4.0.0                ; python_version >= '3.11'
+yamldirs==1.1.8
 
