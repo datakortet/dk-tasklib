@@ -1,5 +1,5 @@
 configparser==6.0.0
-coverage==7.4.1
+coverage==7.13.5
 dkfileutils==1.4.2
 dkpkg==2.0.1
 future==0.18.3
