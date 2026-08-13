@@ -134,7 +134,7 @@ class UpdateTemplateVersion(BuildRule):
             Path(self.ctx.pkg.root).makedirs(Path(fname).dirname())
             with open(fname, 'w') as fp:
                 fp.write(textwrap.dedent("""
-                {% load staticfiles %}
+                {% load static %}
                 {% with "0.0.0" as version %}
                     {# keep the above exactly as-is (it will be overwritten when compiling the css). #}
                     {% with app_path="PKGNAME/PKGNAME-"|add:version|add:".min.css" %}
