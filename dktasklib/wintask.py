@@ -8,11 +8,12 @@ try:
 except ImportError:
     from invoke import task as _task
 
-if invoke.__version_info__ < (0, 22):  # pragma: nocover
-    _should_patch = True
-elif invoke.__version_info__ >= (0, 22):
-    _should_patch = False
+# if invoke.__version_info__ < (0, 22):  # pragma: nocover
+#     _should_patch = True
+# elif invoke.__version_info__ >= (0, 22):
+#     _should_patch = False
 
+_should_patch = False
 
 if _should_patch:  # pragma: nocover
     # https://github.com/pyinvoke/invoke/pull/407
