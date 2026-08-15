@@ -4,7 +4,7 @@ package:
   name: dktasklib
   package_name: dk-tasklib
   description: pyinvoke task library
-  version: 3.0.6
+  version: 3.0.7
   created: 2015
 
 build:
