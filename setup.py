@@ -29,7 +29,6 @@ setuptools.setup(
         "invoke",
         "PyYAML",
         "dkfileutils>=1.4.2",
-        "pathtools",
         "yamldirs>=1.1.8",
     ],
     author='Bjorn Pettersen',
