@@ -48,28 +48,26 @@ class BuildRule(object):
     def topsort(self, tasklist):
         """Topological sort
         """
-        # id(t) was originally t.__name__, id(t) means there will be no sharing...
-        tasks = {id(t): t for t in tasklist}
+        permanent = set()
+        temporary = set()
         res = []
 
-        def visit(name, task):
-            if task._temp_mark:
+        def visit(task):
+            name = id(task)
+            if name in temporary:
                 raise ValueError("Circularity", name, res)
-            if not task._perm_mark:
-                task._temp_mark = True
-                for d in task.requires:
-                    visit(d, tasks[d])
-                task._perm_mark = True
-                task._temp_mark = False
-                res.append(name)
+            if name in permanent:
+                return
+            temporary.add(name)
+            for dependency in task.requires:
+                visit(dependency)
+            permanent.add(name)
+            temporary.remove(name)
+            res.append(task)
 
-        while 1:
-            unmarked = set((name, task) for name, task in tasks.items()
-                           if not (task._perm_mark or task._temp_mark))
-            if not unmarked:
-                return [tasks[k] for k in res]
-            name, task = unmarked.pop()
-            visit(name, task)
+        for task in tasklist:
+            visit(task)
+        return res
 
 
 # @task

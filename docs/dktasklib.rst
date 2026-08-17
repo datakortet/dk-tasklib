@@ -1,13 +1,22 @@
 dktasklib package
 =================
+Module contents
+---------------
+
+.. automodule:: dktasklib
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 
 Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
-    dktasklib.entry_points
-    dktasklib.package
+   dktasklib.entry_points
+   dktasklib.package
 
 Submodules
 ----------
@@ -16,175 +25,166 @@ dktasklib.clean module
 ----------------------
 
 .. automodule:: dktasklib.clean
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.commands module
 -------------------------
 
 .. automodule:: dktasklib.commands
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.concat module
 -----------------------
 
 .. automodule:: dktasklib.concat
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.docs module
 ---------------------
 
 .. automodule:: dktasklib.docs
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.environment module
 ----------------------------
 
 .. automodule:: dktasklib.environment
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.executables module
 ----------------------------
 
 .. automodule:: dktasklib.executables
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.help module
 ---------------------
 
 .. automodule:: dktasklib.help
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.jstools module
 ------------------------
 
 .. automodule:: dktasklib.jstools
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.lessc module
 ----------------------
 
 .. automodule:: dktasklib.lessc
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.manage module
 -----------------------
 
 .. automodule:: dktasklib.manage
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.npm module
 --------------------
 
 .. automodule:: dktasklib.npm
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.pset module
 ---------------------
 
 .. automodule:: dktasklib.pset
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.publish module
 ------------------------
 
 .. automodule:: dktasklib.publish
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.rule module
 ---------------------
 
 .. automodule:: dktasklib.rule
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.runners module
 ------------------------
 
 .. automodule:: dktasklib.runners
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.upversion module
 --------------------------
 
 .. automodule:: dktasklib.upversion
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.urlinliner module
 ---------------------------
 
 .. automodule:: dktasklib.urlinliner
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.utils module
 ----------------------
 
 .. automodule:: dktasklib.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.version module
 ------------------------
 
 .. automodule:: dktasklib.version
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.watch module
 ----------------------
 
 .. automodule:: dktasklib.watch
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 dktasklib.wintask module
 ------------------------
 
 .. automodule:: dktasklib.wintask
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: dktasklib
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :show-inheritance:
+   :undoc-members:

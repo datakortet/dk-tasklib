@@ -32,19 +32,21 @@ Uploading to PyPI
 
 Running tests
 -------------
-One of::
+Run the package-specific environment, tests, coverage, and quality checks::
 
-    python setup.py test
-    py.test dktasklib
+    dk testpackage
 
-with coverage::
-
-    py.test --cov=dktasklib .
+The configured coverage gate is branch-aware and requires at least 83
+percent combined coverage.
 
 
 Building documentation
 ----------------------
 ::
 
-    python setup.py build_sphinx
+    dk docs
 
+For strict compatibility checks, the documentation also builds without
+warnings under supported Sphinx 8 and 9 environments::
+
+    sphinx-build -E -W -b html docs build/docs

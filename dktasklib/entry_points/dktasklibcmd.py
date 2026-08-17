@@ -49,6 +49,7 @@ def create_docs_cmd(args):
     txt = txt.replace(b'\r\n', b'\n')
     t = PyTemplate(txt)
 
+    docsdir.makedirs()
     (docsdir / 'conf.py').write(t.substitute(
         VERSION=run('python setup.py --version'),
         PACKAGE=run('python setup.py --name'),
@@ -64,7 +65,7 @@ def add_django_to_docs_conf():
         print("./docs/conf.py already contains django.setup()")
         return
 
-    src = conf_file.read('rT')
+    src = conf_file.read('r')
     pre, post = src.split('\n\n', 1)
     conf_file.write(
         pre + "\n\n" +

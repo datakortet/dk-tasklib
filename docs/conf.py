@@ -11,13 +11,19 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('..'))
+DOCS_ROOT = os.path.abspath(os.path.dirname(__file__))
+PACKAGE_ROOT = os.path.abspath(os.path.join(DOCS_ROOT, '..'))
+sys.path.insert(0, DOCS_ROOT)
+sys.path.insert(0, PACKAGE_ROOT)
+sys.path.insert(0, os.path.join(PACKAGE_ROOT, '..', 'code', 'dkpkg'))
+sys.path.insert(0, os.path.join(PACKAGE_ROOT, '..', 'code', 'dkfileutils'))
+sys.path.insert(0, os.path.join(PACKAGE_ROOT, '..', 'yamldirs'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -35,6 +41,11 @@ extensions = [
     'sphinx.ext.viewcode',
     'ext.autotaskdoc',
 ]
+
+autodoc_default_options = {
+    'exclude-members': 'task',
+}
+autodoc_mock_imports = ['watchdog']
 
 todo_include_todos = True
 
@@ -261,4 +272,6 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+}

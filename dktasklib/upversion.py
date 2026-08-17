@@ -47,13 +47,8 @@ def _replace_version(fname, cur_version, new_version):
     with open(fname, 'rb') as fp:
         txt = fp.read()
 
-    try:
-        cur_version in txt
-        uc = False
-    except UnicodeDecodeError:
-        uc = True
-        txt = txt.decode('u8')
-
+    cur_version = cur_version.encode('u8')
+    new_version = new_version.encode('u8')
     if cur_version not in txt:  # pragma: nocover
         # warnings.warn("Did not find %r in %r" % (cur_version, fname))
         return False
@@ -67,7 +62,7 @@ def _replace_version(fname, cur_version, new_version):
     txt = txt.replace(cur_version, new_version)
 
     with open(fname, 'wb') as fp:
-        fp.write(txt if not uc else txt.encode('u8'))
+        fp.write(txt)
     return 1
 
 

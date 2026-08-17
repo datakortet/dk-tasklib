@@ -10,18 +10,15 @@ class Result(str):
 
 def run(cmdline, throw=False):
     try:
-        res = Result(
-            subprocess.check_output(
-                cmdline,
-                shell=True
-            )  # .decode('u8')  ## (can't decode since Result is a str)
-        )
+        output = subprocess.check_output(cmdline, shell=True)
+        res = Result(output.decode('u8'))
         res.cmd = cmdline
         return res
     except subprocess.CalledProcessError as e:
         if throw:
             raise
-        res = Result(e.output)
+        output = e.output.decode('u8') if isinstance(e.output, bytes) else e.output
+        res = Result(output)
         res.cmd = cmdline
         res.returncode = e.returncode
         return res

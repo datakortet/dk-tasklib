@@ -40,7 +40,7 @@ class FileModified(FileSystemEventHandler):
         self.action = action
 
     def on_modified(self, event):
-        if event.src_path != self.fname:
+        if Path(event.src_path).abspath() != self.fname:
             return
         self.action(event)
 
@@ -55,10 +55,11 @@ class DirectoryModified(FileSystemEventHandler):
 
     def on_modified(self, event):
         # print event.src_path, self.path, self.ext
-        if not event.src_path.startswith(self.path):
+        event_path = Path(event.src_path).abspath()
+        if not event_path.startswith(self.path):
             # print '  path different'
             return
-        if self.ext and not event.src_path.endswith(self.ext):
+        if self.ext and not event_path.endswith(self.ext):
             # print '  ext different'
             return
         self.action(event)

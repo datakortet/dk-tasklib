@@ -241,9 +241,9 @@ def browserify(ctx,
     ctx.run(cmd)
     with open(dest, 'rb') as fp:
         txt = fp.read()
-    if '\r\n' in txt:
+    if b'\r\n' in txt:
         with open(dest, 'wb') as fp:
-            fp.write(txt.replace('\r\n', '\n'))
+            fp.write(txt.replace(b'\r\n', b'\n'))
     return dest
 
 

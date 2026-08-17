@@ -6,11 +6,8 @@ dk-tasklib
 .. toctree::
    :maxdepth: 2
 
-   dktasklib
-
    develop
-
-.. include:: modules
+   modules
 
 Indices and tables
 ==================

@@ -5,7 +5,7 @@ from dktasklib.wintask import task
 import base64
 import os
 import re
-import urllib
+from urllib.request import urlopen
 
 
 def inline_data(data, type='image/png', name=""):
@@ -15,7 +15,7 @@ def inline_data(data, type='image/png', name=""):
         print("%s is too big (%d bytes), max is 10KB" % (name, len(data)))
         return name
 
-    encoded = base64.b64encode(data)
+    encoded = base64.b64encode(data).decode('ascii')
     return 'data:{type};base64,{encoded}'.format(
         type=type,
         encoded=encoded.replace('\n', '')
@@ -36,12 +36,12 @@ def inline_file(fname):
 def inline_url(uri):
     """Fetch ``uri`` and inline.
     """
-    fp = urllib.urlopen(uri)
-    return inline_data(
-        fp.read(),
-        type=fp.headers['Content-Type'],
-        name=uri
-    )
+    with urlopen(uri) as fp:
+        return inline_data(
+            fp.read(),
+            type=fp.headers['Content-Type'],
+            name=uri
+        )
 
 
 @task(
@@ -69,7 +69,7 @@ def inline(ctx, fname):
     """
     lines = open(fname).readlines()
     output_fname = os.path.splitext(fname)[0]
-    with open(output_fname, 'wb') as fp:
+    with open(output_fname, 'w') as fp:
         for line in lines:
             if line.startswith('@'):
                 varname, content = line.split(':', 1)
@@ -82,12 +82,12 @@ def inline(ctx, fname):
                     varname=varname,
                     content=data
                 )
-            fp.writelines([line])
+            fp.write(line)
 
 
 @task
 def list_urls(ctx, filename):
     """List all url(..) targets in the filename.
     """
-    for match in re.findall(r'url\((.*?)\)', open(filename, 'rb').read()):
+    for match in re.findall(r'url\((.*?)\)', open(filename).read()):
         print(match)

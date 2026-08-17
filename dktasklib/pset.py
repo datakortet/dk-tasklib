@@ -50,7 +50,7 @@ class pset(dict):
         """
         if other is None:
             return False
-        if type(other) == dict:
+        if type(other) is dict:
             return dict.__eq__(self, other)
         # noinspection PyProtectedMember
         if set(self._order) == set(other._order):  # pylint: disable=W0212

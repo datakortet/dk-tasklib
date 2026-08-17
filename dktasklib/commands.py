@@ -5,7 +5,6 @@ import invoke
 
 from .executables import exe
 from .utils import fmt
-from past.builtins import basestring
 
 
 default_command_policy = dict(
@@ -58,12 +57,12 @@ class Command(object):
                     res += flag
                 else:
                     if self.policy['negative_bool'] == 'prefix':
-                        res += '--no' + flag
+                        res += '--no-' + flag.lstrip('-')
 
             elif isinstance(v, (list, tuple)) and v:
                 res += flag + '=' + self.policy['list_join'].join(str(item) for item in v)
 
-            elif isinstance(v, basestring):
+            elif isinstance(v, str):
                 res += flag + '="%s"' % v
 
             else:

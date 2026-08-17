@@ -82,9 +82,9 @@ class Executables(object):
             if win32:
                 # self.ctx.run(cmd, echo=True)
                 runners.run(cmd)
-                wheel = get_executable(exename)
+                exepath = get_executable(exename)
                 # generate signing key if downloading wheel
-                runners.run(wheel + ' keygen')
+                runners.run(exepath + ' keygen')
             else:
                 raise MissingCommand("Missing wheel (%s)" % cmd)
             print('Your ~/.pypirc file should have a [pypi] section instead of a [server-login] section')

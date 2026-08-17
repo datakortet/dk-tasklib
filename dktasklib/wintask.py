@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import invoke
 
 try:
     from invoke import ctask as _task

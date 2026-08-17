@@ -34,3 +34,18 @@ to make local changes to the source code.
 
 
 See docs/ folder for documentation.
+
+
+Development
+-----------
+
+Run the authoritative package checks from the repository root::
+
+    dk testpackage
+
+The suite enforces branch-aware coverage of at least 83 percent. Build the
+documentation with::
+
+    dk docs
+
+The documentation is maintained against current Sphinx 8 and 9 releases.

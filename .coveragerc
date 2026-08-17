@@ -29,6 +29,7 @@ omit =
     tests/conftest.py
 
 ignore_errors = True
+fail_under = 83
 
 [html]
 ;; html report

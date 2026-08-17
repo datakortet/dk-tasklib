@@ -96,7 +96,7 @@ def create_docs_directory(ctx, force=False):
     ctx.pkg.docs.makedirs('_templates')
     confbase = DIRNAME / 'entry_points/confbase.py'
     txt = confbase.read('rb')
-    txt = txt.replace('\r\n', '\n')
+    txt = txt.replace(b'\r\n', b'\n')
     t = PyTemplate(txt)
 
     (ctx.pkg.docs / 'conf.py').write(t.substitute(
@@ -117,7 +117,7 @@ def create_index(ctx, force=False):
         sys.exit(1)
     confbase = DIRNAME / 'entry_points/index.rst'
     txt = confbase.read('rb')
-    txt = txt.replace('\r\n', '\n')
+    txt = txt.replace(b'\r\n', b'\n')
     t = PyTemplate(txt)
 
     index.write(t.substitute(

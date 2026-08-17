@@ -51,7 +51,8 @@ def get_version(ctx, fname, kind='pkg'):
         return ctx.pkg.version
 
     elif kind == "hash":
-        md5 = fname.dirname() / '.md5'
+        directory = fname.dirname() or Path('.')
+        md5 = directory / '.md5'
         if md5.exists():
             return md5.open().read()
         return hashlib.md5(open(fname, 'rb').read()).hexdigest()
@@ -77,7 +78,7 @@ def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
     """
     # where to place the versioned file..
     source = Path(source)
-    outputdir = Path(outputdir) if outputdir else source.dirname()
+    outputdir = Path(outputdir) if outputdir else source.dirname() or Path('.')
     outputdir.makedirs()
     dst_fname = source.basename()
     if '{version}' not in str(dst_fname):

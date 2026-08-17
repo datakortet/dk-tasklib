@@ -125,7 +125,7 @@ def dest_is_newer_than_source(src, dst):
     if not os.path.exists(dst):
         return False
     if not os.path.exists(src):
-        raise ValueError("Source does not exist: " + src)
+        raise ValueError("Source does not exist: " + str(src))
     return os.path.getmtime(src) < os.path.getmtime(dst)
 
 
@@ -186,12 +186,14 @@ def env(**kw):
     currentvals = {k: os.environ.get(k) for k in kw}
     for k, v in kw.items():
         os.environ[k] = str(v)
-    yield
-    for k in kw:
-        if currentvals[k] is None:
-            os.unsetenv(k)
-        else:
-            os.environ[k] = currentvals[k]
+    try:
+        yield
+    finally:
+        for k in kw:
+            if currentvals[k] is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = currentvals[k]
 
 
 @contextmanager
@@ -206,9 +208,11 @@ def cd(directory):
 
     """
     cwd = os.getcwd()
-    os.chdir(directory)
-    yield
-    os.chdir(cwd)
+    try:
+        os.chdir(directory)
+        yield
+    finally:
+        os.chdir(cwd)
 
 
 def find_pymodule(dotted_name):
