@@ -45,9 +45,9 @@ def test_create_docs_command_writes_configuration(monkeypatch, tmp_path):
     dktasklibcmd.create_docs_cmd(Namespace(force=False))
 
     configuration = (tmp_path / 'docs' / 'conf.py').read_text()
-    assert "project = u'sample'" in configuration
-    assert "version = u'2.3.4'" in configuration
-    assert "author = u'Ada Lovelace'" in configuration
+    assert "project = 'sample'" in configuration
+    assert "version = '2.3.4'" in configuration
+    assert "author = 'Ada Lovelace'" in configuration
 
     with pytest.raises(SystemExit):
         dktasklibcmd.create_docs_cmd(Namespace(force=False))

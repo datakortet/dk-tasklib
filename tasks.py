@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Base version of package/tasks.py, created by
 
@@ -25,7 +24,6 @@ will fit your use case.
 
 """
 # pragma: nocover
-from __future__ import print_function
 import os
 import warnings
 
@@ -35,10 +33,8 @@ from dktasklib.wintask import task
 from invoke import Collection
 
 from dktasklib import docs as doctools
-from dktasklib import jstools
 from dktasklib import lessc
 from dktasklib import version, upversion
-from dktasklib.utils import switch_extension
 from dktasklib.manage import collectstatic
 from dktasklib.package import Package, package
 from dktasklib.watch import Watcher
@@ -59,12 +55,6 @@ DJANGO_SETTINGS_MODULE = ''
 # there should be a mypkg/mypkg/less/mypkg.less file that imports any other
 # needed sources
 
-# .jsx (es6 source)
-# ------------------
-# list any .jsx files here. Only filename.jsx (don't include the path).
-# The files should reside in mypkg/mypkg/js/ directory.
-JSX_FILENAMES = []
-
 # ============================================================================
 # autodoc is in a separate process, so can't use settings.configure().
 HAVE_SETTINGS = bool(DJANGO_SETTINGS_MODULE)
@@ -77,23 +67,10 @@ WARN_ABOUT_SETTINGS = not bool(DJANGO_SETTINGS_MODULE)
 
 
 @task
-def build_js(ctx, force=False):
-    """Build all javascript files.
-    """
-    for fname in JSX_FILENAMES:
-        jstools.babel(
-            ctx,
-            '{pkg.source_js}/' + fname,
-            switch_extension('{pkg.django_static}/{pkg.name}/js/' + fname, '.js'),
-            force=force
-        )
-
-
-@task
-def build(ctx, less=False, docs=False, js=False, force=False):
+def build(ctx, less=False, docs=False, force=False):
     """Build everything and collectstatic.
     """
-    specified = any([less, docs, js])
+    specified = any([less, docs])
     buildall = not specified
 
     if buildall or less:
@@ -117,9 +94,6 @@ def build(ctx, less=False, docs=False, js=False, force=False):
             )
         doctools.build(ctx, force=force)
 
-    if buildall or js:
-        build_js(ctx, force)
-
     if HAVE_SETTINGS and (force or changed(ctx.pkg.django_static)):
         collectstatic(ctx, DJANGO_SETTINGS_MODULE)
 
@@ -134,10 +108,6 @@ def watch(ctx):
         action=lambda e: build(ctx, less=True)
     )
     watcher.watch_directory(
-        path='{pkg.source_js}', ext='.jsx',
-        action=lambda e: build(ctx, js=True)
-    )
-    watcher.watch_directory(
         path='{pkg.docs}', ext='.rst',
         action=lambda e: build(ctx, docs=True)
     )
@@ -148,7 +118,6 @@ def watch(ctx):
 ns = Collection(
     build,
     watch,
-    build_js,
     lessc,
     doctools,
     version, upversion,

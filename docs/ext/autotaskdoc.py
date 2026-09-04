@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Automatically document pyinvoke task libraries.
 

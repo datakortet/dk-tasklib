@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 """
 Update a package's version number.
 """
-from __future__ import print_function
 import re
 import os
 import textwrap
@@ -50,7 +48,6 @@ def _replace_version(fname, cur_version, new_version):
     cur_version = cur_version.encode('u8')
     new_version = new_version.encode('u8')
     if cur_version not in txt:  # pragma: nocover
-        # warnings.warn("Did not find %r in %r" % (cur_version, fname))
         return False
     occurences = txt.count(cur_version)
     if occurences > 2:  # pragma: nocover

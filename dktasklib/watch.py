@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Usage::
 
@@ -25,7 +24,6 @@ Usage::
     })
 
 """
-from __future__ import print_function
 import time
 from dkfileutils.path import Path
 from watchdog.observers import Observer
@@ -34,7 +32,7 @@ from watchdog.events import FileSystemEventHandler
 
 class FileModified(FileSystemEventHandler):
     def __init__(self, ctx, fname, action):
-        super(FileModified, self).__init__()
+        super().__init__()
         self.ctx = ctx
         self.fname = Path(fname.format(pkg=ctx.pkg)).abspath()
         self.action = action
@@ -47,25 +45,22 @@ class FileModified(FileSystemEventHandler):
 
 class DirectoryModified(FileSystemEventHandler):
     def __init__(self, ctx, path, ext, action):
-        super(DirectoryModified, self).__init__()
+        super().__init__()
         self.ctx = ctx
         self.path = Path(path.format(pkg=ctx.pkg)).abspath()
         self.ext = ext
         self.action = action
 
     def on_modified(self, event):
-        # print event.src_path, self.path, self.ext
         event_path = Path(event.src_path).abspath()
         if not event_path.startswith(self.path):
-            # print '  path different'
             return
         if self.ext and not event_path.endswith(self.ext):
-            # print '  ext different'
             return
         self.action(event)
 
 
-class Watcher(object):
+class Watcher:
     def __init__(self, ctx):
         self.ctx = ctx
         self.observer = Observer()

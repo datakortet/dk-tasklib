@@ -41,10 +41,6 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
 
         ctx.run("python setup.py " + targets)
 
-        # if sign:
-        #     for fname in glob.glob('dist/*.whl'):
-        #         ctx.run('wheel sign ' + fname)
-
         if docs:
             ctx.run("python setup.py build_sphinx")
 
@@ -52,7 +48,3 @@ def publish(ctx, force=False, clean=True, wheel=True, sign=True, docs=False, upl
             ctx.run("twine upload dist/*")
         else:
             print("Not uploading (use --upload flag to upload).")
-
-        # if docs and upload:
-        #     # we can't upload docs to pypi anymore.. (or can we..?)
-        #     ctx.run("python setup.py upload_docs")

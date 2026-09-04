@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import re
 import invoke
@@ -13,7 +12,7 @@ default_command_policy = dict(
 )
 
 
-class Command(object):
+class Command:
     def __init__(self, name, argspec="",
                  requirements=(),
                  policy=default_command_policy,
@@ -45,7 +44,6 @@ class Command(object):
     def _kw_to_opts(self, kw):
         res = ""
         for k, v in kw.items():
-            # print 'k,v,res:', k, v, `res`
             if k in self.params:  # skip conversion of parameters to argspec
                 continue
 

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Configuration file for the Sphinx documentation builder.
 #
 # This file does only contain a selection of the most common options. For a
@@ -19,14 +17,14 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = u'##{PACKAGE}'
-copyright = u'##{YEAR}, ##{AUTHOR}'
-author = u'##{AUTHOR}'
+project = '##{PACKAGE}'
+copyright = '##{YEAR}, ##{AUTHOR}'
+author = '##{AUTHOR}'
 
 # The short X.Y version
-version = u'##{VERSION}'
+version = '##{VERSION}'
 # The full version, including alpha/beta/rc tags
-release = u'##{VERSION}'
+release = '##{VERSION}'
 
 
 # -- General configuration ---------------------------------------------------
@@ -62,12 +60,12 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = u'en'
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -132,8 +130,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, '##{PACKAGE}.tex', u'##{PACKAGE} Documentation',
-     u'##{AUTHOR}', 'manual'),
+    (master_doc, '##{PACKAGE}.tex', '##{PACKAGE} Documentation',
+     '##{AUTHOR}', 'manual'),
 ]
 
 
@@ -142,7 +140,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, '##{PACKAGE}', u'##{PACKAGE} Documentation',
+    (master_doc, '##{PACKAGE}', '##{PACKAGE} Documentation',
      [author], 1)
 ]
 
@@ -153,7 +151,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, '##{PACKAGE}', u'##{PACKAGE} Documentation',
+    (master_doc, '##{PACKAGE}', '##{PACKAGE} Documentation',
      author, '##{PACKAGE}', 'One line description of project.',
      'Miscellaneous'),
 ]

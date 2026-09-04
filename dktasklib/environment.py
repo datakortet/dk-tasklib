@@ -3,7 +3,7 @@ Global state.
 """
 
 
-class Environment(object):
+class Environment:
     def __call__(self, ctx):
         return ctx
 

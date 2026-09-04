@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 import json
-# import pprint
 from configparser import RawConfigParser
 
 import invoke
@@ -33,7 +31,6 @@ class Package(DKPKGPackage):
 
         package_json = pfind('.', 'package.json')
         if package_json:
-            # root = package_json.dirname()
             with open(package_json, 'r') as fp:
                 pj = json.load(fp)
                 for k, v in pj.items():
@@ -63,7 +60,7 @@ class Package(DKPKGPackage):
         root = pkgdir.dirname()
         ispkg = 'setup.py' in root
         overrides = self.overrides() if ispkg else self.overrides(source=root)
-        super(Package, self).__init__(root, **overrides)
+        super().__init__(root, **overrides)
 
     def vcs(self):
         """Return the name of the version control system handling this package.
@@ -89,7 +86,6 @@ class Package(DKPKGPackage):
 
     def __repr__(self):
         return self.__class__.__name__
-        # return pprint.pformat(self.config())
 
     def __getitem__(self, key):
         try:

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import os
 import hashlib
 
@@ -56,16 +54,9 @@ def get_version(ctx, fname, kind='pkg'):
         if md5.exists():
             return md5.open().read()
         return hashlib.md5(open(fname, 'rb').read()).hexdigest()
-    # elif kind == "svn":
-    #     ver = get_svn_version(source)
     return ""
 
 
-# @task(help=dict(
-#     source="",
-#     dest_template="this filename template must contain '{version}'",
-#     kind="type of version number [pkg,hash]",
-# ))
 def copy_to_version(ctx, source, outputdir=None, kind="pkg", force=False):
     """Copy source with version number to `outputdir`.
 

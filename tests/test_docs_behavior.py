@@ -66,8 +66,8 @@ def test_create_docs_directory_and_index(monkeypatch, tmp_path):
     docs.create_index.body(context)
 
     configuration = (tmp_path / 'docs' / 'conf.py').read_text()
-    assert "project = u'sample'" in configuration
-    assert "version = u'1.2.3'" in configuration
+    assert "project = 'sample'" in configuration
+    assert "version = '1.2.3'" in configuration
     assert str(datetime.date.today().year) in configuration
     index = (tmp_path / 'docs' / 'index.rst').read_text()
     assert 'sample' in index

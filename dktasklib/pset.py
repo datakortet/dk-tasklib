@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 # noinspection PyPep8Naming
 class pset(dict):
     """Property Set class.
@@ -19,7 +16,7 @@ class pset(dict):
     """
     def __init__(self, items=(), **attrs):
         object.__setattr__(self, '_order', [])
-        super(pset, self).__init__()
+        super().__init__()
         if isinstance(items, dict):
             items = items.items()
         for k, v in items:
@@ -86,7 +83,7 @@ class pset(dict):
         return tmp
 
     def __getattr__(self, key):
-        if not super(pset, self).__contains__(key):
+        if not super().__contains__(key):
             raise AttributeError(key)
         return dict.get(self, key)
 

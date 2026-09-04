@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """dk-tasklib - pyinvoke task library
 """
@@ -11,10 +10,10 @@ classifiers = """\
 Development Status :: 3 - Alpha
 Intended Audience :: Developers
 Programming Language :: Python
-Programming Language :: Python :: 2
-Programming Language :: Python :: 2.7
 Programming Language :: Python :: 3
-Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3 :: Only
+Programming Language :: Python :: 3.11
+Programming Language :: Python :: 3.12
 Topic :: Software Development :: Libraries
 """
 

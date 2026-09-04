@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import print_function
 from dktasklib.wintask import task
 import base64
 import os

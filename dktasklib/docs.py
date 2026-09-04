@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import datetime
 import os
 import sys
@@ -173,7 +171,6 @@ def build(ctx, clean=False, browse=False, warn=False,
     """
     Build the project's Sphinx docs.
     """
-    # import pdb;pdb.set_trace()
     if not force and not changed(ctx.pkg.docs):
         print("""
         No changes detected in {}, add --force to build docs anyway.

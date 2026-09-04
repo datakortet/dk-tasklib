@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Test that all modules are importable.
 """
 

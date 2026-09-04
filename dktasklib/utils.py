@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import os
 import string
 import sys
@@ -224,7 +222,6 @@ def find_pymodule(dotted_name):
         if not pth:
             continue
         try:
-            # print 'trying:', name, 'in', pth, os.listdir(pth)
             if name in pth and (pth/name).isdir():
                 return pth/name
             if name + '.py' in pth:

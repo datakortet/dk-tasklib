@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
 import sys
 import os
 
@@ -26,12 +24,6 @@ def manage(ctx, cmd, settings=None, manage_path=None, venv=None):
             manage_path = Path(pfind(settings_dir, 'manage.py')).dirname()
 
         with cd(manage_path):
-            # print "MANAGE_PATH:", manage_path
-            # print "CWD:", os.getcwd()
-            # run('python -c "import sys;print sys.path"')
-            # run('vex dev python -c "import sys;print chr(10).join(sys.path)"')
-            # run("python -c \"import sys;print '\n'.join(sys.path)\"")
-
             call = "python manage.py {cmd}"
             if venv:
                 call = "vex {venv} python manage.py {cmd} --traceback"
@@ -56,7 +48,6 @@ def collectstatic(ctx, settings=None, venv=None, clobber=False, force=False):
         for fname in ctx.pkg.django_static.glob(r'**/*\d+.min.*'):
             pubname = static / fname.relpath(ctx.pkg.django_static)
             if pubname.exists():
-                # print 'checking:', pubname
                 if pubname.open('rb').read() != fname.open('rb').read():
                     changed_versioned_resources = True
                     print()

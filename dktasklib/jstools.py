@@ -3,7 +3,6 @@ import textwrap
 
 from dktasklib.wintask import task
 from invoke import Collection
-# from dkfileutils.path import Path
 from dktasklib import runners
 from dktasklib.commands import Command
 from dktasklib.executables import requires
@@ -62,24 +61,6 @@ def ensure_node_modules(ctx):
             ctx.run("npm install --no-color")
     else:
         return True
-
-
-# def ensure_babel(ctx):
-#     if 'babel' not in runners.run("npm ls -g --depth=0 babel --no-color"):
-#         print("didn't find babel, installing it..")
-#         with cd(ctx.pkg.root):
-#             ctx.run("npm install -g babel")
-#     else:
-#         return True
-
-
-# def ensure_browserify(ctx):
-#     if 'browserify' not in runners.run("npm ls -g --depth=0 browserify --no-color"):
-#         print("didn't find browserify, installing it..")
-#         with cd(ctx.pkg.root):
-#             ctx.run("npm install -g browserify")
-#     else:
-#         return True
 
 
 def ensure_es2015(ctx):
@@ -146,43 +127,6 @@ def ensure_babel_minify(ctx):
         return True
 
 
-# FIXME: cannot use @requires this way since it causes download/install of
-# requirements when this file is imported (not when the function is used!)
-
-# @requires('nodejs', 'npm', 'babel')
-# @task
-# def babel(ctx, source, dest=None, source_maps=True, force=False):
-#     """
-#     --source-maps --out-file $ProjectFileDir$/$ProjectName$/static/$ProjectName$/$FileNameWithoutExtension$.js $FilePath$
-#     """
-#     source = Path(source.format(pkg=ctx.pkg))
-#     if dest is None:
-#         dest = ctx.pkg.django_static / ctx.pkg.name / 'js'
-#         dest.makedirs()
-#     else:
-#         dest = Path(dest.format(pkg=ctx.pkg))
-#     if dest.isdir():
-#         dest = dest / switch_extension(source.basename(), '.js')
-
-#     if not force and dest_is_newer_than_source(source, dest):
-#         print('babel:', dest, 'is up-to-date.')
-#         return dest
-
-#     ensure_package_json(ctx)
-#     ensure_node_modules(ctx)
-#     # ensure_babel(ctx)
-#     # ensure_es2015(ctx)
-#     ensure_preset_latest(ctx)
-#     ensure_babelrc(ctx)
-
-#     options = ""
-#     if source_maps:
-#         options += " --source-maps"
-
-#     ctx.run("babel {options} --out-file {dest} {source}".format(**locals()))
-#     return dest
-
-
 def version_js(ctx, fname, kind='pkg', force=False):
     """Add version number to a .js file.
     """
@@ -222,9 +166,7 @@ def browserify(ctx,
     """
     print('ensure package.json:', ensure_package_json(ctx))
     print('ensure node_modules:', ensure_node_modules(ctx))
-    # print('ensure browserify:', ensure_browserify(ctx))
 
-    # options = "--debug"  # source maps
     options = ""  # no source maps
     if babelify:
         print('ensure babelify:', ensure_babelify(ctx))
@@ -321,8 +263,6 @@ def babel_minify(ctx, src, dst):
         For example,
         minify index.js --mangle.keepClassName --deadcode.keepFnArgs --outFile index.min.js
     """
-    # if os.path.exists(dst):
-    #     os.unlink(dst)
 
     babel_minifycmd(
         ctx,
@@ -337,24 +277,6 @@ def babel_minify(ctx, src, dst):
         evaluate=False
     )
     return dst
-
-
-# @task(default=True)
-# def buildjs(ctx, src, dst, force=False, **kw):
-#     uglify = kw.pop('uglify', False)
-#     if kw.pop('browserify', False):
-#         dst = browserify(ctx, src, dst,
-#                          babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
-#     else:
-#         dst = babel(ctx, src, dst, force=force)
-
-#     if uglify:
-#         finaldst = switch_extension(dst, '.min.js')
-#         dst = uglifyjs(ctx, dst, finaldst)
-#         if force:
-#             dst = copy_to_version(ctx, dst, force=force)
-
-#     return dst
 
 
 uglifycmd = Command('uglifyjs', '{src} {opts} -o {dst}',
@@ -382,9 +304,6 @@ def buildjs(ctx, src, dst, force=False, **kw):
     if kw.pop('browserify', False):
         dst = browserify(ctx, src, dst,
                          babelify=kw.pop('babelify', src.endswith('.jsx')), **kw)
-    else:
-        # dst = babel(ctx, src, dst, force=force)
-        pass
 
     if uglify:
         finaldst = switch_extension(dst, '.min.js')

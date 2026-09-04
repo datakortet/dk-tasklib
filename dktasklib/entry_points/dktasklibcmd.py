@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-
 """Commands installed by setup.py
 """
-from __future__ import print_function
 # pragma: nocover
 import argparse
 import datetime

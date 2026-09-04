@@ -1,4 +1,3 @@
-# from functools import wraps
 import sys
 import warnings
 
@@ -16,7 +15,7 @@ class MissingCommand(Exception):
 
 
 # noinspection PyShadowingNames
-class Executables(object):
+class Executables:
     """Class for finding executables on the host system.
     """
     def __init__(self):
@@ -80,7 +79,6 @@ class Executables(object):
             pip = get_executable('pip')
             cmd = pip + ' install wheel[signatures]'
             if win32:
-                # self.ctx.run(cmd, echo=True)
                 runners.run(cmd)
                 exepath = get_executable(exename)
                 # generate signing key if downloading wheel
@@ -97,7 +95,6 @@ class Executables(object):
             pip = get_executable('pip')
             cmd = pip + ' install twine'
             if win32:
-                # self.ctx.run(cmd, echo=True)
                 runners.run(cmd)
                 exepath = get_executable(exename)
             else:
@@ -123,7 +120,6 @@ class Executables(object):
         npminstall = "npm install -g browserify --no-color"
         if not exepath:
             if win32:
-                # self.ctx.run(npminstall, echo=False, encoding="utf-8")
                 self.ctx.run(npminstall, echo=True, encoding="utf-8")
                 exepath = get_executable(exename)
             else:
@@ -153,18 +149,6 @@ class Executables(object):
             else:
                 raise MissingCommand("Missing babel (%s)" % npminstall)
         return exepath
-
-    # def find_babel(self):
-    #     exename = 'babel'
-    #     exepath = get_executable(exename)
-    #     npminstall = "npm install -g babel --no-color"
-    #     if not exepath:
-    #         if win32:
-    #             self.ctx.run(npminstall, echo=False, encoding="utf-8")
-    #             exepath = get_executable(exename)
-    #         else:
-    #             raise MissingCommand("Missing babel (%s)" % npminstall)
-    #     return exepath
 
     def find_nodejs(self):  # pragma: nocover
         """Find :program:`node`.
@@ -213,9 +197,4 @@ def requires(*deps):
         except MissingCommand as e:
             warnings.warn(str(e))
         return fn
-        # @wraps(fn)
-        # def _inner(*args, **kwargs):
-        #     exe.require(*deps)
-        #     return fn(*args, **kwargs)
-        # return _inner
     return _wrapper

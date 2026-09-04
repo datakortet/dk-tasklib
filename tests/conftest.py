@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # pragma: nocover
 import invoke
 import pytest
 
 
-class DkContext(object):
+class DkContext:
     def init(self, default=None, **kw):
         overrides = {}
         if default is not None:
