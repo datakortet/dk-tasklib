@@ -11,7 +11,7 @@ def test_publish(ctx):
     files = """
     mypackage:
         - setup.py: |
-            from distutils.core import setup
+            from setuptools import setup
             setup(
                 name='mypackage',
                 packages=['mypackage'],
