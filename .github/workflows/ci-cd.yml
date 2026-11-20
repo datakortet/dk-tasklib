@@ -65,8 +65,6 @@ jobs:
       matrix:
         include:
           - python-version: '3.13'
-            sphinx: '8.2.3'
-          - python-version: '3.13'
             sphinx: '9.1.0'
     defaults:
       run:
